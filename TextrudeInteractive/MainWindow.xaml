@@ -1,0 +1,124 @@
+﻿<Window x:Class="TextrudeInteractive.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextrudeInteractive"
+        mc:Ignorable="d"
+        Title="Protoype" Height="450" Width="800"
+        Closing="MainWindow_OnClosing">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" IsMainMenu="True">
+            <MenuItem Header="_Project">
+                <MenuItem Click="LoadProject" Header="Load" />
+                <MenuItem Click="SaveProject" Header="Save" />
+                <MenuItem Click="SaveProjectAs" Header="Save as..." />
+            </MenuItem>
+            <MenuItem Header="_Help" />
+        </Menu>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0">
+                   
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                            <GroupBox Grid.Row="0" Header="Definitions">
+                           
+                            <TextBox Name="DefinitionsTextBox" 
+                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnDefinitionsTextChanged" 
+                                     Foreground="DarkCyan"
+                                     Background="LemonChiffon"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalScrollBarVisibility="Auto"/>
+
+                        </GroupBox>
+                      
+                        <GridSplitter Grid.Row="1" Height="5" Background="Gray" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox Grid.Row="2" Header="Model">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
+                                    <Label>Format:</Label>
+                                    <ComboBox Name="format" Width="100" SelectionChanged="Format_OnSelectionChanged"
+
+                                    />
+                                </StackPanel>
+                            <TextBox Name="ModelTextBox"
+                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
+                                     DockPanel.Dock="Bottom"
+                                     Foreground="DarkBlue"
+                                     Background="Beige"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalScrollBarVisibility="Auto"
+                                     
+                                     />
+
+                            </DockPanel>
+
+                        </GroupBox>
+
+                    </Grid>
+
+                </DockPanel>
+
+
+                <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="5" Background="Gray" />
+              
+                <GroupBox Grid.Column="2"  Header="Template">
+                    <TextBox FontFamily="Consolas" AcceptsReturn="True" Name="TemplateTextBox"
+                             TextChanged="OnModelTextChanged"
+                             Foreground="DarkRed"
+                             Background="BurlyWood"
+                             HorizontalScrollBarVisibility="Auto"
+                             VerticalScrollBarVisibility="Auto"
+                             
+                             />
+
+                </GroupBox>
+
+                <GridSplitter Grid.Column="3" VerticalAlignment="Stretch" Width="5" HorizontalAlignment="Stretch" Background="Gray" />
+
+                <GroupBox Grid.Column="4" Header="Output">
+                    <TextBox DockPanel.Dock="Bottom" Name="OutputText" FontFamily="Consolas"
+                             Text="{Binding Path=., Mode=OneWay}" IsReadOnly="True"
+                             AcceptsReturn="True"  
+                             Background="LightSteelBlue"
+                             HorizontalScrollBarVisibility="Auto"
+                             VerticalScrollBarVisibility="Auto"/> 
+                </GroupBox>
+
+            </Grid>
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="Gray" />
+            <GroupBox Grid.Row="2" Header="Errors">
+           
+                        <TextBox Name="Errors" FontFamily="Consolas" Text="{Binding Path=., Mode=OneWay}"
+                                 Foreground="Red"
+                                 Background="LightPink"
+                                 IsReadOnly="True"
+                                 AcceptsReturn="True"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"/>
+                 
+                </GroupBox>
+        </Grid>
+
+    </DockPanel>
+
+</Window>
