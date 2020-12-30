@@ -1,0 +1,6 @@
+{
+  "ModelText": "Name,Value,Description\r\nDisk,100,\"save your work immediately\"\r\nKeyboard,201,\"press F1 to continue\"\r\n\r\n",
+  "TemplateText": "{{# simple function to ensure consistent naming for errors\r\nfunc definition_name (row)\r\n   \"ERROR_\";  row.Name | string.upcase\r\nend}}\r\n\r\n{{# print out a list of #defines for the errors in the csv\r\nfor err in model}}\r\n#define {{definition_name(err)}} ({{err.Value}})  \r\n{{-end}}\r\n\r\n\r\n{{# create a simple function to get the description for an error code}}\r\nchar * get_error_description(int n)\r\n{\r\n  switch (n)\r\n  {\r\n\r\n{{for err in model}}\r\n    case {{definition_name(err)}} :\r\n      return \"{{err.Description}}\";\r\n{{-end}}\r\n    default:\r\n      return \"UNKNOWN ERROR\";\r\n}\r\n\r\n\r\n",
+  "Definitions": [],
+  "DataFormat": 1
+}
