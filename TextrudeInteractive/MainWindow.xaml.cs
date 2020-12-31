@@ -25,12 +25,14 @@ namespace TextrudeInteractive
             new BehaviorSubject<GenInput>(GenInput.EmptyYaml);
 
         private readonly TextBox[] modelBoxes;
+        private readonly TextBox[] OutputBoxes;
 
         public MainWindow()
         {
             InitializeComponent();
             formats = new[] {format0, format1, format2};
             modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
+            OutputBoxes = new[] {OutputText0, OutputText1, OutputText2};
             _projectManager = new ProjectManager(this);
             foreach (var comboBox in formats)
             {
@@ -65,7 +67,12 @@ namespace TextrudeInteractive
 
         private void HandleNewText(ApplicationEngine engine)
         {
-            OutputText.Text = engine.Output;
+            var outputs = engine.GetOutput(OutputBoxes.Length);
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                OutputBoxes[i].Text = outputs[i];
+            }
+
             Errors.Text = string.Join(Environment.NewLine, engine.Errors);
         }
 

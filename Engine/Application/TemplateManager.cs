@@ -26,6 +26,7 @@ namespace Engine.Application
         {
             if (_compiledTemplate.HasErrors) return string.Empty;
 
+
             _output = _compiledTemplate.Render(_context);
             if (_compiledTemplate.HasErrors)
                 ErrorList = ErrorList
@@ -50,21 +51,17 @@ namespace Engine.Application
             _top.Add(env, val);
         }
 
-        public string[] GetOutput(int n)
+        public string TryGetString(string variableName)
         {
-            var r = new string[n];
-            for (var i = 0; i < n; i++)
+            var scribanVariable = new ScriptVariableGlobal(variableName);
+            try
             {
-                if (i == 0)
-                    r[i] = _output;
-                else
-                {
-                    var t = _context.GetValue(new ScriptVariableGlobal($"file{i}"));
-                    r[i] = t?.ToString() ?? string.Empty;
-                }
+                return _context.GetValue(scribanVariable)?.ToString() ?? string.Empty;
             }
-
-            return r;
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }

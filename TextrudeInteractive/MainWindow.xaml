@@ -5,8 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextrudeInteractive"
         mc:Ignorable="d"
-        Title="Protoype" Height="450" Width="800"
+        Title="Textrude Interactive" Height="800" Width="1000"
         Closing="MainWindow_OnClosing">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Margin" Value="2"  />
+</Style>
+        <Style TargetType="GridSplitter">
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+        <Style TargetType="TabControl">
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_Project">
@@ -16,145 +36,127 @@
             </MenuItem>
             <MenuItem Header="_Help" />
         </Menu>
-        <Grid DockPanel.Dock="Bottom">
+        <Grid DockPanel.Dock="Bottom" Margin="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="3*" />
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3" />
 
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.Column="0">
-                   
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        
-                            <GroupBox Grid.Row="0" Header="Definitions">
-                           
-                            <TextBox Name="DefinitionsTextBox" 
-                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged" 
-                                     Foreground="DarkCyan"
-                                     Background="LemonChiffon"
-                                     HorizontalScrollBarVisibility="Auto"
-                                     VerticalScrollBarVisibility="Auto"/>
 
-                        </GroupBox>
-                      
-                        <GridSplitter Grid.Row="1" Height="5" Background="Gray" HorizontalAlignment="Stretch"></GridSplitter>
-                        <TabControl Grid.Row="2">
-                            <TabItem Header="Model">
+
+                    <TabControl>
+                        <TabItem Header="model">
                             <DockPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                                     <Label>Format:</Label>
-                                    <ComboBox Name="format0" Width="100" SelectionChanged="OnModelFormatChanged"
-
-                                    />
+                                    <ComboBox Name="format0" Width="100" SelectionChanged="OnModelFormatChanged" />
                                 </StackPanel>
-                            <TextBox Name="ModelTextBox0"
-                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
-                                     DockPanel.Dock="Bottom"
-                                     Foreground="DarkBlue"
-                                     Background="Beige"
-                                     HorizontalScrollBarVisibility="Auto"
-                                     VerticalScrollBarVisibility="Auto"
-                                     />
+                                <TextBox Name="ModelTextBox0"
+                                         DockPanel.Dock="Bottom"
+                                         Foreground="DarkBlue"
+                                         Background="Beige"
+                                          TextChanged="OnModelTextChanged"
+                                         />
 
                             </DockPanel>
-                            </TabItem>
-                            <TabItem Header="Model1">
-                                <DockPanel>
-                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
-                                        <Label>Format:</Label>
-                                        <ComboBox Name="format1" Width="100" SelectionChanged="OnModelFormatChanged"
+                        </TabItem>
+                        <TabItem Header="model1">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                                    <Label>Format:</Label>
+                                    <ComboBox Name="format1" Width="100" SelectionChanged="OnModelFormatChanged" />
+                                </StackPanel>
+                                <TextBox Name="ModelTextBox1"
+                                         TextChanged="OnModelTextChanged"
+                                         DockPanel.Dock="Bottom"
+                                         Foreground="DarkBlue"
+                                         Background="Beige"
+                                         />
 
-                                        />
-                                    </StackPanel>
-                                    <TextBox Name="ModelTextBox1"
-                                             FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
-                                             DockPanel.Dock="Bottom"
-                                             Foreground="DarkBlue"
-                                             Background="Beige"
-                                             HorizontalScrollBarVisibility="Auto"
-                                             VerticalScrollBarVisibility="Auto"
-                                    />
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="model2">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                                    <Label>Format:</Label>
+                                    <ComboBox Name="format2" Width="100" SelectionChanged="OnModelFormatChanged" />
+                                </StackPanel>
+                                <TextBox Name="ModelTextBox2"
+                                         TextChanged="OnModelTextChanged"
+                                         DockPanel.Dock="Bottom"
+                                         Foreground="DarkBlue"
+                                         Background="Beige"
+                                         />
 
-                                </DockPanel>
-                            </TabItem>
-                            <TabItem Header="Model2">
-                                <DockPanel>
-                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
-                                        <Label>Format:</Label>
-                                        <ComboBox Name="format2" Width="100" SelectionChanged="OnModelFormatChanged"
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="Definitions">
+                            <TextBox Name="DefinitionsTextBox"
+                                     TextChanged="OnModelTextChanged"
+                                     Foreground="DarkCyan"
+                                     Background="LemonChiffon"
+                                     />
 
-                                        />
-                                    </StackPanel>
-                                    <TextBox Name="ModelTextBox2"
-                                             FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
-                                             DockPanel.Dock="Bottom"
-                                             Foreground="DarkBlue"
-                                             Background="Beige"
-                                             HorizontalScrollBarVisibility="Auto"
-                                             VerticalScrollBarVisibility="Auto"
-                                    />
+                        </TabItem>
+                    </TabControl>
 
-                                </DockPanel>
-                            </TabItem>
-                        </TabControl>
-
-                    </Grid>
 
                 </DockPanel>
 
 
-                <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="5" Background="Gray" />
-              
-                <GroupBox Grid.Column="2"  Header="Template">
-                    <TextBox FontFamily="Consolas" AcceptsReturn="True" Name="TemplateTextBox"
+                <GridSplitter Grid.Column="1" />
+
+                <GroupBox Grid.Column="2" Header="Template">
+                    <TextBox Name="TemplateTextBox"
                              TextChanged="OnModelTextChanged"
                              Foreground="DarkRed"
                              Background="BurlyWood"
-                             HorizontalScrollBarVisibility="Auto"
-                             VerticalScrollBarVisibility="Auto"
-                             
                              />
-
                 </GroupBox>
 
-                <GridSplitter Grid.Column="3" VerticalAlignment="Stretch" Width="5" HorizontalAlignment="Stretch" Background="Gray" />
+                <GridSplitter Grid.Column="3"/>
 
-                <GroupBox Grid.Column="4" Header="Output">
-                    <TextBox DockPanel.Dock="Bottom" Name="OutputText" FontFamily="Consolas"
-                             Text="{Binding Path=., Mode=OneWay}" IsReadOnly="True"
-                             AcceptsReturn="True"  
-                             Background="LightSteelBlue"
-                             HorizontalScrollBarVisibility="Auto"
-                             VerticalScrollBarVisibility="Auto"/> 
-                </GroupBox>
+                <TabControl Grid.Column="4">
+                    <TabItem Header="output">
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText0" 
+                                 IsReadOnly="True"
+                                 Background="LightSteelBlue" />
+                    </TabItem>
+                    <TabItem Header="output1">
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText1" 
+                                 IsReadOnly="True"
+                                 Background="LightSteelBlue"
+                                 />
+                    </TabItem>
+                    <TabItem Header="output2">
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText2" 
+                                 IsReadOnly="True"
+                                 Background="LightSteelBlue"
+                                 />
+                    </TabItem>
+                </TabControl>
 
             </Grid>
-            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="Gray" />
+            <GridSplitter Grid.Row="1"/>
             <GroupBox Grid.Row="2" Header="Errors">
-           
-                        <TextBox Name="Errors" FontFamily="Consolas" Text="{Binding Path=., Mode=OneWay}"
-                                 Foreground="Red"
-                                 Background="LightPink"
-                                 IsReadOnly="True"
-                                 AcceptsReturn="True"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 VerticalScrollBarVisibility="Auto"/>
-                 
-                </GroupBox>
+
+                <TextBox Name="Errors" 
+                         Foreground="Red"
+                         Background="LightPink"
+                         IsReadOnly="True"
+                       />
+
+            </GroupBox>
         </Grid>
 
     </DockPanel>

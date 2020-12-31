@@ -11,20 +11,20 @@ namespace Tests
     public class YamlAssumptionTests
     {
         [TestMethod]
-        public void NumbersShouldBeDeserialized()
+        public void NumbersAreDeserializedAsStrings()
         {
-            var reader = new StringReader("A: 001");
+            var reader = new StringReader("A: 1");
 
             var graph = new Deserializer().Deserialize(reader);
 
             var propertyA = ((Dictionary<object, object>) graph).First();
 
-            propertyA.Key.Should().Be("A"); //passes
-            propertyA.Value.Should().Be(1); //fails - the value is actually the string "1"
+            propertyA.Key.Should().Be("A");
+            propertyA.Value.Should().Be("1");
         }
 
         [TestMethod]
-        public void BooleansShouldBeDeserialized()
+        public void BooleansAreDeserializedAsStrings()
         {
             var reader = new StringReader("A: true");
 
@@ -32,8 +32,8 @@ namespace Tests
 
             var propertyA = ((Dictionary<object, object>) graph).First();
 
-            propertyA.Key.Should().Be("A"); //passes
-            propertyA.Value.Should().Be(true); //fails - the value is actually the string "1"
+            propertyA.Key.Should().Be("A");
+            propertyA.Value.Should().Be("true");
         }
     }
 }

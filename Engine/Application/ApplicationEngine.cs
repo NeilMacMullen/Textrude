@@ -7,6 +7,15 @@ using Scriban.Runtime;
 
 namespace Engine.Application
 {
+    public static class ApplicationStrings
+    {
+        public const string ModelPrefix = "model";
+        public const string OutputPrefix = "output";
+        public const string EnvironmentNamespace = "env";
+        public const string DefinitionsNamespace = "def";
+        public const string HelpersNamespace = "helpers";
+    }
+
     public class ApplicationEngine
     {
         private readonly TemplateManager _templateManager = new();
@@ -27,8 +36,8 @@ namespace Engine.Application
                 //Note that models are added as model0, model1 etc but for
                 //convenience, "model0" is also available as "model"
                 if (_modelCount == 0)
-                    _templateManager.AddVariable("model", model.Untyped);
-                _templateManager.AddVariable($"model{_modelCount}", model.Untyped);
+                    _templateManager.AddVariable(ApplicationStrings.ModelPrefix, model.Untyped);
+                _templateManager.AddVariable($"{ApplicationStrings.ModelPrefix}{_modelCount}", model.Untyped);
                 _modelCount++;
             }
             catch (Exception e)
@@ -44,7 +53,7 @@ namespace Engine.Application
             var environmentVariables =
                 Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                     .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString());
-            _templateManager.AddVariable("env", environmentVariables);
+            _templateManager.AddVariable(ApplicationStrings.EnvironmentNamespace, environmentVariables);
             return this;
         }
 
@@ -53,7 +62,7 @@ namespace Engine.Application
             try
             {
                 var definitions = DefinitionParser.CreateDefinitions(rawDefinitions);
-                _templateManager.AddVariable("def", definitions);
+                _templateManager.AddVariable(ApplicationStrings.DefinitionsNamespace, definitions);
             }
             catch (ArgumentException e)
             {
@@ -88,13 +97,16 @@ namespace Engine.Application
         {
             var scriptObject1 = new ScriptObject();
             scriptObject1.Import(typeof(MyFunctions));
-            _templateManager.AddVariable("helpers", scriptObject1);
+            _templateManager.AddVariable(ApplicationStrings.HelpersNamespace, scriptObject1);
             return this;
         }
 
-        public string[] GetOutput(int i)
+        public string[] GetOutput(int n)
         {
-            return _templateManager.GetOutput(i);
+            return
+                Enumerable.Range(0, n).Select(i =>
+                    i == 0 ? Output : _templateManager.TryGetString($"{ApplicationStrings.OutputPrefix}{i}")
+                ).ToArray();
         }
     }
 

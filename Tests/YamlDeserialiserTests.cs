@@ -40,7 +40,7 @@ namespace Tests
 
 
         [TestMethod]
-        public void BooleansAreCorrectlyDeserialised()
+        public void BooleansAreCorrectlyDeserialized()
         {
             var graph = GetGraph(new
             {
@@ -50,28 +50,26 @@ namespace Tests
         }
 
         [TestMethod]
-        public void StringsThatLookLikeNumbersAreNotDeserialisedAsNumbers()
+        public void StringsThatLookLikeNumbersAreNotDeserializedAsNumbers()
         {
-            var graph = GetGraph(new
-            {
-                A = "1"
-            });
+            var graph = new YamlModelDeserializer().Deserialize("A: \"1\"").Untyped
+                as Dictionary<string, object>;
+            ;
             graph["A"].Should().Be("1");
         }
 
         [TestMethod]
-        public void StringsThatLookLikeBoolssAreNotDeserialisedAsBools()
+        public void StringsThatLookLikeBoolsAreNotDeserializedAsBools()
         {
-            var graph = GetGraph(new
-            {
-                A = "true"
-            });
+            var graph = new YamlModelDeserializer().Deserialize("A: \"true\"").Untyped
+                as Dictionary<string, object>;
+            ;
             graph["A"].Should().Be("true");
         }
 
 
         [TestMethod]
-        public void SequenceCanBeDeserialised()
+        public void SequenceCanBeDeserialized()
         {
             var graph = GetArray(new[] {"cat", "dog"});
             graph.Should().BeEquivalentTo(new[] {"cat", "dog"});

@@ -31,8 +31,8 @@ namespace Tests
 1";
 
             var template = @"test1
-{{-capture file1}}test2{{end-}}
-{{-capture file2}}test3{{end-}}
+{{-capture output1}}test2{{end-}}
+{{-capture output2}}test3{{end-}}
 test4";
             var engine = new ApplicationEngine()
                 .WithTemplate(template)
