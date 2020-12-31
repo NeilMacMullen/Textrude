@@ -29,6 +29,6 @@ namespace TextrudeInteractive
         public string Template { get; init; } = string.Empty;
 
         public static EngineInputSet EmptyYaml { get; } =
-            new EngineInputSet(string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
+            new(string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
     }
 }

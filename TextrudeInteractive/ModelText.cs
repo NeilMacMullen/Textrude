@@ -4,13 +4,13 @@ namespace TextrudeInteractive
 {
     public class ModelText
     {
-        public static ModelText EmptyYaml = new ModelText(string.Empty, ModelFormat.Yaml);
-
         public ModelText(string text, ModelFormat format)
         {
             Text = text;
             Format = format;
         }
+
+        public static ModelText EmptyYaml { get; } = new(string.Empty, ModelFormat.Yaml);
 
 
         public ModelFormat Format { get; init; } = ModelFormat.Line;
