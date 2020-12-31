@@ -1,20 +1,42 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Engine.Application;
 
 namespace TextrudeInteractive
 {
+    public class ModelText
+    {
+        public ModelText(string text, ModelFormat format)
+        {
+            Text = text;
+            Format = format;
+        }
+
+        /* for deserialization */
+        public ModelText()
+        {
+        }
+
+        public ModelFormat Format { get; set; } = ModelFormat.Line;
+        public string Text { get; set; } = string.Empty;
+        public static ModelText EmptyYaml { get; } = new ModelText(string.Empty, ModelFormat.Yaml);
+    }
+
     public class GenInput
     {
-        public readonly string[] Definitions;
-        public readonly ModelFormat Format;
-        public readonly string ModelText;
-        public readonly string Template;
+        public readonly ModelText[] Models = Array.Empty<ModelText>();
+        public readonly string Template = string.Empty;
 
-        public GenInput(string template, string modelText, ModelFormat format, string definitionsText)
+        //for deserialization
+        public GenInput()
+        {
+        }
+
+        public GenInput(string template, ModelText[] models, string definitionsText)
         {
             Template = template;
-            ModelText = modelText;
-            Format = format;
+            Models = models;
+
             Definitions = definitionsText
                 .Split('\r', '\n')
                 .Select(l => l.Trim())
@@ -22,7 +44,9 @@ namespace TextrudeInteractive
                 .ToArray();
         }
 
+        public string[] Definitions { get; set; }
+
         public static GenInput EmptyYaml { get; } =
-            new GenInput(string.Empty, string.Empty, ModelFormat.Yaml, string.Empty);
+            new GenInput(string.Empty, Array.Empty<ModelText>(), string.Empty);
     }
 }

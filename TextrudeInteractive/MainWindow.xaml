@@ -43,7 +43,7 @@
                             <GroupBox Grid.Row="0" Header="Definitions">
                            
                             <TextBox Name="DefinitionsTextBox" 
-                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnDefinitionsTextChanged" 
+                                     FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged" 
                                      Foreground="DarkCyan"
                                      Background="LemonChiffon"
                                      HorizontalScrollBarVisibility="Auto"
@@ -52,27 +52,65 @@
                         </GroupBox>
                       
                         <GridSplitter Grid.Row="1" Height="5" Background="Gray" HorizontalAlignment="Stretch"></GridSplitter>
-                        <GroupBox Grid.Row="2" Header="Model">
+                        <TabControl Grid.Row="2">
+                            <TabItem Header="Model">
                             <DockPanel>
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
                                     <Label>Format:</Label>
-                                    <ComboBox Name="format" Width="100" SelectionChanged="Format_OnSelectionChanged"
+                                    <ComboBox Name="format0" Width="100" SelectionChanged="OnModelFormatChanged"
 
                                     />
                                 </StackPanel>
-                            <TextBox Name="ModelTextBox"
+                            <TextBox Name="ModelTextBox0"
                                      FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
                                      DockPanel.Dock="Bottom"
                                      Foreground="DarkBlue"
                                      Background="Beige"
                                      HorizontalScrollBarVisibility="Auto"
                                      VerticalScrollBarVisibility="Auto"
-                                     
                                      />
 
                             </DockPanel>
+                            </TabItem>
+                            <TabItem Header="Model1">
+                                <DockPanel>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
+                                        <Label>Format:</Label>
+                                        <ComboBox Name="format1" Width="100" SelectionChanged="OnModelFormatChanged"
 
-                        </GroupBox>
+                                        />
+                                    </StackPanel>
+                                    <TextBox Name="ModelTextBox1"
+                                             FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
+                                             DockPanel.Dock="Bottom"
+                                             Foreground="DarkBlue"
+                                             Background="Beige"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             VerticalScrollBarVisibility="Auto"
+                                    />
+
+                                </DockPanel>
+                            </TabItem>
+                            <TabItem Header="Model2">
+                                <DockPanel>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
+                                        <Label>Format:</Label>
+                                        <ComboBox Name="format2" Width="100" SelectionChanged="OnModelFormatChanged"
+
+                                        />
+                                    </StackPanel>
+                                    <TextBox Name="ModelTextBox2"
+                                             FontFamily="Consolas" AcceptsReturn="True" TextChanged="OnModelTextChanged"
+                                             DockPanel.Dock="Bottom"
+                                             Foreground="DarkBlue"
+                                             Background="Beige"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             VerticalScrollBarVisibility="Auto"
+                                    />
+
+                                </DockPanel>
+                            </TabItem>
+                        </TabControl>
 
                     </Grid>
 

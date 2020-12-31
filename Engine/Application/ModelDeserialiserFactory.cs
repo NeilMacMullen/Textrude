@@ -24,5 +24,17 @@ namespace Engine.Application
         {
             return Fetch(type).Serialize(o);
         }
+
+        public static ModelFormat FormatFromExtension(string extension)
+        {
+            foreach (var s in KnownDeserializers.Keys)
+            {
+                if (extension.ToUpperInvariant().EndsWith(s.ToString().ToUpperInvariant()))
+                    return s;
+            }
+
+            //if in doubt just treat the input as lines of text
+            return ModelFormat.Line;
+        }
     }
 }

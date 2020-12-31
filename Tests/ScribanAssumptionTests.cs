@@ -13,14 +13,15 @@ namespace Tests
         [TestMethod]
         public void Capture()
         {
-            var text = @"{{capture test}}text{{end}}";
+            var text = @"outer1{{capture test}}text{{end}}outer2";
             var compiledTemplate = Template.Parse(text);
             var scriptObject1 = new ScriptObject();
             var context = new TemplateContext();
             context.PushGlobal(scriptObject1);
 
             var result = compiledTemplate.Render(context);
-            compiledTemplate.HasErrors.Should().BeFalse();
+            result.Should().Be("outer1outer2");
+            context.Output.ToString().Should().Be("outer1outer2");
             var t = context.GetValue(new ScriptVariableGlobal("test"));
             t.ToString().Should().Be("text");
 

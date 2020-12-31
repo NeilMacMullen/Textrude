@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -7,6 +6,7 @@ namespace TextrudeInteractive
 {
     public class ProjectManager
     {
+        private const string Filter = "project files (*.texproj)|*.texproj|All files (*.*)|*.*";
         private readonly MainWindow _owner;
 
         private string _currentProjectPath = string.Empty;
@@ -19,25 +19,21 @@ namespace TextrudeInteractive
             var g = _owner.CollectInput();
             var proj = new TemplatazorProject
             {
-                DataFormat = g.Format,
-                Definitions = g.Definitions,
-                ModelText = g.ModelText,
-                TemplateText = g.Template
+                EngineInput = g
             };
             return proj;
         }
 
         public void LoadProject()
         {
-            var dlg = new OpenFileDialog();
+            var dlg = new OpenFileDialog {Filter = Filter};
 
             if (dlg.ShowDialog(_owner) == true)
             {
                 var text = File.ReadAllText(dlg.FileName);
                 var proj = JsonConvert.DeserializeObject<TemplatazorProject>(text);
-                var gi = new GenInput(proj.TemplateText, proj.ModelText, proj.DataFormat,
-                    string.Join(Environment.NewLine, proj.Definitions));
-                _owner.SetUI(gi);
+                _owner.SetUI(proj.EngineInput);
+                _currentProjectPath = dlg.FileName;
             }
         }
 
@@ -54,7 +50,7 @@ namespace TextrudeInteractive
 
         public void SaveProjectAs()
         {
-            var dlg = new SaveFileDialog();
+            var dlg = new SaveFileDialog {Filter = Filter};
             if (dlg.ShowDialog(_owner) == true)
             {
                 _currentProjectPath = dlg.FileName;

@@ -1,12 +1,18 @@
-﻿using System;
+﻿using CommandLine;
 
 namespace Textrude
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var result = Parser.Default
+                .ParseArguments(args,
+                    typeof(CmdRender.Options),
+                    typeof(CmdTest.Options)
+                )
+                .WithParsed<CmdTest.Options>(CmdTest.Run)
+                .WithParsed<CmdRender.Options>(CmdRender.Run);
         }
     }
 }

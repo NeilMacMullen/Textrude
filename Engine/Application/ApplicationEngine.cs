@@ -10,6 +10,7 @@ namespace Engine.Application
     public class ApplicationEngine
     {
         private readonly TemplateManager _templateManager = new();
+        private int _modelCount;
 
         public ImmutableArray<string> Errors = ImmutableArray<string>.Empty;
 
@@ -22,7 +23,13 @@ namespace Engine.Application
             {
                 var serializer = ModelDeserializerFactory.Fetch(format);
                 var model = serializer.Deserialize(modelText);
-                _templateManager.AddVariable("model", model.Untyped);
+
+                //Note that models are added as model0, model1 etc but for
+                //convenience, "model0" is also available as "model"
+                if (_modelCount == 0)
+                    _templateManager.AddVariable("model", model.Untyped);
+                _templateManager.AddVariable($"model{_modelCount}", model.Untyped);
+                _modelCount++;
             }
             catch (Exception e)
             {
@@ -83,6 +90,11 @@ namespace Engine.Application
             scriptObject1.Import(typeof(MyFunctions));
             _templateManager.AddVariable("helpers", scriptObject1);
             return this;
+        }
+
+        public string[] GetOutput(int i)
+        {
+            return _templateManager.GetOutput(i);
         }
     }
 

@@ -1,7 +1,7 @@
 # Textrude
 
 
-Textrude is a general-purpose code-generation tool suitable for integration with build-systems.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to generate output files. 
+Textrude is a cross-platform general-purpose code-generation tool suitable for integration with build-systems.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to generate output files. 
 
 Templates and models can quickly be developed using the bundled TextrudeInteractive tool (windows only).
 
@@ -17,21 +17,26 @@ Let's face it, there are any number of code-generation technologies you might co
 - Integrates well with your build system
 - Well suited for systems where it's necessary to generate multiple representations of the same model, often in different target languages
 - Allows localisation of data concerns
-- By generation compilable code, you get stronger typing 
+- By generation compilable code, you get stronger typing
+- TextrudeInteractive provides a real-time prototyping tool  
 
 ## Download
 
 Not yet ready for release.....
+Known issues...
+- YAML and CSV deserialisers don't always interpret numbers and strings correctly
+- No support for multiple models or output files
+- UI is ugly as sin
 Get it from ....
 Change notes
 ..or build yourself from source
 
 ## More
-- Getting started with template generation
+- [Getting started with template generation](doc/gettingStarted.md) 
 - Built in functions and helpers
 - Creating your own library of functions and templates
 - Using Textrude in a build system
-- 
+- advanced usage - multiple models and/or output files
 
 ## Credits
 
@@ -50,8 +55,6 @@ Architecture...
 file -> [Deserialiser] -> JObject -> ScriptObject
 
 
-
-
 [Templatetext]
 [modelText] 
 
@@ -60,3 +63,16 @@ file -> [Deserialiser] -> JObject -> ScriptObject
 
 Extensions
 --binding custom dotnet functions- build your own version
+
+Help wanted 
+TextrudeInteractive has a UI only a developer could love and is very much a "scratch" project.  Help make it better....
+Contribute to library methods
+Test on linux
+Documentation
+
+
+## What's with the name 
+It's short for Text-extrude but if you can't stop seeing it as Text-Rude you are not alone.
+
+It is unrelated to the rather cool (but apparently abandoned project) [Textruder](https://github.com/arrogantrobot/textruder) or to plastics company [Tex-Trude](http://www.tex-trude.com/)
+

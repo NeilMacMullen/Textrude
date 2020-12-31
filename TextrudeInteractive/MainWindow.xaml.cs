@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -16,32 +17,51 @@ namespace TextrudeInteractive
     public partial class MainWindow : Window
     {
         private readonly ProjectManager _projectManager;
+        private readonly bool _uiIsReady;
+
+        private readonly ComboBox[] formats;
 
         private readonly ISubject<GenInput> InputStream =
             new BehaviorSubject<GenInput>(GenInput.EmptyYaml);
 
+        private readonly TextBox[] modelBoxes;
 
         public MainWindow()
         {
             InitializeComponent();
+            formats = new[] {format0, format1, format2};
+            modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
             _projectManager = new ProjectManager(this);
-            format.ItemsSource = Enum.GetValues(typeof(ModelFormat));
-            format.SelectedIndex = 0;
+            foreach (var comboBox in formats)
+            {
+                comboBox.ItemsSource = Enum.GetValues(typeof(ModelFormat));
+            }
+
+            SetUI(GenInput.EmptyYaml);
+
+
             InputStream
                 .Throttle(TimeSpan.FromMilliseconds(300))
                 .ObserveOn(NewThreadScheduler.Default)
-                .Select(gi => new ApplicationEngine()
-                    .WithTemplate(gi.Template)
-                    .WithModel(gi.ModelText, gi.Format)
-                    .WithEnvironmentVariables()
-                    .WithDefinitions(gi.Definitions)
-                    .WithHelpers()
-                    .Render())
+                .Select(Render)
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleNewText);
-            SetUI(GenInput.EmptyYaml);
+            _uiIsReady = true;
         }
 
+        private ApplicationEngine Render(GenInput gi)
+        {
+            var engine = new ApplicationEngine()
+                .WithTemplate(gi.Template)
+                .WithEnvironmentVariables()
+                .WithDefinitions(gi.Definitions)
+                .WithHelpers();
+
+            foreach (var m in gi.Models)
+                engine = engine.WithModel(m.Text, m.Format);
+
+            return engine.Render();
+        }
 
         private void HandleNewText(ApplicationEngine engine)
         {
@@ -52,12 +72,17 @@ namespace TextrudeInteractive
 
         public GenInput CollectInput()
         {
-            return new GenInput(TemplateTextBox.Text, ModelTextBox.Text,
-                (ModelFormat) format.SelectedItem, DefinitionsTextBox.Text);
+            var models = Enumerable.Range(0, formats.Length)
+                .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
+                .ToArray();
+
+            return new GenInput(TemplateTextBox.Text, models, DefinitionsTextBox.Text);
         }
 
-        private void OnModelTextChanged(object sender, TextChangedEventArgs e)
+        private void OnModelChanged()
         {
+            if (!_uiIsReady)
+                return;
             try
             {
                 InputStream.OnNext(CollectInput());
@@ -68,15 +93,14 @@ namespace TextrudeInteractive
             }
         }
 
-        private void OnDefinitionsTextChanged(object sender, TextChangedEventArgs e)
+        private void OnModelTextChanged(object sender, TextChangedEventArgs e)
         {
-            OnModelTextChanged(sender, e);
+            OnModelChanged();
         }
 
-
-        private void Format_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnModelFormatChanged(object sender, SelectionChangedEventArgs e)
         {
-            OnModelTextChanged(null, null);
+            OnModelChanged();
         }
 
         private void LoadProject(object sender, RoutedEventArgs e)
@@ -106,8 +130,14 @@ namespace TextrudeInteractive
         public void SetUI(GenInput gi)
         {
             DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
-            format.SelectedValue = gi.Format;
-            ModelTextBox.Text = gi.ModelText;
+
+            for (var i = 0; i < formats.Length; i++)
+            {
+                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelText.EmptyYaml;
+                formats[i].SelectedValue = model.Format;
+                modelBoxes[i].Text = model.Text;
+            }
+
             TemplateTextBox.Text = gi.Template;
         }
     }
