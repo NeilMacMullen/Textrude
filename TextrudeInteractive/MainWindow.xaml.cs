@@ -23,8 +23,8 @@ namespace TextrudeInteractive
 
         private readonly ComboBox[] formats;
 
-        private readonly ISubject<GenInput> InputStream =
-            new BehaviorSubject<GenInput>(GenInput.EmptyYaml);
+        private readonly ISubject<EngineInputSet> InputStream =
+            new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
         private readonly TextBox[] modelBoxes;
         private readonly TextBox[] OutputBoxes;
@@ -41,7 +41,7 @@ namespace TextrudeInteractive
                 comboBox.ItemsSource = Enum.GetValues(typeof(ModelFormat));
             }
 
-            SetUI(GenInput.EmptyYaml);
+            SetUI(EngineInputSet.EmptyYaml);
 
 
             InputStream
@@ -53,7 +53,7 @@ namespace TextrudeInteractive
             _uiIsReady = true;
         }
 
-        private ApplicationEngine Render(GenInput gi)
+        private ApplicationEngine Render(EngineInputSet gi)
         {
             var engine = new ApplicationEngine(new FileSystemOperations());
             foreach (var m in gi.Models)
@@ -80,13 +80,13 @@ namespace TextrudeInteractive
         }
 
 
-        public GenInput CollectInput()
+        public EngineInputSet CollectInput()
         {
             var models = Enumerable.Range(0, formats.Length)
                 .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
                 .ToArray();
 
-            return new GenInput(TemplateTextBox.Text,
+            return new EngineInputSet(TemplateTextBox.Text,
                 models,
                 DefinitionsTextBox.Text,
                 IncludesTextBox.Text);
@@ -140,13 +140,13 @@ namespace TextrudeInteractive
         }
 
 
-        public void SetUI(GenInput gi)
+        public void SetUI(EngineInputSet gi)
         {
             DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
 
             for (var i = 0; i < formats.Length; i++)
             {
-                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelTexts.EmptyYaml;
+                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelText.EmptyYaml;
                 formats[i].SelectedValue = model.Format;
                 modelBoxes[i].Text = model.Text;
             }

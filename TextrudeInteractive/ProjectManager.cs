@@ -14,10 +14,10 @@ namespace TextrudeInteractive
         public ProjectManager(MainWindow owner) => _owner = owner;
 
 
-        private TemplatazorProject CreateProject()
+        private TextrudeProject CreateProject()
         {
             var g = _owner.CollectInput();
-            var proj = new TemplatazorProject
+            var proj = new TextrudeProject
             {
                 EngineInput = g
             };
@@ -32,7 +32,7 @@ namespace TextrudeInteractive
             if (dlg.ShowDialog(_owner) == true)
             {
                 var text = File.ReadAllText(dlg.FileName);
-                var proj = JsonConvert.DeserializeObject<TemplatazorProject>(text);
+                var proj = JsonConvert.DeserializeObject<TextrudeProject>(text);
                 _owner.SetUI(proj.EngineInput);
                 _currentProjectPath = dlg.FileName;
             }
