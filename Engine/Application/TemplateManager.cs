@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Scriban;
 using Scriban.Runtime;
@@ -9,14 +10,18 @@ namespace Engine.Application
     public class TemplateManager
     {
         private readonly TemplateContext _context = new();
+        private readonly ScriptLoader _scriptLoader;
         private readonly ScriptObject _top = new();
 
         private Template _compiledTemplate;
         private string _output = string.Empty;
 
-        public TemplateManager()
+        public TemplateManager(IFileSystemOperations ops)
         {
-            _context.StrictVariables = true;
+            //TODO - disabled until bug-fix in Scriban
+            //_context.StrictVariables = true;
+            _scriptLoader = new ScriptLoader(ops);
+            _context.TemplateLoader = _scriptLoader;
             _context.PushGlobal(_top);
         }
 
@@ -24,7 +29,8 @@ namespace Engine.Application
 
         public string Render()
         {
-            if (_compiledTemplate.HasErrors) return string.Empty;
+            if (ErrorList.Any())
+                return string.Empty;
 
 
             _output = _compiledTemplate.Render(_context);
@@ -38,17 +44,30 @@ namespace Engine.Application
 
         public void SetTemplate(string templateText)
         {
-            _compiledTemplate = Template.Parse(templateText);
-            ErrorList = _compiledTemplate
-                .Messages
-                .Select(e => $"ERROR: {e}")
-                .ToImmutableArray();
+            try
+            {
+                _compiledTemplate = Template.Parse(templateText);
+
+                ErrorList = _compiledTemplate
+                    .Messages
+                    .Select(e => $"ERROR: {e}")
+                    .ToImmutableArray();
+            }
+            catch (Exception e)
+            {
+                ErrorList = ErrorList.Add($"SCRIBAN INTERNAL EXCEPTION: {e}");
+            }
         }
 
 
         public void AddVariable(string env, object val)
         {
             _top.Add(env, val);
+        }
+
+        public void AddIncludePath(string path)
+        {
+            _scriptLoader.AddIncludePath(path);
         }
 
         public string TryGetString(string variableName)

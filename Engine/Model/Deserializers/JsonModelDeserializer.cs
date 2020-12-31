@@ -5,10 +5,7 @@ namespace Engine.Model.Deserializers
 {
     public class JsonModelDeserializer : IModelDeserializer
     {
-        public string Serialize(object o)
-        {
-            return JsonConvert.SerializeObject(o);
-        }
+        public string Serialize(object o) => JsonConvert.SerializeObject(o);
 
         public Model Deserialize(string s)
         {

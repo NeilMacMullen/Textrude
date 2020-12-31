@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -7,6 +8,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using Engine.Application;
 
 namespace TextrudeInteractive
@@ -53,14 +55,15 @@ namespace TextrudeInteractive
 
         private ApplicationEngine Render(GenInput gi)
         {
-            var engine = new ApplicationEngine()
-                .WithTemplate(gi.Template)
-                .WithEnvironmentVariables()
-                .WithDefinitions(gi.Definitions)
-                .WithHelpers();
-
+            var engine = new ApplicationEngine(new FileSystemOperations());
             foreach (var m in gi.Models)
                 engine = engine.WithModel(m.Text, m.Format);
+            engine = engine
+                .WithEnvironmentVariables()
+                .WithDefinitions(gi.Definitions)
+                .WithIncludePaths(gi.IncludePaths)
+                .WithHelpers()
+                .WithTemplate(gi.Template);
 
             return engine.Render();
         }
@@ -83,7 +86,10 @@ namespace TextrudeInteractive
                 .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
                 .ToArray();
 
-            return new GenInput(TemplateTextBox.Text, models, DefinitionsTextBox.Text);
+            return new GenInput(TemplateTextBox.Text,
+                models,
+                DefinitionsTextBox.Text,
+                IncludesTextBox.Text);
         }
 
         private void OnModelChanged()
@@ -140,12 +146,27 @@ namespace TextrudeInteractive
 
             for (var i = 0; i < formats.Length; i++)
             {
-                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelText.EmptyYaml;
+                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelTexts.EmptyYaml;
                 formats[i].SelectedValue = model.Format;
                 modelBoxes[i].Text = model.Text;
             }
 
             TemplateTextBox.Text = gi.Template;
+
+            IncludesTextBox.Text = string.Join(Environment.NewLine, gi.IncludePaths);
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            var u = e.Uri.AbsoluteUri;
+
+            var ps = new ProcessStartInfo(u)
+            {
+                UseShellExecute = true,
+                Verb = "open"
+            };
+            Process.Start(ps);
+            e.Handled = true;
         }
     }
 }

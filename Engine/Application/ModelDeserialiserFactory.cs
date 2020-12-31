@@ -15,15 +15,9 @@ namespace Engine.Application
                 [ModelFormat.Line] = new LineModelDeserializer()
             };
 
-        public static IModelDeserializer Fetch(ModelFormat type)
-        {
-            return KnownDeserializers[type];
-        }
+        public static IModelDeserializer Fetch(ModelFormat type) => KnownDeserializers[type];
 
-        public static string Serialise(object o, ModelFormat type)
-        {
-            return Fetch(type).Serialize(o);
-        }
+        public static string Serialise(object o, ModelFormat type) => Fetch(type).Serialize(o);
 
         public static ModelFormat FormatFromExtension(string extension)
         {

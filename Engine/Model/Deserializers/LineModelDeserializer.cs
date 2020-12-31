@@ -10,9 +10,6 @@ namespace Engine.Model.Deserializers
             return new Model(lines);
         }
 
-        public string Serialize(object o)
-        {
-            throw new NotImplementedException();
-        }
+        public string Serialize(object o) => throw new NotImplementedException();
     }
 }

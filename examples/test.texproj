@@ -1,0 +1,17 @@
+{
+  "Description": "",
+  "EngineInput": {
+    "Models": [
+      {
+        "Format": 2,
+        "Text": "a test"
+      }
+    ],
+    "Template": "temp",
+    "Definitions": [
+      "color=blue",
+      "size=large"
+    ],
+    "IncludePaths": []
+  }
+}

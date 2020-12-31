@@ -18,9 +18,6 @@ namespace Engine.Model.Deserializers
             return new Model(cleaned);
         }
 
-        public string Serialize(object o)
-        {
-            throw new NotImplementedException();
-        }
+        public string Serialize(object o) => throw new NotImplementedException();
     }
 }

@@ -7,9 +7,11 @@ namespace Tests
     [TestClass]
     public class CsvTests
     {
+        private readonly MockFileSystem _files = new();
+
         private void Test(string csv, string template, string expected)
         {
-            new ApplicationEngine()
+            new ApplicationEngine(_files)
                 .WithTemplate(template)
                 .WithModel(csv, ModelFormat.Csv)
                 .Render()

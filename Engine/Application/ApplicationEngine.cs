@@ -7,21 +7,18 @@ using Scriban.Runtime;
 
 namespace Engine.Application
 {
-    public static class ApplicationStrings
-    {
-        public const string ModelPrefix = "model";
-        public const string OutputPrefix = "output";
-        public const string EnvironmentNamespace = "env";
-        public const string DefinitionsNamespace = "def";
-        public const string HelpersNamespace = "helpers";
-    }
-
     public class ApplicationEngine
     {
-        private readonly TemplateManager _templateManager = new();
+        private readonly TemplateManager _templateManager;
         private int _modelCount;
 
         public ImmutableArray<string> Errors = ImmutableArray<string>.Empty;
+
+        public ApplicationEngine(IFileSystemOperations ops)
+        {
+            _templateManager = new TemplateManager(ops);
+            _templateManager.AddIncludePath(ops.ApplicationFolder());
+        }
 
         public string Output { get; private set; } = string.Empty;
         public bool HasErrors => Errors.Any();
@@ -107,6 +104,22 @@ namespace Engine.Application
                 Enumerable.Range(0, n).Select(i =>
                     i == 0 ? Output : _templateManager.TryGetString($"{ApplicationStrings.OutputPrefix}{i}")
                 ).ToArray();
+        }
+
+        public ApplicationEngine WithIncludePaths(string[] giIncludePaths)
+        {
+            foreach (var inc in giIncludePaths)
+                _templateManager.AddIncludePath(inc);
+            return this;
+        }
+
+        private static class ApplicationStrings
+        {
+            public const string ModelPrefix = "model";
+            public const string OutputPrefix = "output";
+            public const string EnvironmentNamespace = "env";
+            public const string DefinitionsNamespace = "def";
+            public const string HelpersNamespace = "helpers";
         }
     }
 

@@ -29,10 +29,7 @@ namespace Engine.Model.Helpers
         /// <remarks>
         ///     The topmost model can either be a ScriptObject or an array of ScriptObjects
         /// </remarks>
-        public static Model Create(JToken token)
-        {
-            return new(MakeTree(token));
-        }
+        public static Model Create(JToken token) => new(MakeTree(token));
 
 
         private static object MakeTree(JToken token)
@@ -86,10 +83,7 @@ namespace Engine.Model.Helpers
             }
         }
 
-        public static JToken GraphFromJsonString(string input)
-        {
-            return JToken.Parse(input);
-        }
+        public static JToken GraphFromJsonString(string input) => JToken.Parse(input);
 
         public static JToken GraphFromObject(object o)
         {

@@ -57,6 +57,21 @@
                     <TabControl>
                         <TabItem Header="model">
                             <DockPanel>
+                                <Expander  DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
+                                    <TextBlock FontStyle="Italic" Margin="2">
+                                        <Run Text="Model data is available in the template using:"/>
+                                        <LineBreak/>
+                                        <Run Text="  {{model}}" FontWeight="Bold"/>
+                                        <LineBreak/>
+                                        <Run Text="  {{model.propertyName}}" FontWeight="Bold"/>
+                                        <LineBreak/>
+                                        <Run Text="  {{model[0].propertyName}}" FontWeight="Bold"/>
+                                        <LineBreak/>
+                                        <Run Text="  etc"/>
+                                    </TextBlock>
+                                </Expander>
+                               
+                                <DockPanel>
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                                     <Label>Format:</Label>
                                     <ComboBox Name="format0" Width="100" SelectionChanged="OnModelFormatChanged" />
@@ -69,6 +84,9 @@
                                          />
 
                             </DockPanel>
+
+                            </DockPanel>
+
                         </TabItem>
                         <TabItem Header="model1">
                             <DockPanel>
@@ -101,11 +119,53 @@
                             </DockPanel>
                         </TabItem>
                         <TabItem Header="Definitions">
-                            <TextBox Name="DefinitionsTextBox"
+                            <DockPanel>
+                                <Expander  DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
+                                <TextBlock FontStyle="Italic" Margin="2">
+                                    <Run Text="Enter definitions 1-per-line:-"/>
+<LineBreak/>
+                                    <Run Text="  build=DEBUG" FontWeight="Bold"/>
+                                    <LineBreak/>
+                                    <Run Text="  Platform=Win32" FontWeight="Bold"/>
+                                    <LineBreak/>
+                                    <Run Text="Definitions are available from the def object.  Eg:"/>
+                                    <LineBreak/>
+                                    <Run Text=" {{def.build}}" FontWeight="Bold"/>
+                                </TextBlock>
+                                </Expander>
+                                <TextBox Name="DefinitionsTextBox"
+                                         TextChanged="OnModelTextChanged"
+                                         Foreground="DarkCyan"
+                                         Background="LemonChiffon"
+                                />
+
+                            </DockPanel>
+
+                        </TabItem>
+                        <TabItem Header="Include">
+                            <DockPanel>
+                                <Expander DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
+                                <TextBlock FontStyle="Italic" Margin="2">
+                                <Run Text="Enter additional include-folders 1-per-line.  Eg"/>
+                                <LineBreak/>
+                                <Run Text="   c:/work/myscripts" FontWeight="Bold"/>
+                                <LineBreak/>
+                                <Run Text="   c:/lib/custom" FontWeight="Bold"/>
+                                <LineBreak/>
+                                <Run Text="then use:" />
+                                <LineBreak/>
+                                <Run Text="   {{include 'script.sbn'}}" FontWeight="Bold"/>
+                                <LineBreak/>
+                                <Run Text="from the main template" />
+                            </TextBlock>
+                                </Expander>
+                                <TextBox Name="IncludesTextBox"
                                      TextChanged="OnModelTextChanged"
                                      Foreground="DarkCyan"
                                      Background="LemonChiffon"
-                                     />
+                            />
+
+                            </DockPanel>
 
                         </TabItem>
                     </TabControl>
@@ -117,34 +177,61 @@
                 <GridSplitter Grid.Column="1" />
 
                 <GroupBox Grid.Column="2" Header="Template">
-                    <TextBox Name="TemplateTextBox"
-                             TextChanged="OnModelTextChanged"
-                             Foreground="DarkRed"
-                             Background="BurlyWood"
-                             />
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Margin="2">           
+                            <Hyperlink NavigateUri="https://github.com/scriban/scriban/blob/master/doc/language.md" RequestNavigate="Hyperlink_RequestNavigate">
+                               Scriban Language reference
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBox Name="TemplateTextBox"
+                                 TextChanged="OnModelTextChanged"
+                                 Foreground="DarkRed"
+                                 Background="BurlyWood"
+                        />
+                    </DockPanel>
                 </GroupBox>
 
                 <GridSplitter Grid.Column="3"/>
-
-                <TabControl Grid.Column="4">
-                    <TabItem Header="output">
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText0" 
-                                 IsReadOnly="True"
-                                 Background="LightSteelBlue" />
-                    </TabItem>
-                    <TabItem Header="output1">
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText1" 
-                                 IsReadOnly="True"
-                                 Background="LightSteelBlue"
-                                 />
-                    </TabItem>
-                    <TabItem Header="output2">
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText2" 
-                                 IsReadOnly="True"
-                                 Background="LightSteelBlue"
-                                 />
-                    </TabItem>
-                </TabControl>
+                <DockPanel Grid.Column="4">
+                  
+                    <TabControl >
+                        <TabItem Header="output">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
+                                    <Run Text="Default output:"/>
+                                </TextBlock>
+                                <TextBox DockPanel.Dock="Bottom" Name="OutputText0" 
+                                         IsReadOnly="True"
+                                         Background="LightSteelBlue" />
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="output1">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
+                                    <Run Text="Use:"/>
+                                    <LineBreak/>
+                                    <Run Text=" {{capture output1}} ... {{end}}" FontWeight="Bold"/>
+                                </TextBlock>
+                                <TextBox DockPanel.Dock="Bottom" Name="OutputText1" 
+                                         IsReadOnly="True"
+                                         Background="LightSteelBlue" />
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="output2">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
+                                    <Run Text="Use:"/>
+                                    <LineBreak/>
+                                    <Run Text=" {{capture output2}} ... {{end}}" FontWeight="Bold"/>
+                                </TextBlock>
+                                <TextBox DockPanel.Dock="Bottom" Name="OutputText2" 
+                                         IsReadOnly="True"
+                                         Background="LightSteelBlue" />
+                            </DockPanel>
+                        </TabItem>
+                    </TabControl>
+                </DockPanel>
+               
 
             </Grid>
             <GridSplitter Grid.Row="1"/>

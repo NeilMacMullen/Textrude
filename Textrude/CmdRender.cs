@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using CommandLine;
 using Engine.Application;
@@ -9,20 +8,20 @@ namespace Textrude
 {
     public class CmdRender
     {
-        public static void Run(Options options)
+        public static void Run(Options options, IFileSystemOperations filesystem)
         {
-            var outputShouldBeChecked = !string.IsNullOrWhiteSpace(options.Output) && File.Exists(options.Output);
+            var outputShouldBeChecked = !string.IsNullOrWhiteSpace(options.Output) && filesystem.Exists(options.Output);
             if (outputShouldBeChecked)
             {
                 var modelDates = options.Models
-                    .Select(m => Helpers.TryOrQuit(() => File.GetLastWriteTimeUtc(m),
+                    .Select(m => Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(m),
                         $"Unable to open model file {m}"))
                     .ToArray();
                 var modelLastWritten = modelDates.Any() ? modelDates.Max() : DateTime.MaxValue;
 
-                var templateLastWritten = Helpers.TryOrQuit(() => File.GetLastWriteTimeUtc(options.Template),
+                var templateLastWritten = Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(options.Template),
                     $"Unable to open template file {options.Template}");
-                var outputLastWritten = Helpers.TryOrQuit(() => File.GetLastWriteTimeUtc(options.Output),
+                var outputLastWritten = Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(options.Output),
                     $"Unable to open output file {options.Output}");
 
                 //check if there is nothing to do...
@@ -30,16 +29,16 @@ namespace Textrude
                     return;
             }
 
-            var template = Helpers.TryOrQuit(() => File.ReadAllText(options.Template),
+            var template = Helpers.TryOrQuit(() => filesystem.ReadAllText(options.Template),
                 $"Unable to read template file {options.Template}");
 
-            var engine = new ApplicationEngine()
+            var engine = new ApplicationEngine(filesystem)
                 .WithDefinitions(options.Definitions)
                 .WithTemplate(template);
 
             foreach (var modelPath in options.Models)
             {
-                var modelText = Helpers.TryOrQuit(() => File.ReadAllText(modelPath),
+                var modelText = Helpers.TryOrQuit(() => filesystem.ReadAllText(modelPath),
                     $"Unable to read model file {modelPath}");
 
                 var format = ModelDeserializerFactory.FormatFromExtension(modelPath);
@@ -61,7 +60,7 @@ namespace Textrude
 
             var output = engine.Output;
             if (!string.IsNullOrWhiteSpace(options.Output))
-                File.WriteAllText(options.Output, output);
+                filesystem.WriteAllText(options.Output, output);
             else Console.WriteLine(output);
         }
 

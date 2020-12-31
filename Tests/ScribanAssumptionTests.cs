@@ -1,12 +1,27 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scriban;
+using Scriban.Parsing;
 using Scriban.Runtime;
 using Scriban.Syntax;
 
 namespace Tests
 {
+    internal class DummyLoader : ITemplateLoader
+    {
+        public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
+            => templateName;
+
+        public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
+            => "some text";
+
+        public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
+            => ValueTask.FromResult(Load(context, callerSpan, templatePath));
+    }
+
     [TestClass]
     public class ScribanAssumptionTests
     {
@@ -21,12 +36,36 @@ namespace Tests
 
             var result = compiledTemplate.Render(context);
             result.Should().Be("outer1outer2");
-            //context.Output.ToString().Should().Be("outer1outer2");
+            context.Output.ToString().Should().Be("outer1outer2");
             var t = context.GetValue(new ScriptVariableGlobal("test"));
             t.ToString().Should().Be("text");
 
             var u = context.GetValue(new ScriptVariableGlobal("abcd"));
             u.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void Include()
+        {
+            var text = @"{{include 'testfile'}}";
+            var context = new TemplateContext {TemplateLoader = new DummyLoader()};
+            //NOTE - setting strict variables causes the test to fail
+            context.StrictVariables = true;
+            var compiledTemplate = Template.Parse(text);
+            context.PushGlobal(new ScriptObject());
+
+            var result = compiledTemplate.Render(context);
+            result.Should().Be("some text");
+        }
+
+        [TestMethod]
+        public void ShouldNotBlowUpWithMalformedInput()
+        {
+            var text = @"{{T ""m"" b:";
+            var context = new TemplateContext();
+            context.PushGlobal(new ScriptObject());
+            Action act = () => Template.Parse(text);
+            act.Should().NotThrow();
         }
 
         [TestMethod]

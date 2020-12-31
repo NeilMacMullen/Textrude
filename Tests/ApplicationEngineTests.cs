@@ -6,52 +6,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Tests
 {
     [TestClass]
-    public class MultiFileTests
+    public class ApplicationEngineTests
     {
-        [TestMethod]
-        public void MultipleModelsCanBeSupplied()
-        {
-            var csv = @"C
-1";
-            var json = @"{""a"":2}";
-            var template = @"{{model0[0].C + model1.a}}";
-            var result = new ApplicationEngine()
-                .WithTemplate(template)
-                .WithModel(csv, ModelFormat.Csv)
-                .WithModel(json, ModelFormat.Json)
-                .Render()
-                .Output;
-            result.Should().Be("3");
-        }
+        private readonly MockFileSystem _files = new();
 
-        [TestMethod]
-        public void MultipleFilesCanBeGenerated()
-        {
-            var csv = @"C
-1";
-
-            var template = @"test1
-{{-capture output1}}test2{{end-}}
-{{-capture output2}}test3{{end-}}
-test4";
-            var engine = new ApplicationEngine()
-                .WithTemplate(template)
-                .WithModel(csv, ModelFormat.Csv)
-                .Render();
-            var res = engine.Output;
-            //res.Should().Be("aaa");
-            var o = engine.GetOutput(3);
-            o[2].Should().Be("test3");
-            o[1].Should().Be("test2");
-            o[0].Should().Be("test1test4");
-        }
-    }
-
-
-    [TestClass]
-    public class TemplatorTests
-    {
-        private readonly ModelFormat[] StructParsers =
+        private readonly ModelFormat[] _structParsers =
         {
             ModelFormat.Yaml,
             ModelFormat.Json
@@ -60,10 +19,10 @@ test4";
 
         private void Test(object obj, string template, Action<string> act)
         {
-            foreach (var type in StructParsers)
+            foreach (var type in _structParsers)
             {
                 var text = ModelDeserializerFactory.Serialise(obj, type);
-                var result = new ApplicationEngine()
+                var result = new ApplicationEngine(_files)
                     .WithTemplate(template)
                     .WithModel(text, type)
                     .Render()

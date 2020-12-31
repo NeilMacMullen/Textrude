@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Engine.Application;
 
 namespace Textrude
 {
@@ -6,13 +7,14 @@ namespace Textrude
     {
         private static void Main(string[] args)
         {
+            var filesystem = new FileSystemOperations();
             var result = Parser.Default
                 .ParseArguments(args,
                     typeof(CmdRender.Options),
                     typeof(CmdTest.Options)
                 )
                 .WithParsed<CmdTest.Options>(CmdTest.Run)
-                .WithParsed<CmdRender.Options>(CmdRender.Run);
+                .WithParsed<CmdRender.Options>(o => CmdRender.Run(o, filesystem));
         }
     }
 }
