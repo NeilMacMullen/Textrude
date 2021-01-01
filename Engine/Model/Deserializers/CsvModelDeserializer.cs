@@ -6,6 +6,9 @@ using CsvHelper;
 
 namespace Engine.Model.Deserializers
 {
+    /// <summary>
+    ///     Deseriazes a CSV file
+    /// </summary>
     public class CsvModelDeserializer : IModelDeserializer
     {
         public Model Deserialize(string input)

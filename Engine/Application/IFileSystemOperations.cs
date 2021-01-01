@@ -2,6 +2,9 @@
 
 namespace Engine.Application
 {
+    /// <summary>
+    ///     Provides an abstraction of the filesystem to facilitate testing
+    /// </summary>
     public interface IFileSystemOperations
     {
         public bool Exists(string path);

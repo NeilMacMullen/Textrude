@@ -3,6 +3,9 @@ using YamlDotNet.Serialization;
 
 namespace Engine.Model.Deserializers
 {
+    /// <summary>
+    ///     Deserializer for YAML
+    /// </summary>
     public class YamlModelDeserializer : IModelDeserializer
     {
         public Model Deserialize(string input)

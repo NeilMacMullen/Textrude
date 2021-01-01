@@ -7,17 +7,33 @@ using Scriban.Runtime;
 
 namespace Engine.Application
 {
+    /// <summary>
+    ///     Locates and loads 'included' scripts for  the template
+    /// </summary>
     public class ScriptLoader : ITemplateLoader
     {
+        /// <summary>
+        ///     The underlying file system
+        /// </summary>
         private readonly IFileSystemOperations _filesystem;
 
-        public List<string> IncludePaths = new();
+        /// <summary>
+        ///     List of folders in priority order
+        /// </summary>
+        private readonly List<string> _includePaths = new();
 
         public ScriptLoader(IFileSystemOperations filesystem) => _filesystem = filesystem;
 
+        /// <summary>
+        ///     Resolve the path for the specified filename
+        /// </summary>
+        /// <remarks>
+        ///     Searches through all available folders to try and locate the
+        ///     desired file
+        /// </remarks>
         public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
         {
-            foreach (var i in IncludePaths)
+            foreach (var i in _includePaths)
             {
                 var path = Path.Combine(i, templateName);
                 if (_filesystem.Exists(path))
@@ -37,7 +53,7 @@ namespace Engine.Application
 
         public void AddIncludePath(string path)
         {
-            IncludePaths.Add(path);
+            _includePaths.Add(path);
         }
     }
 }

@@ -1,11 +1,17 @@
 ﻿namespace Engine.Application
 {
+    /// <summary>
+    ///     Supported Model file formats
+    /// </summary>
     public enum ModelFormat
     {
         Json,
         Csv,
         Yaml,
-        Auto,
+
+        /// <summary>
+        ///     File will be read as an array of lines
+        /// </summary>
         Line
     }
 }

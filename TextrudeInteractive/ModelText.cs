@@ -2,7 +2,10 @@
 
 namespace TextrudeInteractive
 {
-    public class ModelText
+    /// <summary>
+    ///     Holds text that can be parsed to become a Model
+    /// </summary>
+    public record ModelText
     {
         public ModelText(string text, ModelFormat format)
         {
@@ -10,6 +13,9 @@ namespace TextrudeInteractive
             Format = format;
         }
 
+        /// <summary>
+        ///     Useful default object
+        /// </summary>
         public static ModelText EmptyYaml { get; } = new(string.Empty, ModelFormat.Yaml);
 
 

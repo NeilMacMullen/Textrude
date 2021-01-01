@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System;
+using CommandLine;
 
 namespace Textrude
 {
@@ -6,12 +7,13 @@ namespace Textrude
     {
         public static void Run(Options o)
         {
+            Console.WriteLine("Textrude homepage:  https://github.com/NeilMacMullen/Textrude");
+            Console.WriteLine("Scriban language docs:  https://github.com/scriban/scriban/blob/master/doc/language.md");
         }
 
         [Verb("test")]
         public class Options
         {
-            [Option(Required = true)] public string Model { get; set; } = string.Empty;
         }
     }
 }

@@ -67,6 +67,7 @@ namespace Engine.Model.Helpers
                 case JTokenType.Date:
                     return p.Value<DateTime>();
 /*
+                Unused types...
                 case JTokenType.None:
                 case JTokenType.Constructor:
                 case JTokenType.Property:

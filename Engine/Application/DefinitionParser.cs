@@ -4,27 +4,47 @@ using System.Linq;
 
 namespace Engine.Application
 {
+    /// <summary>
+    ///     Provides parsing for user-supplied definitions
+    /// </summary>
+    /// <remarks>
+    ///     The application allows the user to import definitions into the template context.
+    ///     This is done by supplying assignments in the format
+    ///     name=value
+    ///     The parser trims names but NOT values.  (This policy may change)
+    ///     Empty assignments are allowed; i.e.
+    ///     'def=' is a valid assignment and will result in def having the empty string as a value.
+    /// </remarks>
     public static class DefinitionParser
     {
+        /// <summary>
+        ///     Parse a single assignment
+        /// </summary>
         private static string[] SplitToken(string str)
         {
-            var separator = str.IndexOf('=');
+            var separatorIndex = str.IndexOf('=');
 
-            if (separator <= 0 || separator >= str.Length)
+            if (separatorIndex <= 0)
                 throw new ArgumentException($"'{str}' is not a valid definition");
 
-            var id = str.Substring(0, separator).Trim();
+            var id = str.Substring(0, separatorIndex).Trim();
 
             if (id.Length <= 0)
                 throw new ArgumentException($"'{str}' is not a valid definition");
 
-            return new[] {id, str.Substring(separator + 1)};
+            return new[] {id, str.Substring(separatorIndex + 1)};
         }
 
-        public static Dictionary<string, string> CreateDefinitions(IEnumerable<string> rawDefinitions)
+        /// <summary>
+        ///     Parse a set of assigments and return them as a dictionary
+        /// </summary>
+        /// <remarks>
+        ///     Models can accept dictionaries directly so that's our preferred output format
+        /// </remarks>
+        public static Dictionary<string, string> CreateDefinitions(IEnumerable<string> definitionAssignments)
         {
             var definitions =
-                rawDefinitions
+                definitionAssignments
                     .Select(SplitToken)
                     .ToArray();
             var duplicates = definitions.Select(a => a[0]).GroupBy(n => n)

@@ -6,46 +6,75 @@ using Engine.Application;
 
 namespace Textrude
 {
+    /// <summary>
+    ///     Renders a template based on the supplied parameters
+    /// </summary>
     public class CmdRender
     {
-        public static void Run(Options options, IFileSystemOperations filesystem)
+        private readonly IFileSystemOperations _fileSystem;
+        private readonly Options _options;
+        private readonly Helpers _sys;
+
+        public CmdRender(Options options, IFileSystemOperations fileSystem, Helpers sys)
         {
-            var outputShouldBeChecked = !string.IsNullOrWhiteSpace(options.Output) && filesystem.Exists(options.Output);
-            if (outputShouldBeChecked)
+            _options = options;
+            _fileSystem = fileSystem;
+            _sys = sys;
+        }
+
+        private DateTime[] GetLastWrittenDates(IEnumerable<string> files, DateTime fallback, bool allowNotExist)
+        {
+            DateTime GetLastWriteTime(string file)
             {
-                var modelDates = options.Models
-                    .Select(m => Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(m),
-                        $"Unable to open model file {m}"))
-                    .ToArray();
-                var modelLastWritten = modelDates.Any() ? modelDates.Max() : DateTime.MaxValue;
+                if (allowNotExist && !_fileSystem.Exists(file))
+                    return fallback;
 
-                var templateLastWritten = Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(options.Template),
-                    $"Unable to open template file {options.Template}");
-                var outputLastWritten = Helpers.TryOrQuit(() => filesystem.GetLastWriteTimeUtc(options.Output),
-                    $"Unable to open output file {options.Output}");
-
-                //check if there is nothing to do...
-                if (outputLastWritten > templateLastWritten && outputLastWritten > modelLastWritten)
-                    return;
+                return _fileSystem.GetLastWriteTimeUtc(file);
             }
 
-            var template = Helpers.TryOrQuit(() => filesystem.ReadAllText(options.Template),
-                $"Unable to read template file {options.Template}");
+            return files
+                .Select(f =>
+                    _sys.GetOrQuit(() => GetLastWriteTime(f), $"Missing/inaccessible file '{f}'")
+                ).Append(fallback)
+                .ToArray();
+        }
 
-            var engine = new ApplicationEngine(filesystem)
-                .WithDefinitions(options.Definitions)
+        private string TryReadFile(string path)
+        {
+            return _sys.GetOrQuit(() => _fileSystem.ReadAllText(path),
+                $"Unable to read file {_options.Template}");
+        }
+
+        public void Run()
+        {
+            var lastModelDate = GetLastWrittenDates(_options.Models, DateTime.MinValue, false).Max();
+            var earliestOuputDate = GetLastWrittenDates(_options.Output, DateTime.MinValue, true).Min();
+            var templateDate = GetLastWrittenDates(new[] {_options.Template}, DateTime.MinValue, false).Max();
+
+            var lastInputDate = lastModelDate > templateDate ? lastModelDate : templateDate;
+
+
+            //check if there is nothing to do...
+            if (_options.Lazy && (lastInputDate < earliestOuputDate))
+                return;
+
+
+            var template = TryReadFile(_options.Template);
+
+            var engine = new ApplicationEngine(_fileSystem)
+                .WithDefinitions(_options.Definitions)
                 .WithTemplate(template);
 
-            foreach (var modelPath in options.Models)
+            foreach (var modelPath in _options.Models)
             {
-                var modelText = Helpers.TryOrQuit(() => filesystem.ReadAllText(modelPath),
-                    $"Unable to read model file {modelPath}");
-
+                var modelText = TryReadFile(modelPath);
                 var format = ModelDeserializerFactory.FormatFromExtension(modelPath);
                 engine = engine.WithModel(modelText, format);
             }
 
-            if (!options.HideEnvironment)
+            engine = engine.WithIncludePaths(_options.Include);
+
+            if (!_options.HideEnvironment)
                 engine = engine.WithEnvironmentVariables();
 
             engine.Render();
@@ -56,26 +85,57 @@ namespace Textrude
             }
 
             if (engine.HasErrors)
-                Helpers.TryOrQuit<int>(() => throw new ApplicationException(), "");
+                _sys.GetOrQuit<int>(() => throw new ApplicationException(), "");
 
-            var output = engine.Output;
-            if (!string.IsNullOrWhiteSpace(options.Output))
-                filesystem.WriteAllText(options.Output, output);
-            else Console.WriteLine(output);
+            var outputFiles = _options.Output.ToArray();
+            var outputFileCount = outputFiles.Length;
+            if (outputFileCount != 0)
+            {
+                var outputs = engine.GetOutput(outputFileCount);
+                for (var i = 0; i < outputFileCount; i++)
+                {
+                    var outputFile = outputFiles[i];
+                    var text = outputs[i];
+                    _sys.TryOrQuit(() => _fileSystem.WriteAllText(outputFile, text),
+                        $"Unable to write output to {outputFile}");
+                }
+            }
+            else
+            {
+                Console.WriteLine(engine.Output);
+            }
+        }
+
+        public static void Run(Options options, IFileSystemOperations filesystem, Helpers sys)
+        {
+            var cmd = new CmdRender(options, filesystem, sys);
+            cmd.Run();
         }
 
         [Verb("render")]
         public class Options
         {
-            [Option(Required = true)] public IEnumerable<string> Models { get; set; } = Enumerable.Empty<string>();
+            [Option(HelpText = "list of model files")]
+            public IEnumerable<string> Models { get; set; } = Enumerable.Empty<string>();
 
-            [Option(Required = true)] public string Template { get; set; } = string.Empty;
+            [Option(Required = true, HelpText = "template file")]
+            public string Template { get; set; } = string.Empty;
 
-            [Option] public string Output { get; set; } = string.Empty;
+            [Option(HelpText = "list of output files.  If omitted, output will be written to console")]
+            public IEnumerable<string> Output { get; set; } = Enumerable.Empty<string>();
 
-            [Option] public IEnumerable<string> Definitions { get; set; } = Enumerable.Empty<string>();
+            [Option(HelpText = "list of definitions")]
+            public IEnumerable<string> Definitions { get; set; } = Enumerable.Empty<string>();
 
-            [Option] public bool HideEnvironment { get; set; }
+            [Option(HelpText = "list of additional include paths")]
+            public IEnumerable<string> Include { get; set; } = Enumerable.Empty<string>();
+
+            [Option(HelpText = "prevent environment variables being passed to the template")]
+            public bool HideEnvironment { get; set; }
+
+
+            [Option(HelpText = "Only write output files if models/template have been modified since last render pass")]
+            public bool Lazy { get; set; }
         }
     }
 }

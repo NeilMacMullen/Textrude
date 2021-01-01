@@ -4,6 +4,9 @@ using Engine.Model.Deserializers;
 
 namespace Engine.Application
 {
+    /// <summary>
+    ///     Factory to help us "do the right thing" depending on the format of the model
+    /// </summary>
     public static class ModelDeserializerFactory
     {
         private static readonly Dictionary<ModelFormat, IModelDeserializer>
@@ -19,8 +22,12 @@ namespace Engine.Application
 
         public static string Serialise(object o, ModelFormat type) => Fetch(type).Serialize(o);
 
+        /// <summary>
+        ///     Figure out the likely format of a model from the extension of the file that contains it
+        /// </summary>
         public static ModelFormat FormatFromExtension(string extension)
         {
+            //TODO_- make the deserializers provide their own list of supported extensions
             foreach (var s in KnownDeserializers.Keys)
             {
                 if (extension.ToUpperInvariant().EndsWith(s.ToString().ToUpperInvariant()))

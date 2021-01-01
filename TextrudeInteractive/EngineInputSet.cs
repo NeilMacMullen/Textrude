@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace TextrudeInteractive
 {
+    /// <summary>
+    ///     Holds all the input necessary to run a template rendering pass
+    /// </summary>
+    /// <remarks> </remarks>
     public record EngineInputSet
     {
         public EngineInputSet(string template, ModelText[] models, string definitionsText,
@@ -21,7 +25,10 @@ namespace TextrudeInteractive
                 StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>
+        /// </summary>
         public string[] Definitions { get; init; } = Array.Empty<string>();
+
         public string[] IncludePaths { get; init; } = Array.Empty<string>();
 
         public ModelText[] Models { get; init; } = Array.Empty<ModelText>();
