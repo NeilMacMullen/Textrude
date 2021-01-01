@@ -9,6 +9,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
 
@@ -51,7 +52,7 @@ namespace TextrudeInteractive
                 .ObserveOn(NewThreadScheduler.Default)
                 .Select(Render)
                 .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(HandleNewText);
+                .Subscribe(HandleRenderResults);
             _uiIsReady = true;
         }
 
@@ -81,7 +82,7 @@ namespace TextrudeInteractive
             return engine.Render();
         }
 
-        private void HandleNewText(ApplicationEngine engine)
+        private void HandleRenderResults(ApplicationEngine engine)
         {
             var outputs = engine.GetOutput(OutputBoxes.Length);
             for (var i = 0; i < outputs.Length; i++)
@@ -89,7 +90,17 @@ namespace TextrudeInteractive
                 OutputBoxes[i].Text = outputs[i];
             }
 
-            Errors.Text = string.Join(Environment.NewLine, engine.Errors);
+            Errors.Text = $"Completed: {DateTime.Now.ToLongTimeString()}" + Environment.NewLine;
+            if (engine.HasErrors)
+            {
+                Errors.Foreground = Brushes.OrangeRed;
+                Errors.Text += string.Join(Environment.NewLine, engine.Errors);
+            }
+            else
+            {
+                Errors.Foreground = Brushes.GreenYellow;
+                Errors.Text += "No errors";
+            }
         }
 
 

@@ -159,12 +159,14 @@
                     <TabItem Header="output1">
 
                         <TextBox DockPanel.Dock="Bottom" Name="OutputText1"
-                                 IsReadOnly="True" />
+                                 IsReadOnly="True"
+                                 Foreground="GreenYellow"/>
                     </TabItem>
                     <TabItem Header="output2">
 
                         <TextBox DockPanel.Dock="Bottom" Name="OutputText2"
-                                 IsReadOnly="True" />
+                                 IsReadOnly="True" 
+                                 Foreground="GreenYellow"/>
                     </TabItem>
                 </TabControl>
 
