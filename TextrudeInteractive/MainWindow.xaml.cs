@@ -9,15 +9,15 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using Engine.Application;
+using MaterialDesignExtensions.Controls;
 
 namespace TextrudeInteractive
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MaterialWindow
     {
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
@@ -179,16 +179,15 @@ namespace TextrudeInteractive
             Process.Start(ps);
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            OpenBrowserTo(e.Uri);
-
-            e.Handled = true;
-        }
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
             OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude"));
+        }
+
+        private void ShowLanguageRef(object sender, RoutedEventArgs e)
+        {
+            OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
         }
     }
 }

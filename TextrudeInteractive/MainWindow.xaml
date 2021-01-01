@@ -1,30 +1,43 @@
-﻿<Window x:Class="TextrudeInteractive.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TextrudeInteractive"
-        mc:Ignorable="d"
-        Title="Textrude Interactive" Height="800" Width="1000"
-        Closing="MainWindow_OnClosing">
+﻿<controls:MaterialWindow x:Class="TextrudeInteractive.MainWindow"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:local="clr-namespace:TextrudeInteractive"
+                         mc:Ignorable="d"
+                         Title="Textrude Interactive" Height="800" Width="1000"
+                         Closing="MainWindow_OnClosing"
+                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                         TextElement.FontWeight="Regular"
+                         TextElement.FontSize="13"
+                         TextOptions.TextFormattingMode="Ideal"
+                         TextOptions.TextRenderingMode="Auto"
+                         Background="{DynamicResource MaterialDesignPaper}"
+                         FontFamily="{DynamicResource MaterialDesignFont}"
+
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
     <Window.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="AcceptsReturn" Value="True"/>
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Margin" Value="2"  />
-</Style>
-        <Style TargetType="GridSplitter">
-            <Setter Property="Background" Value="Gray"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
         </Style>
-        <Style TargetType="TabControl">
-            <Setter Property="Margin" Value="2"/>
+
+        <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+            <Setter Property="Foreground" Value="Azure" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
         </Style>
-        <Style TargetType="GroupBox">
-            <Setter Property="Margin" Value="2"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+            <Setter Property="FontFamily" Value="Consolas" />
+
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="BorderBrush" Value="DarkSlateGray" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="2" />
+
         </Style>
     </Window.Resources>
     <DockPanel>
@@ -35,7 +48,8 @@
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="Home page" Click="ShowAbout"/>
+                <MenuItem Header="Home page..." Click="ShowAbout" />
+                <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom" Margin="2">
@@ -47,208 +61,126 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="3" />
-
+                    <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <DockPanel Grid.Column="0">
 
 
-                    <TabControl>
-                        <TabItem Header="model">
-                            <DockPanel>
-                                <Expander  DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
-                                    <TextBlock FontStyle="Italic" Margin="2">
-                                        <Run Text="Model data is available in the template using:"/>
-                                        <LineBreak/>
-                                        <Run Text="  {{model}}" FontWeight="Bold"/>
-                                        <LineBreak/>
-                                        <Run Text="  {{model.propertyName}}" FontWeight="Bold"/>
-                                        <LineBreak/>
-                                        <Run Text="  {{model[0].propertyName}}" FontWeight="Bold"/>
-                                        <LineBreak/>
-                                        <Run Text="  etc"/>
-                                    </TextBlock>
-                                </Expander>
-                               
+                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
+                    <TabItem Header="models">
+
+                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}"  >
+                            <TabItem Header="model">
                                 <DockPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                                    <Label>Format:</Label>
-                                    <ComboBox Name="format0" Width="100" SelectionChanged="OnModelFormatChanged" />
-                                </StackPanel>
-                                <TextBox Name="ModelTextBox0"
-                                         DockPanel.Dock="Bottom"
-                                         Foreground="DarkBlue"
-                                         Background="Beige"
-                                          TextChanged="OnModelTextChanged"
-                                         />
 
-                            </DockPanel>
 
-                            </DockPanel>
+                                    <ComboBox Name="format0" SelectionChanged="OnModelFormatChanged"
+                                              DockPanel.Dock="Top" />
 
-                        </TabItem>
-                        <TabItem Header="model1">
-                            <DockPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                                    <Label>Format:</Label>
-                                    <ComboBox Name="format1" Width="100" SelectionChanged="OnModelFormatChanged" />
-                                </StackPanel>
-                                <TextBox Name="ModelTextBox1"
-                                         TextChanged="OnModelTextChanged"
-                                         DockPanel.Dock="Bottom"
-                                         Foreground="DarkBlue"
-                                         Background="Beige"
-                                         />
+                                    <TextBox Name="ModelTextBox0"
+                                             DockPanel.Dock="Bottom"
 
-                            </DockPanel>
-                        </TabItem>
-                        <TabItem Header="model2">
-                            <DockPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                                    <Label>Format:</Label>
-                                    <ComboBox Name="format2" Width="100" SelectionChanged="OnModelFormatChanged" />
-                                </StackPanel>
-                                <TextBox Name="ModelTextBox2"
-                                         TextChanged="OnModelTextChanged"
-                                         DockPanel.Dock="Bottom"
-                                         Foreground="DarkBlue"
-                                         Background="Beige"
-                                         />
+                                             TextChanged="OnModelTextChanged"
+                                             Foreground="LightSeaGreen"
+                                             />
 
-                            </DockPanel>
-                        </TabItem>
-                        <TabItem Header="Definitions">
-                            <DockPanel>
-                                <Expander  DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
-                                <TextBlock FontStyle="Italic" Margin="2">
-                                    <Run Text="Enter definitions 1-per-line:-"/>
-<LineBreak/>
-                                    <Run Text="  build=DEBUG" FontWeight="Bold"/>
-                                    <LineBreak/>
-                                    <Run Text="  Platform=Win32" FontWeight="Bold"/>
-                                    <LineBreak/>
-                                    <Run Text="Definitions are available from the def object.  Eg:"/>
-                                    <LineBreak/>
-                                    <Run Text=" {{def.build}}" FontWeight="Bold"/>
-                                </TextBlock>
-                                </Expander>
+
+                                </DockPanel>
+
+                            </TabItem>
+                            <TabItem Header="model1">
+                                <DockPanel>
+                                    <ComboBox Name="format1" SelectionChanged="OnModelFormatChanged"
+                                              DockPanel.Dock="Top" />
+                                    <TextBox Name="ModelTextBox1"
+                                             TextChanged="OnModelTextChanged"
+                                             DockPanel.Dock="Bottom"
+                                             Foreground="LightSeaGreen"/>
+
+                                </DockPanel>
+                            </TabItem>
+                            <TabItem Header="model2">
+                                <DockPanel>
+
+                                    <ComboBox Name="format2" SelectionChanged="OnModelFormatChanged"
+                                              DockPanel.Dock="Top" />
+                                    <TextBox Name="ModelTextBox2"
+                                             TextChanged="OnModelTextChanged"
+                                             DockPanel.Dock="Bottom"
+                                             Foreground="LightSeaGreen"/>
+
+                                </DockPanel>
+                            </TabItem>
+                        </TabControl>
+                    </TabItem>
+                    <TabItem Header="other">
+
+                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
+                            <TabItem Header="definitions">
                                 <TextBox Name="DefinitionsTextBox"
-                                         TextChanged="OnModelTextChanged"
-                                         Foreground="DarkCyan"
-                                         Background="LemonChiffon"
-                                />
-
-                            </DockPanel>
-
-                        </TabItem>
-                        <TabItem Header="Include">
-                            <DockPanel>
-                                <Expander DockPanel.Dock="Top" ExpandDirection="Down" IsExpanded="True">
-                                <TextBlock FontStyle="Italic" Margin="2">
-                                <Run Text="Enter additional include-folders 1-per-line.  Eg"/>
-                                <LineBreak/>
-                                <Run Text="   c:/work/myscripts" FontWeight="Bold"/>
-                                <LineBreak/>
-                                <Run Text="   c:/lib/custom" FontWeight="Bold"/>
-                                <LineBreak/>
-                                <Run Text="then use:" />
-                                <LineBreak/>
-                                <Run Text="   {{include 'script.sbn'}}" FontWeight="Bold"/>
-                                <LineBreak/>
-                                <Run Text="from the main template" />
-                            </TextBlock>
-                                </Expander>
+                                         TextChanged="OnModelTextChanged" 
+                                         Foreground="Yellow"/>
+                            </TabItem>
+                            <TabItem Header="include folders">
                                 <TextBox Name="IncludesTextBox"
-                                     TextChanged="OnModelTextChanged"
-                                     Foreground="DarkCyan"
-                                     Background="LemonChiffon"
-                            />
-
-                            </DockPanel>
-
-                        </TabItem>
-                    </TabControl>
+                                         TextChanged="OnModelTextChanged" 
+                                         Foreground="Pink"/>
+                            </TabItem>
+                        </TabControl>
+                    </TabItem>
 
 
-                </DockPanel>
+                </TabControl>
 
 
                 <GridSplitter Grid.Column="1" />
 
-                <GroupBox Grid.Column="2" Header="Template">
-                    <DockPanel>
-                        <TextBlock DockPanel.Dock="Top" Margin="2">           
-                            <Hyperlink NavigateUri="https://github.com/scriban/scriban/blob/master/doc/language.md" RequestNavigate="Hyperlink_RequestNavigate">
-                               Scriban Language reference
-                            </Hyperlink>
-
-                        </TextBlock>
+                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
+                    <TabItem Header="Template">
                         <TextBox Name="TemplateTextBox"
                                  TextChanged="OnModelTextChanged"
-                                 Foreground="DarkRed"
-                                 Background="BurlyWood"
-                        />
-                    </DockPanel>
-                </GroupBox>
+                                 Foreground="White"/>
+                    </TabItem>
+                </TabControl>
 
-                <GridSplitter Grid.Column="3"/>
-                <DockPanel Grid.Column="4">
-                  
-                    <TabControl >
-                        <TabItem Header="output">
-                            <DockPanel>
-                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
-                                    <Run Text="Default output:"/>
-                                </TextBlock>
-                                <TextBox DockPanel.Dock="Bottom" Name="OutputText0" 
-                                         IsReadOnly="True"
-                                         Background="LightSteelBlue" />
-                            </DockPanel>
-                        </TabItem>
-                        <TabItem Header="output1">
-                            <DockPanel>
-                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
-                                    <Run Text="Use:"/>
-                                    <LineBreak/>
-                                    <Run Text=" {{capture output1}} ... {{end}}" FontWeight="Bold"/>
-                                </TextBlock>
-                                <TextBox DockPanel.Dock="Bottom" Name="OutputText1" 
-                                         IsReadOnly="True"
-                                         Background="LightSteelBlue" />
-                            </DockPanel>
-                        </TabItem>
-                        <TabItem Header="output2">
-                            <DockPanel>
-                                <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="2">
-                                    <Run Text="Use:"/>
-                                    <LineBreak/>
-                                    <Run Text=" {{capture output2}} ... {{end}}" FontWeight="Bold"/>
-                                </TextBlock>
-                                <TextBox DockPanel.Dock="Bottom" Name="OutputText2" 
-                                         IsReadOnly="True"
-                                         Background="LightSteelBlue" />
-                            </DockPanel>
-                        </TabItem>
-                    </TabControl>
-                </DockPanel>
-               
+
+                <GridSplitter Grid.Column="3" />
+
+
+                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4">
+                    <TabItem Header="output">
+
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText0"
+                                 IsReadOnly="True"
+                                 Foreground="GreenYellow" />
+                    </TabItem>
+                    <TabItem Header="output1">
+
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText1"
+                                 IsReadOnly="True" />
+                    </TabItem>
+                    <TabItem Header="output2">
+
+                        <TextBox DockPanel.Dock="Bottom" Name="OutputText2"
+                                 IsReadOnly="True" />
+                    </TabItem>
+                </TabControl>
+
 
             </Grid>
-            <GridSplitter Grid.Row="1"/>
-            <GroupBox Grid.Row="2" Header="Errors">
+            <GridSplitter Grid.Row="1" />
 
-                <TextBox Name="Errors" 
-                         Foreground="Red"
-                         Background="LightPink"
-                         IsReadOnly="True"
-                       />
 
-            </GroupBox>
+            <TextBox Grid.Row="2" Name="Errors"
+                     FontWeight="Normal"
+                     IsReadOnly="True"
+                     Foreground="OrangeRed"
+                     FontSize="16" />
+
         </Grid>
 
     </DockPanel>
 
-</Window>
+</controls:MaterialWindow>
