@@ -37,7 +37,7 @@ namespace Tests
         {
             _options.Template = "nofile";
             Action act = () => Run();
-            act.Should().Throw<ApplicationException>().WithMessage("nofile");
+            act.Should().Throw<ApplicationException>().WithMessage("*missing*nofile*");
         }
 
         [TestMethod]

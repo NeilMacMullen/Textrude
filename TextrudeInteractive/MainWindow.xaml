@@ -34,7 +34,9 @@
                 <MenuItem Click="SaveProject" Header="Save" />
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />
             </MenuItem>
-            <MenuItem Header="_Help" />
+            <MenuItem Header="_Help">
+                <MenuItem Header="Home page" Click="ShowAbout"/>
+            </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom" Margin="2">
             <Grid.RowDefinitions>
@@ -182,6 +184,7 @@
                             <Hyperlink NavigateUri="https://github.com/scriban/scriban/blob/master/doc/language.md" RequestNavigate="Hyperlink_RequestNavigate">
                                Scriban Language reference
                             </Hyperlink>
+
                         </TextBlock>
                         <TextBox Name="TemplateTextBox"
                                  TextChanged="OnModelTextChanged"

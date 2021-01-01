@@ -12,9 +12,9 @@ namespace Textrude
             var result = Parser.Default
                 .ParseArguments(args,
                     typeof(CmdRender.Options),
-                    typeof(CmdTest.Options)
+                    typeof(CmdInfo.Options)
                 )
-                .WithParsed<CmdTest.Options>(CmdTest.Run)
+                .WithParsed<CmdInfo.Options>(CmdInfo.Run)
                 .WithParsed<CmdRender.Options>(o => CmdRender.Run(o, filesystem, sys));
         }
     }

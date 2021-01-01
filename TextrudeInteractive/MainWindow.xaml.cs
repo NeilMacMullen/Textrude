@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -32,6 +33,7 @@ namespace TextrudeInteractive
         public MainWindow()
         {
             InitializeComponent();
+            SetTitle(string.Empty);
             formats = new[] {format0, format1, format2};
             modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
             OutputBoxes = new[] {OutputText0, OutputText1, OutputText2};
@@ -51,6 +53,17 @@ namespace TextrudeInteractive
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleNewText);
             _uiIsReady = true;
+        }
+
+        public void SetTitle(string path)
+        {
+#if HASGITVERSION
+
+            var file = Path.GetFileNameWithoutExtension(path);
+            var title =
+                $"Textrude Interactive {GitVersionInformation.SemVer} ({GitVersionInformation.CommitDate}) {file}";
+            Title = title;
+#endif
         }
 
         private ApplicationEngine Render(EngineInputSet gi)
@@ -156,17 +169,26 @@ namespace TextrudeInteractive
             IncludesTextBox.Text = string.Join(Environment.NewLine, gi.IncludePaths);
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        private void OpenBrowserTo(Uri uri)
         {
-            var u = e.Uri.AbsoluteUri;
-
-            var ps = new ProcessStartInfo(u)
+            var ps = new ProcessStartInfo(uri.AbsoluteUri)
             {
                 UseShellExecute = true,
                 Verb = "open"
             };
             Process.Start(ps);
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            OpenBrowserTo(e.Uri);
+
             e.Handled = true;
+        }
+
+        private void ShowAbout(object sender, RoutedEventArgs e)
+        {
+            OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude"));
         }
     }
 }

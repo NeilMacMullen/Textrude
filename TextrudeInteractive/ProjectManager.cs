@@ -35,6 +35,7 @@ namespace TextrudeInteractive
                 var proj = JsonConvert.DeserializeObject<TextrudeProject>(text);
                 _owner.SetUI(proj.EngineInput);
                 _currentProjectPath = dlg.FileName;
+                _owner.SetTitle(_currentProjectPath);
             }
         }
 

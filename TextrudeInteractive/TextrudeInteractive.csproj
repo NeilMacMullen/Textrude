@@ -6,6 +6,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.5.1">
       <PrivateAssets>all</PrivateAssets>
