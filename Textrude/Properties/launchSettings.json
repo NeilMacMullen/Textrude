@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Textrude": {
+      "commandName": "Project",
+      "commandLineArgs": "info"
+    }
+  }
+}

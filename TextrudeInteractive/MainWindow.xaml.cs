@@ -7,6 +7,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,6 +31,7 @@ namespace TextrudeInteractive
 
         private readonly TextBox[] modelBoxes;
         private readonly TextBox[] OutputBoxes;
+        private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
 
         public MainWindow()
         {
@@ -54,6 +56,19 @@ namespace TextrudeInteractive
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleRenderResults);
             _uiIsReady = true;
+            RunBackgroundUpgradeCheck();
+        }
+
+        private void RunBackgroundUpgradeCheck()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    _latestVersion = await UpgradeManager.GetLatestVersion();
+                    await Task.Delay(TimeSpan.FromHours(24));
+                }
+            });
         }
 
         public void SetTitle(string path)
@@ -62,7 +77,7 @@ namespace TextrudeInteractive
 
             var file = Path.GetFileNameWithoutExtension(path);
             var title =
-                $"Textrude Interactive {GitVersionInformation.SemVer} ({GitVersionInformation.CommitDate}) {file}";
+                $"Textrude Interactive {GitVersionInformation.SemVer} : {file}";
             Title = title;
 #endif
         }
@@ -90,7 +105,16 @@ namespace TextrudeInteractive
                 OutputBoxes[i].Text = outputs[i];
             }
 
-            Errors.Text = $"Completed: {DateTime.Now.ToLongTimeString()}" + Environment.NewLine;
+            Errors.Text = string.Empty;
+#if HASGITVERSION
+            if (_latestVersion.Supersedes(GitVersionInformation.SemVer))
+            {
+                Errors.Text =
+                    $"Upgrade to {_latestVersion.Version} available - please visit {UpgradeManager.ReleaseSite}" +
+                    Environment.NewLine;
+            }
+#endif
+            Errors.Text += $"Completed: {DateTime.Now.ToLongTimeString()}" + Environment.NewLine;
             if (engine.HasErrors)
             {
                 Errors.Foreground = Brushes.OrangeRed;

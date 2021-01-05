@@ -14,7 +14,7 @@ namespace Textrude
                     typeof(CmdRender.Options),
                     typeof(CmdInfo.Options)
                 )
-                .WithParsed<CmdInfo.Options>(CmdInfo.Run)
+                .WithParsed<CmdInfo.Options>(o => CmdInfo.Run(o).Wait())
                 .WithParsed<CmdRender.Options>(o => CmdRender.Run(o, filesystem, sys));
         }
     }
