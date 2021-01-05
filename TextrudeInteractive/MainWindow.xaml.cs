@@ -224,5 +224,10 @@ namespace TextrudeInteractive
         {
             OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
         }
+
+        private void NewProject(object sender, RoutedEventArgs e)
+        {
+            _projectManager.NewProject();
+        }
     }
 }

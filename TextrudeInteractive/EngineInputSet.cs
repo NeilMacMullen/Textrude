@@ -9,6 +9,9 @@ namespace TextrudeInteractive
     /// <remarks> </remarks>
     public record EngineInputSet
     {
+        public static EngineInputSet EmptyYaml =
+            new(string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
+
         public EngineInputSet(string template, ModelText[] models, string definitionsText,
             string includes)
         {
@@ -25,6 +28,11 @@ namespace TextrudeInteractive
                 StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         }
 
+        //Required for deserialisation
+        public EngineInputSet()
+        {
+        }
+
         /// <summary>
         /// </summary>
         public string[] Definitions { get; init; } = Array.Empty<string>();
@@ -34,8 +42,5 @@ namespace TextrudeInteractive
         public ModelText[] Models { get; init; } = Array.Empty<ModelText>();
 
         public string Template { get; init; } = string.Empty;
-
-        public static EngineInputSet EmptyYaml { get; } =
-            new(string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
     }
 }

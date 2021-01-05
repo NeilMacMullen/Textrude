@@ -43,6 +43,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_Project">
+                <MenuItem Click="NewProject" Header="New" />
                 <MenuItem Click="LoadProject" Header="Load" />
                 <MenuItem Click="SaveProject" Header="Save" />
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />

@@ -1,17 +1,22 @@
 {
   "Description": "",
   "EngineInput": {
+    "Definitions": [],
+    "IncludePaths": [],
     "Models": [
       {
         "Format": 2,
-        "Text": "a test"
+        "Text": ""
+      },
+      {
+        "Format": 2,
+        "Text": ""
+      },
+      {
+        "Format": 2,
+        "Text": ""
       }
     ],
-    "Template": "temp",
-    "Definitions": [
-      "color=blue",
-      "size=large"
-    ],
-    "IncludePaths": []
+    "Template": ""
   }
 }

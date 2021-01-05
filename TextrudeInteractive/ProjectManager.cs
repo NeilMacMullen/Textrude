@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text.Json;
+using System.Windows;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 
 namespace TextrudeInteractive
 {
@@ -31,11 +33,17 @@ namespace TextrudeInteractive
 
             if (dlg.ShowDialog(_owner) == true)
             {
-                var text = File.ReadAllText(dlg.FileName);
-                var proj = JsonConvert.DeserializeObject<TextrudeProject>(text);
-                _owner.SetUI(proj.EngineInput);
-                _currentProjectPath = dlg.FileName;
-                _owner.SetTitle(_currentProjectPath);
+                try
+                {
+                    var text = File.ReadAllText(dlg.FileName);
+                    var proj = JsonSerializer.Deserialize<TextrudeProject>(text);
+                    _currentProjectPath = dlg.FileName;
+                    UpdateUI(proj);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(_owner, "Error - unable to open project");
+                }
             }
         }
 
@@ -45,8 +53,17 @@ namespace TextrudeInteractive
                 SaveProjectAs();
             else
             {
-                var text = JsonConvert.SerializeObject(CreateProject(), Formatting.Indented);
-                File.WriteAllText(_currentProjectPath, text);
+                try
+                {
+                    var o = new JsonSerializerOptions {WriteIndented = true};
+                    var text = JsonSerializer.Serialize(CreateProject(), o);
+
+                    File.WriteAllText(_currentProjectPath, text);
+                }
+                catch
+                {
+                    MessageBox.Show(_owner, "Error - unable to save project");
+                }
             }
         }
 
@@ -58,6 +75,20 @@ namespace TextrudeInteractive
                 _currentProjectPath = dlg.FileName;
                 SaveProject();
             }
+        }
+
+        public void NewProject()
+        {
+            _currentProjectPath = string.Empty;
+            var proj = new TextrudeProject();
+            UpdateUI(proj);
+        }
+
+        private void UpdateUI(TextrudeProject project)
+        {
+            _owner.SetUI(project.EngineInput);
+
+            _owner.SetTitle(_currentProjectPath);
         }
     }
 }
