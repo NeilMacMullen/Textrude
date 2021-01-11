@@ -1,3 +1,4 @@
+using System;
 using Engine.Application;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,6 +35,15 @@ namespace Tests
                 )
                 .Trim()
                 .Should().Be("4");
+        }
+
+        [TestMethod]
+        public void MiscExtensionAreLoaded()
+        {
+            var guid = Render(
+                @"{{misc.new_guid}}"
+            );
+            Guid.TryParse(guid, out var _).Should().BeTrue();
         }
     }
 }

@@ -175,6 +175,9 @@ namespace Engine.Application
             Add(ExtensionCache.KnownAssemblies.Debug,
                 ExtensionCache.GetDebugMethods());
 
+            Add(ExtensionCache.KnownAssemblies.Misc,
+                ExtensionCache.GetMiscMethods());
+
             Add(ExtensionCache.KnownAssemblies.Humanizr,
                 ExtensionCache.GetHumanizrMethods());
 

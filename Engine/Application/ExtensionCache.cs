@@ -11,7 +11,8 @@ namespace Engine.Application
         public enum KnownAssemblies
         {
             Debug,
-            Humanizr
+            Humanizr,
+            Misc
         }
 
         private static readonly Dictionary<KnownAssemblies, ScriptObject> _cachedResults =
@@ -49,6 +50,12 @@ namespace Engine.Application
         public static ScriptObject GetDebugMethods()
         {
             return GetOrCreate(KnownAssemblies.Debug, () => new[] {typeof(DebugMethods)});
+        }
+
+
+        public static ScriptObject GetMiscMethods()
+        {
+            return GetOrCreate(KnownAssemblies.Misc, () => new[] {typeof(MiscMethods)});
         }
 
         public static ScriptObject MakeScriptObject(IEnumerable<Type> types)
