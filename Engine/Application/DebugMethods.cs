@@ -3,7 +3,7 @@
     /// <summary>
     ///     Provides some helpful functions for templates
     /// </summary>
-    public static class HelperFunctions
+    public static class DebugMethods
     {
         /// <summary>
         ///     Use the YAML serializer to dump objects

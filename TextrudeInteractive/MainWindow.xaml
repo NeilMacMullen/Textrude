@@ -51,6 +51,8 @@
             <MenuItem Header="_Help">
                 <MenuItem Header="Home page..." Click="ShowAbout" />
                 <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
+                <Separator/>
+                <MenuItem Header="Report a problem..." Click="NewIssue" />
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom" Margin="2">

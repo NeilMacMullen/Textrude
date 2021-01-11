@@ -9,6 +9,9 @@ namespace Tests
     [TestClass]
     public class TextrudeCliTests
     {
+        private const string modelFile = "model.yaml";
+        private const string outputFile = "output.txt";
+        private const string templateFile = "template.sbn";
         private readonly MockFileSystem _fileSystem = new();
 
         private readonly Helpers _helper = new()
@@ -43,20 +46,42 @@ namespace Tests
         [TestMethod]
         public void SimpleModelGeneratesOutput()
         {
-            AddModel("m.yaml", "A: 123");
+            AddModel(modelFile, "A: 123");
             AddTemplate("{{model.A}} ddd");
-            AddOutputFile("out.txt");
+            AddOutputFile(outputFile);
 
             Run();
-            _fileSystem.ReadAllText("out.txt")
+            _fileSystem.ReadAllText(outputFile)
                 .Should().Be("123 ddd");
+        }
+
+        [TestMethod]
+        public void WhenLazyEngineDoesNotRunUnlessInputTouched()
+        {
+            _options.Lazy = true;
+            AddModel(modelFile, "A: 123");
+            AddTemplate("{{model.A}}");
+            AddOutputFile(outputFile);
+            //create this last so that it post-dates the input
+            _fileSystem.WriteAllText(outputFile, string.Empty);
+
+            Run();
+            _fileSystem.ReadAllText(outputFile).Should().BeEmpty();
+
+            _fileSystem.Touch(modelFile);
+            Run();
+            _fileSystem.ReadAllText(outputFile).Should().Be("123");
+
+            _fileSystem.WriteAllText(templateFile, "abc");
+
+            Run();
+            _fileSystem.ReadAllText(outputFile).Should().Be("abc");
         }
 
         private void AddTemplate(string someText)
         {
-            var fileName = "template.sbn";
-            _fileSystem.WriteAllText(fileName, someText);
-            _options.Template = fileName;
+            _fileSystem.WriteAllText(templateFile, someText);
+            _options.Template = templateFile;
         }
 
         private void AddModel(string fileName, string text)

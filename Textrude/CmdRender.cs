@@ -48,7 +48,7 @@ namespace Textrude
         public void Run()
         {
             var lastModelDate = GetLastWrittenDates(_options.Models, DateTime.MinValue, false).Max();
-            var earliestOuputDate = GetLastWrittenDates(_options.Output, DateTime.MinValue, true).Min();
+            var earliestOuputDate = GetLastWrittenDates(_options.Output, DateTime.MaxValue, true).Min();
             var templateDate = GetLastWrittenDates(new[] {_options.Template}, DateTime.MinValue, false).Max();
 
             var lastInputDate = lastModelDate > templateDate ? lastModelDate : templateDate;

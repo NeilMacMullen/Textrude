@@ -34,6 +34,11 @@ namespace Tests
 
         public string ApplicationFolder() => "exeFolder";
 
+        public void Touch(string path)
+        {
+            WriteAllText(path, ReadAllText(path));
+        }
+
         private record DatedContent
         {
             public readonly string Content;

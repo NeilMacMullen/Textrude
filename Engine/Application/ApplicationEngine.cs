@@ -164,14 +164,23 @@ namespace Engine.Application
         /// <summary>
         ///     Adds some helper methods
         /// </summary>
-        /// TODO - clean this up
         public ApplicationEngine WithHelpers()
         {
-            var scriptObject1 = new ScriptObject();
-            scriptObject1.Import(typeof(HelperFunctions));
-            _templateManager.AddVariable(ApplicationStrings.HelpersNamespace, scriptObject1);
+            void Add(ExtensionCache.KnownAssemblies name, ScriptObject scriptObject)
+            {
+                _templateManager.AddVariable(name.ToString().ToLowerInvariant(),
+                    scriptObject);
+            }
+
+            Add(ExtensionCache.KnownAssemblies.Debug,
+                ExtensionCache.GetDebugMethods());
+
+            Add(ExtensionCache.KnownAssemblies.Humanizr,
+                ExtensionCache.GetHumanizrMethods());
+
             return this;
         }
+
 
         /// <summary>
         ///     Retrieve the output of the engine render pass

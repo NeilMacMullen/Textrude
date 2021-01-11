@@ -229,5 +229,10 @@ namespace TextrudeInteractive
         {
             _projectManager.NewProject();
         }
+
+        private void NewIssue(object sender, RoutedEventArgs e)
+        {
+            OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude/issues/new"));
+        }
     }
 }

@@ -1,0 +1,14 @@
+{{func autogenwarning}}
+/*
+   WARNING 
+   -------
+   This file was auto-generated.
+   Do not modify by hand - your changes will be lost .
+    
+
+   Built:  {{ date.now | date.to_string "%r on %A, %d %h %Y"}}
+   Machine: {{env.COMPUTERNAME}}
+   User:  {{env.USERNAME}}
+
+*/ 
+{{end}}
