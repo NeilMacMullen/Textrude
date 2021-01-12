@@ -82,9 +82,11 @@ namespace TextrudeInteractive
 #endif
         }
 
-        private ApplicationEngine Render(EngineInputSet gi)
+        private TimedOperation<ApplicationEngine> Render(EngineInputSet gi)
         {
             var engine = new ApplicationEngine(new FileSystemOperations());
+            var timer = new TimedOperation<ApplicationEngine>(engine);
+
             foreach (var m in gi.Models)
                 engine = engine.WithModel(m.Text, m.Format);
             engine = engine
@@ -94,11 +96,14 @@ namespace TextrudeInteractive
                 .WithHelpers()
                 .WithTemplate(gi.Template);
 
-            return engine.Render();
+            engine.Render();
+            return timer;
         }
 
-        private void HandleRenderResults(ApplicationEngine engine)
+        private void HandleRenderResults(TimedOperation<ApplicationEngine> timedEngine)
         {
+            var elapsedMs = (int) timedEngine.Timer.ElapsedMilliseconds;
+            var engine = timedEngine.Value;
             var outputs = engine.GetOutput(OutputBoxes.Length);
             for (var i = 0; i < outputs.Length; i++)
             {
@@ -114,7 +119,8 @@ namespace TextrudeInteractive
                     Environment.NewLine;
             }
 #endif
-            Errors.Text += $"Completed: {DateTime.Now.ToLongTimeString()}" + Environment.NewLine;
+            Errors.Text += $"Completed: {DateTime.Now.ToLongTimeString()}  Render time: {elapsedMs}ms" +
+                           Environment.NewLine;
             if (engine.HasErrors)
             {
                 Errors.Foreground = Brushes.OrangeRed;

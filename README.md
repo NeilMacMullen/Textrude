@@ -19,6 +19,8 @@ Let's face it, there are any number of code-generation technologies you might co
 - Allows localisation of data concerns
 - By generation compilable code, you get stronger typing
 - TextrudeInteractive provides a real-time prototyping tool  
+- easy to inject context via environment or defines
+- built in dependency checking 
 
 ## Download
 

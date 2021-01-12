@@ -73,6 +73,7 @@ namespace TextrudeInteractive
             if (dlg.ShowDialog(_owner) == true)
             {
                 _currentProjectPath = dlg.FileName;
+                _owner.SetTitle(_currentProjectPath);
                 SaveProject();
             }
         }
