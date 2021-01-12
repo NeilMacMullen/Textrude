@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Engine.Application;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Textrude;
@@ -25,7 +26,7 @@ namespace Tests
 
         private void Run()
         {
-            CmdRender.Run(_options, _fileSystem, _helper);
+            CmdRender.Run(_options, new RunTimeEnvironment(_fileSystem), _helper);
         }
 
         [TestMethod]

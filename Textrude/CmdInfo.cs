@@ -7,7 +7,7 @@ namespace Textrude
 {
     public class CmdInfo
     {
-        public static async Task Run(Options o)
+        public static async Task Run(Options o, RunTimeEnvironment rte)
         {
 #if HASGITVERSION
             var isDirty = GitVersionInformation.UncommittedChanges == "0"
@@ -32,7 +32,7 @@ Useful links:
 #endif
         }
 
-        [Verb("info")]
+        [Verb("info", HelpText = "Provide detail information about version and further resources")]
         public class Options
         {
         }

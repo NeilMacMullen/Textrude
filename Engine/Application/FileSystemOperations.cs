@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace Engine.Application
 {
@@ -22,13 +21,5 @@ namespace Engine.Application
         {
             File.WriteAllText(path, content);
         }
-
-        /// <summary>
-        ///     Returns the folder the application is running from.
-        /// </summary>
-        /// <remarks>
-        ///     This is useful when setting up include paths
-        /// </remarks>
-        public string ApplicationFolder() => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
     }
 }

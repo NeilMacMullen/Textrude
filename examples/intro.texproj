@@ -1,0 +1,22 @@
+{
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [],
+    "IncludePaths": [],
+    "Models": [
+      {
+        "Format": 1,
+        "Text": "description,emphasize\r\n\u0022can import models in JSON,YAML, or CSV\u0022, false\r\nautomatically imports build context,false\r\nuses SCRIBAN for scripting and templating\r\nruns on Windows or Linux\r\ncomes with an interactive editor\r\nis free and open-source,true  "
+      },
+      {
+        "Format": 2,
+        "Text": ""
+      },
+      {
+        "Format": 2,
+        "Text": ""
+      }
+    ],
+    "Template": "Hi {{env.USERNAME}}\r\n\r\nTextrude:\r\n\r\n {{for row in model\r\n\r\n  description=row.description\r\n  if(row.emphasize) \r\n     description = description | string.upcase \r\n  end\r\n \r\n \u0022- \u0022 \u002B description\r\n \u0022 \r\n \u0022 \r\n end}} "
+  }
+}

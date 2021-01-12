@@ -84,7 +84,8 @@ namespace TextrudeInteractive
 
         private TimedOperation<ApplicationEngine> Render(EngineInputSet gi)
         {
-            var engine = new ApplicationEngine(new FileSystemOperations());
+            var rte = new RunTimeEnvironment(new FileSystemOperations());
+            var engine = new ApplicationEngine(rte);
             var timer = new TimedOperation<ApplicationEngine>(engine);
 
             foreach (var m in gi.Models)

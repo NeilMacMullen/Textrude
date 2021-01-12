@@ -11,7 +11,7 @@ namespace Tests
         private readonly MockFileSystem _files = new();
 
         private string Render(string template) =>
-            new ApplicationEngine(_files)
+            new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
                 .WithHelpers()
                 .Render()

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Scriban.Runtime;
 
@@ -24,6 +26,8 @@ namespace Engine.Application
     /// </remarks>
     public class ApplicationEngine
     {
+        private readonly RunTimeEnvironment _environment;
+
         /// <summary>
         ///     provides generic scriban Template operations
         /// </summary>
@@ -34,16 +38,18 @@ namespace Engine.Application
         /// </summary>
         private int _modelCount;
 
+
         /// <summary>
         ///     Create a new application engine
         /// </summary>
-        /// <param name="ops">abstract file system to allow for testing</param>
-        public ApplicationEngine(IFileSystemOperations ops)
+        /// <param name="fileSystem">abstract file system to allow for testing</param>
+        public ApplicationEngine(RunTimeEnvironment environment)
         {
-            _templateManager = new TemplateManager(ops);
+            _environment = environment;
+            _templateManager = new TemplateManager(environment.FileSystem);
             //we always add the location of the application executable as an include path for 
             //scripts. This allows us to easily ship a library of standard scripts
-            _templateManager.AddIncludePath(ops.ApplicationFolder());
+            _templateManager.AddIncludePath(environment.ApplicationFolder());
         }
 
         /// <summary>
@@ -103,7 +109,8 @@ namespace Engine.Application
                 Environment.GetEnvironmentVariables()
                     .Cast<DictionaryEntry>()
                     .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString());
-
+            //Add run-time information
+            environmentVariables[ApplicationStrings.TextrudeExe] = _environment.ApplicationPath();
             _templateManager.AddVariable(ApplicationStrings.EnvironmentNamespace, environmentVariables);
             return this;
         }
@@ -223,7 +230,31 @@ namespace Engine.Application
             public const string OutputPrefix = "output";
             public const string EnvironmentNamespace = "env";
             public const string DefinitionsNamespace = "def";
-            public const string HelpersNamespace = "helpers";
+            public const string TextrudeExe = "TEXTRUDE_EXE";
         }
+    }
+
+    public class RunTimeEnvironment
+    {
+        public readonly IFileSystemOperations FileSystem;
+
+        public RunTimeEnvironment(IFileSystemOperations fileSystem) => FileSystem = fileSystem;
+
+        /// <summary>
+        ///     Returns the folder the application is running from.
+        /// </summary>
+        /// <remarks>
+        ///     This is useful when setting up include paths
+        /// </remarks>
+        public string ApplicationFolder() => Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+
+        /// <summary>
+        ///     Path to application exe
+        /// </summary>
+        /// <remarks>
+        ///     This is the approved formulation for compatibility with single-exe apps.
+        ///     See https://github.com/dotnet/runtime/issues/3704
+        /// </remarks>
+        public string ApplicationPath() => Process.GetCurrentProcess().MainModule.FileName;
     }
 }

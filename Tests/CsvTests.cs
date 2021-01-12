@@ -11,7 +11,7 @@ namespace Tests
 
         private void Test(string csv, string template, string expected)
         {
-            new ApplicationEngine(_files)
+            new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
                 .WithModel(csv, ModelFormat.Csv)
                 .Render()

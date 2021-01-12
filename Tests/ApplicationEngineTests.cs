@@ -9,6 +9,7 @@ namespace Tests
     public class ApplicationEngineTests
     {
         private readonly MockFileSystem _files = new();
+        private readonly RunTimeEnvironment _rte;
 
         private readonly ModelFormat[] _structParsers =
         {
@@ -16,13 +17,15 @@ namespace Tests
             ModelFormat.Json
         };
 
+        public ApplicationEngineTests() => _rte = new RunTimeEnvironment(_files);
+
 
         private void Test(object obj, string template, Action<string> act)
         {
             foreach (var type in _structParsers)
             {
                 var text = ModelDeserializerFactory.Serialise(obj, type);
-                var result = new ApplicationEngine(_files)
+                var result = new ApplicationEngine(_rte)
                     .WithTemplate(template)
                     .WithModel(text, type)
                     .Render()

@@ -11,14 +11,14 @@ namespace Textrude
     /// </summary>
     public class CmdRender
     {
-        private readonly IFileSystemOperations _fileSystem;
         private readonly Options _options;
+        private readonly RunTimeEnvironment _runtime;
         private readonly Helpers _sys;
 
-        public CmdRender(Options options, IFileSystemOperations fileSystem, Helpers sys)
+        public CmdRender(Options options, RunTimeEnvironment rte, Helpers sys)
         {
             _options = options;
-            _fileSystem = fileSystem;
+            _runtime = rte;
             _sys = sys;
         }
 
@@ -26,10 +26,10 @@ namespace Textrude
         {
             DateTime GetLastWriteTime(string file)
             {
-                if (allowNotExist && !_fileSystem.Exists(file))
+                if (allowNotExist && !_runtime.FileSystem.Exists(file))
                     return fallback;
 
-                return _fileSystem.GetLastWriteTimeUtc(file);
+                return _runtime.FileSystem.GetLastWriteTimeUtc(file);
             }
 
             return files
@@ -41,27 +41,27 @@ namespace Textrude
 
         private string TryReadFile(string path)
         {
-            return _sys.GetOrQuit(() => _fileSystem.ReadAllText(path),
+            return _sys.GetOrQuit(() => _runtime.FileSystem.ReadAllText(path),
                 $"Unable to read file {_options.Template}");
         }
 
         public void Run()
         {
             var lastModelDate = GetLastWrittenDates(_options.Models, DateTime.MinValue, false).Max();
-            var earliestOuputDate = GetLastWrittenDates(_options.Output, DateTime.MaxValue, true).Min();
+            var earliestOutputDate = GetLastWrittenDates(_options.Output, DateTime.MaxValue, true).Min();
             var templateDate = GetLastWrittenDates(new[] {_options.Template}, DateTime.MinValue, false).Max();
 
             var lastInputDate = lastModelDate > templateDate ? lastModelDate : templateDate;
 
 
             //check if there is nothing to do...
-            if (_options.Lazy && (lastInputDate < earliestOuputDate))
+            if (_options.Lazy && (lastInputDate < earliestOutputDate))
                 return;
 
 
             var template = TryReadFile(_options.Template);
 
-            var engine = new ApplicationEngine(_fileSystem)
+            var engine = new ApplicationEngine(_runtime)
                 .WithDefinitions(_options.Definitions)
                 .WithTemplate(template);
 
@@ -96,7 +96,7 @@ namespace Textrude
                 {
                     var outputFile = outputFiles[i];
                     var text = outputs[i];
-                    _sys.TryOrQuit(() => _fileSystem.WriteAllText(outputFile, text),
+                    _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(outputFile, text),
                         $"Unable to write output to {outputFile}");
                 }
             }
@@ -106,9 +106,9 @@ namespace Textrude
             }
         }
 
-        public static void Run(Options options, IFileSystemOperations filesystem, Helpers sys)
+        public static void Run(Options options, RunTimeEnvironment rte, Helpers sys)
         {
-            var cmd = new CmdRender(options, filesystem, sys);
+            var cmd = new CmdRender(options, rte, sys);
             cmd.Run();
         }
 

@@ -11,6 +11,5 @@ namespace Engine.Application
         public string ReadAllText(string path);
         public DateTime GetLastWriteTimeUtc(string path);
         public void WriteAllText(string path, string content);
-        string ApplicationFolder();
     }
 }

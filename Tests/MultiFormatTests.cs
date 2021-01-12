@@ -16,7 +16,7 @@ namespace Tests
 1";
             var json = @"{""a"":2}";
             var template = @"{{model0[0].C + model1.a}}";
-            var result = new ApplicationEngine(_files)
+            var result = new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
                 .WithModel(csv, ModelFormat.Csv)
                 .WithModel(json, ModelFormat.Json)
@@ -35,7 +35,7 @@ namespace Tests
 {{-capture output1}}test2{{end-}}
 {{-capture output2}}test3{{end-}}
 test4";
-            var engine = new ApplicationEngine(_files)
+            var engine = new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
                 .WithModel(csv, ModelFormat.Csv)
                 .Render();
