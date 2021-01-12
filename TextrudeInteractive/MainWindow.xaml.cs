@@ -241,5 +241,10 @@ namespace TextrudeInteractive
         {
             OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude/issues/new"));
         }
+
+        private void ExportInvocation(object sender, RoutedEventArgs e)
+        {
+            _projectManager.ExportProject();
+        }
     }
 }

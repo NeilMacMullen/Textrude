@@ -47,6 +47,8 @@
                 <MenuItem Click="LoadProject" Header="Load" />
                 <MenuItem Click="SaveProject" Header="Save" />
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />
+                <Separator/>
+                <MenuItem Click="ExportInvocation" Header="Export as invocation"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="Home page..." Click="ShowAbout" />

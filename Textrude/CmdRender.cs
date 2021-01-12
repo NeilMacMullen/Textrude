@@ -62,6 +62,7 @@ namespace Textrude
             var template = TryReadFile(_options.Template);
 
             var engine = new ApplicationEngine(_runtime)
+                .WithHelpers()
                 .WithDefinitions(_options.Definitions)
                 .WithTemplate(template);
 

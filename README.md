@@ -1,5 +1,8 @@
 # Textrude
 
+## Give a Star! :star:
+
+If you like or are using this project please give it a star. Thanks!
 
 Textrude is a cross-platform general-purpose code-generation tool suitable for integration with build-systems.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to generate output files. 
 
@@ -39,6 +42,7 @@ Change notes
 - Creating your own library of functions and templates
 - Using Textrude in a build system
 - advanced usage - multiple models and/or output files
+- use the exportInvocation
 
 ## Credits
 

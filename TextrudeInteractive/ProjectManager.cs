@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
+using Engine.Application;
 using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 
 namespace TextrudeInteractive
 {
@@ -90,6 +93,57 @@ namespace TextrudeInteractive
             _owner.SetUI(project.EngineInput);
 
             _owner.SetTitle(_currentProjectPath);
+        }
+
+        public void ExportProject()
+        {
+            var dlg = new VistaFolderBrowserDialog();
+            if (dlg.ShowDialog(_owner) == false)
+                return;
+            var folder = dlg.SelectedPath;
+
+            var p = CreateProject();
+
+            var e = p.EngineInput;
+            var mcount = e.Models.Length;
+
+            var exe =
+                Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder(), "textrude.exe");
+
+            var invocation = $"&\"{exe}\" render --lazy --output out.txt";
+
+            invocation += " --models";
+            for (var i = 0; i < mcount; i++)
+            {
+                var m = e.Models[i];
+                if (m.Text.Trim().Length == 0)
+                    continue;
+                var mName = Path.ChangeExtension($"model{i}", m.Format.ToString());
+                var mPath = Path.Combine(folder, mName);
+                File.WriteAllText(mPath, m.Text);
+                invocation += $" \"{mPath}\"";
+            }
+
+            var templatePath = Path.Combine(folder, "template.sbn");
+            File.WriteAllText(templatePath, e.Template);
+            invocation += $" --template \"{templatePath}\"";
+
+            if (e.Definitions.Any())
+            {
+                invocation += " --definitions";
+                foreach (var d in e.Definitions)
+                    invocation += $" \"{d}\"";
+            }
+
+            if (e.IncludePaths.Any())
+            {
+                invocation += " --include";
+                foreach (var inc in e.IncludePaths)
+                    invocation += $" \"{inc}\"";
+            }
+
+            var iPath = Path.Combine(folder, "render.ps1");
+            File.WriteAllText(iPath, invocation);
         }
     }
 }
