@@ -17,6 +17,6 @@
         "Text": ""
       }
     ],
-    "Template": ""
+    "Template": "{{include \u0022lib/warnings.sbn\u0022}}\r\n\r\n{{autogenwarning}}"
   }
 }
