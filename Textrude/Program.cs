@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using Engine.Application;
+using SharedApplication;
 
 namespace Textrude
 {
@@ -10,12 +11,15 @@ namespace Textrude
             var rte = new RunTimeEnvironment(new FileSystemOperations());
             var sys = new Helpers();
             var result = Parser.Default
-                .ParseArguments(args,
-                    typeof(CmdRender.Options),
-                    typeof(CmdInfo.Options)
-                )
-                .WithParsed<CmdInfo.Options>(o => CmdInfo.Run(o, rte).Wait())
-                .WithParsed<CmdRender.Options>(o => CmdRender.Run(o, rte, sys));
+                    .ParseArguments(args,
+                        typeof(RenderOptions),
+                        typeof(RenderFromFileOptions),
+                        typeof(CmdInfo.Options)
+                    )
+                    .WithParsed<CmdInfo.Options>(o => CmdInfo.Run(o, rte).Wait())
+                    .WithParsed<RenderOptions>(o => CmdRender.Run(o, rte, sys))
+                    .WithParsed<RenderFromFileOptions>(o => CmdRenderFromFile.Run(o, rte, sys))
+                ;
         }
     }
 }

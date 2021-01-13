@@ -2,7 +2,7 @@
   "profiles": {
     "Textrude": {
       "commandName": "Project",
-      "commandLineArgs": "info"
+      "commandLineArgs": " renderFromFile  --arguments \"args.json\""
     }
   }
 }

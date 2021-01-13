@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\SharedApplication\SharedApplication.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommandLine;
 using Engine.Application;
+using SharedApplication;
 
 namespace Textrude
 {
@@ -11,11 +11,11 @@ namespace Textrude
     /// </summary>
     public class CmdRender
     {
-        private readonly Options _options;
+        private readonly RenderOptions _options;
         private readonly RunTimeEnvironment _runtime;
         private readonly Helpers _sys;
 
-        public CmdRender(Options options, RunTimeEnvironment rte, Helpers sys)
+        public CmdRender(RenderOptions options, RunTimeEnvironment rte, Helpers sys)
         {
             _options = options;
             _runtime = rte;
@@ -32,11 +32,15 @@ namespace Textrude
                 return _runtime.FileSystem.GetLastWriteTimeUtc(file);
             }
 
-            return files
+            var f = files
                 .Select(f =>
                     _sys.GetOrQuit(() => GetLastWriteTime(f), $"Missing/inaccessible file '{f}'")
-                ).Append(fallback)
+                )
                 .ToArray();
+            //ensure we always have at least one date in the set
+            if (!f.Any())
+                f = f.Append(fallback).ToArray();
+            return f;
         }
 
         private string TryReadFile(string path)
@@ -48,7 +52,7 @@ namespace Textrude
         public void Run()
         {
             var lastModelDate = GetLastWrittenDates(_options.Models, DateTime.MinValue, false).Max();
-            var earliestOutputDate = GetLastWrittenDates(_options.Output, DateTime.MaxValue, true).Min();
+            var earliestOutputDate = GetLastWrittenDates(_options.Output, DateTime.MinValue, true).Min();
             var templateDate = GetLastWrittenDates(new[] {_options.Template}, DateTime.MinValue, false).Max();
 
             var lastInputDate = lastModelDate > templateDate ? lastModelDate : templateDate;
@@ -103,40 +107,22 @@ namespace Textrude
             }
             else
             {
-                Console.WriteLine(engine.Output);
+                var outputs = engine.GetOutput(10);
+                for (var i = 0; i < outputs.Length; i++)
+                {
+                    var text = outputs[i];
+                    if (text.Length == 0)
+                        continue;
+                    Console.WriteLine($"----------------- output{i} -------------------");
+                    Console.WriteLine(text);
+                }
             }
         }
 
-        public static void Run(Options options, RunTimeEnvironment rte, Helpers sys)
+        public static void Run(RenderOptions options, RunTimeEnvironment rte, Helpers sys)
         {
             var cmd = new CmdRender(options, rte, sys);
             cmd.Run();
-        }
-
-        [Verb("render")]
-        public class Options
-        {
-            [Option(HelpText = "list of model files")]
-            public IEnumerable<string> Models { get; set; } = Enumerable.Empty<string>();
-
-            [Option(Required = true, HelpText = "template file")]
-            public string Template { get; set; } = string.Empty;
-
-            [Option(HelpText = "list of output files.  If omitted, output will be written to console")]
-            public IEnumerable<string> Output { get; set; } = Enumerable.Empty<string>();
-
-            [Option(HelpText = "list of definitions")]
-            public IEnumerable<string> Definitions { get; set; } = Enumerable.Empty<string>();
-
-            [Option(HelpText = "list of additional include paths")]
-            public IEnumerable<string> Include { get; set; } = Enumerable.Empty<string>();
-
-            [Option(HelpText = "prevent environment variables being passed to the template")]
-            public bool HideEnvironment { get; set; }
-
-
-            [Option(HelpText = "Only write output files if models/template have been modified since last render pass")]
-            public bool Lazy { get; set; }
         }
     }
 }

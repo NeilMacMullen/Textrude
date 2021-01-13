@@ -6,6 +6,7 @@ using System.Windows;
 using Engine.Application;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+using SharedApplication;
 
 namespace TextrudeInteractive
 {
@@ -100,50 +101,60 @@ namespace TextrudeInteractive
             var dlg = new VistaFolderBrowserDialog();
             if (dlg.ShowDialog(_owner) == false)
                 return;
-            var folder = dlg.SelectedPath;
-
-            var p = CreateProject();
-
-            var e = p.EngineInput;
-            var mcount = e.Models.Length;
-
-            var exe =
-                Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder(), "textrude.exe");
-
-            var invocation = $"&\"{exe}\" render --lazy --output out.txt";
-
-            invocation += " --models";
-            for (var i = 0; i < mcount; i++)
+            try
             {
-                var m = e.Models[i];
-                if (m.Text.Trim().Length == 0)
-                    continue;
-                var mName = Path.ChangeExtension($"model{i}", m.Format.ToString());
-                var mPath = Path.Combine(folder, mName);
-                File.WriteAllText(mPath, m.Text);
-                invocation += $" \"{mPath}\"";
+                var folder = dlg.SelectedPath;
+
+                var engine = CreateProject().EngineInput;
+                var options = new RenderOptions {Definitions = engine.Definitions, Include = engine.IncludePaths};
+
+
+                void WriteToFile(string fileName, string content)
+                    => File.WriteAllText(Path.Combine(folder, fileName), content);
+
+                for (var i = 0; i < engine.Models.Length; i++)
+                {
+                    var m = engine.Models[i];
+                    if (m.Text.Trim().Length == 0)
+                    {
+                        continue;
+                    }
+
+                    var mName = Path.ChangeExtension($"model{i}", m.Format.ToString());
+                    WriteToFile(mName, m.Text);
+                    options.Models = options.Models.Append(mName).ToArray();
+                }
+
+                var templateName = "template.sbn";
+                WriteToFile(templateName, engine.Template);
+                options.Template = templateName;
+
+                var exe =
+                    Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder(),
+                        "textrude.exe");
+
+                var builder = new CommandLineBuilder(options).WithExe(exe);
+
+                WriteToFile("render.bat", $"{builder.BuildRenderInvocation()}");
+
+
+                //write yaml invocation
+
+                var jsonArgs = "args.json";
+                var (json, jsoncmd) = builder.BuildJson(jsonArgs);
+                WriteToFile(jsonArgs, json);
+                WriteToFile("jsonrender.bat", jsoncmd);
+
+
+                var yamlArgs = "args.yaml";
+                var (yaml, yamlCmd) = builder.BuildYaml(yamlArgs);
+                WriteToFile(yamlArgs, yaml);
+                WriteToFile("yamlrender.bat", yamlCmd);
             }
-
-            var templatePath = Path.Combine(folder, "template.sbn");
-            File.WriteAllText(templatePath, e.Template);
-            invocation += $" --template \"{templatePath}\"";
-
-            if (e.Definitions.Any())
+            catch (Exception e)
             {
-                invocation += " --definitions";
-                foreach (var d in e.Definitions)
-                    invocation += $" \"{d}\"";
+                MessageBox.Show("Sorry - couldn't export invocation");
             }
-
-            if (e.IncludePaths.Any())
-            {
-                invocation += " --include";
-                foreach (var inc in e.IncludePaths)
-                    invocation += $" \"{inc}\"";
-            }
-
-            var iPath = Path.Combine(folder, "render.ps1");
-            File.WriteAllText(iPath, invocation);
         }
     }
 }

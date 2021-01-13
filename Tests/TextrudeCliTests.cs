@@ -3,6 +3,7 @@ using System.Linq;
 using Engine.Application;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharedApplication;
 using Textrude;
 
 namespace Tests
@@ -21,7 +22,7 @@ namespace Tests
                 msg => throw new ApplicationException(msg)
         };
 
-        private readonly CmdRender.Options _options = new();
+        private readonly RenderOptions _options = new();
 
 
         private void Run()
@@ -78,6 +79,19 @@ namespace Tests
             Run();
             _fileSystem.ReadAllText(outputFile).Should().Be("abc");
         }
+
+
+        [TestMethod]
+        public void WhenLazyEngineRunsIfOutputDoesNotExist()
+        {
+            _options.Lazy = true;
+            AddModel(modelFile, "A: 123");
+            AddTemplate("{{model.A}}");
+            AddOutputFile(outputFile);
+            Run();
+            _fileSystem.ReadAllText(outputFile).Should().Be("123");
+        }
+
 
         private void AddTemplate(string someText)
         {

@@ -4,39 +4,36 @@
 
 If you like or are using this project please give it a star. Thanks!
 
+## What is it?
+
 Textrude is a cross-platform general-purpose code-generation tool suitable for integration with build-systems.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to generate output files. 
 
 Templates and models can quickly be developed using the bundled TextrudeInteractive tool (windows only).
 
-Here's an example showing how easy it is to generate a C function to return a human-readable error message from an error code.
-
 ![Screenshot of TextrudeInteractive](img/ex1.png)
 
-## But what about T4/Code-generators/SWIG etc... 
+## Why use it?
+
 Let's face it, there are any number of code-generation technologies you might consider.  Textrude's strengths are:
 
 - Easy model (data) creation - use CSV for simple lists or YAML/JSON if you need structured data
 - Low-ceremony syntax while retaining a fully functional programming language
-- Integrates well with your build system
-- Well suited for systems where it's necessary to generate multiple representations of the same model, often in different target languages
-- Allows localisation of data concerns
-- By generation compilable code, you get stronger typing
-- TextrudeInteractive provides a real-time prototyping tool  
-- easy to inject context via environment or defines
-- built in dependency checking 
+- Well suited for systems where it's necessary to generate multiple representations of the same model
+- Supports multiple input models and multiple output files for a single template
+- Easy to inject context via environment or defines
+- Built-in dependency checking integrates well with your build system
+- Real-time prototyping tool  (TextrudeInteractive)
+
 
 ## Download
 
-Not yet ready for release.....
-Known issues...
-- YAML and CSV deserialisers don't always interpret numbers and strings correctly
-- No support for multiple models or output files
-- UI is ugly as sin
-Get it from ....
-Change notes
-..or build yourself from source
+Get the latest binaries from the --link here--- or build yourself from source.
 
-## More
+##Known issues...
+- YAML and CSV deserialisers don't always interpret numbers and strings correctly
+- TextrudeInteractive UI is a bit rudimentary
+
+## Documentation
 - [Getting started with template generation](doc/gettingStarted.md) 
 - Built in functions and helpers
 - Creating your own library of functions and templates
