@@ -2,13 +2,13 @@
 
 ## Give a Star! :star:
 
-If you like or are using this project please give it a star. Thanks!
+If you like or are using this project please give it a star or leave some feedback in the [discussions](https://github.com/NeilMacMullen/Textrude/discussions/categories/send-a-smile) section. Thanks!
 
 ## What is it?
 
-Textrude is a cross-platform general-purpose code-generation tool suitable for integration with build-systems.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to generate output files. 
+Textrude is a cross-platform general-purpose code-generation tool.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to quickly scaffold output files. 
 
-Templates and models can quickly be developed using the bundled TextrudeInteractive tool (windows only).
+Templates and models can quickly be developed using the bundled TextrudeInteractive tool.
 
 ![Screenshot of TextrudeInteractive](img/ex1.png)
 
@@ -18,20 +18,21 @@ Let's face it, there are any number of code-generation technologies you might co
 
 - Easy model (data) creation - use CSV for simple lists or YAML/JSON if you need structured data
 - Low-ceremony syntax while retaining a fully functional programming language
-- Well suited for systems where it's necessary to generate multiple representations of the same model
 - Supports multiple input models and multiple output files for a single template
-- Easy to inject context via environment or defines
+- Easy to inject additional model context via environment variables or user-supplied definitions
 - Built-in dependency checking integrates well with your build system
+- Allows template re-use via include mechanism
 - Real-time prototyping tool  (TextrudeInteractive)
-
 
 ## Download
 
-Get the latest binaries from the --link here--- or build yourself from source.
+Get pre-built binaries from the [Releases](https://github.com/NeilMacMullen/Textrude/releases) area or build yourself from source.
+
 
 ##Known issues...
-- YAML and CSV deserialisers don't always interpret numbers and strings correctly
-- TextrudeInteractive UI is a bit rudimentary
+- YAML and CSV deserialisers will always attempt to force strings that look like numbers or booleans into that format rather than leaving them as strings.  Most of the time this does not matter but please raise an issue if this causes particular problems
+- TextrudeInteractive does not warn when closing if project is dirty.
+- Textrude.exe is untested on Linux - please raise an issue if you run into problems
 
 ## Documentation
 - [Getting started with template generation](doc/gettingStarted.md) 
