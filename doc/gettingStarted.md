@@ -1,6 +1,6 @@
 # Getting started
 
-*The easiest way to get started with Textrude and Scriban is to play with TextrudeInteractive but if you want to charge ahead and use the commmand-line tool, refer to TODO*
+*The easiest way to get started with Textrude and Scriban is to play with TextrudeInteractive but if you want to charge ahead and use the commmand-line tool, refer to the build-system integration documentation*
 
 
 ## Understanding the template flow 

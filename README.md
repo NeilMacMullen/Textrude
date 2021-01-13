@@ -41,7 +41,7 @@ The binaries are provided in the form of a zip which includes single-file execut
 ## Documentation
 - [Getting started with template generation](doc/gettingStarted.md) 
 - [Built in functions and helpers](doc/builtIns.md)
-- [Evironment variables and user-definitions](doc/environmentAndDefinitions.md)
+- [Environment variables and user-definitions](doc/environmentAndDefinitions.md)
 - [Multiple models and/or output files](doc/multiModel.md)
 
 - [Creating and using library functions](doc/userlibrary.md)
