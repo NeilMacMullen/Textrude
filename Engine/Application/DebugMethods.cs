@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Engine.Application
+﻿namespace Engine.Application
 {
     /// <summary>
     ///     Provides some helpful functions for templates
@@ -16,10 +14,5 @@ namespace Engine.Application
             var text = serializer.Serialize(o);
             return text;
         }
-    }
-
-    public static class MiscMethods
-    {
-        public static string NewGuid() => Guid.NewGuid().ToString();
     }
 }

@@ -5,6 +5,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
+    /// <summary>
+    ///     Tests for the DefinitionParser
+    /// </summary>
     [TestClass]
     public class DefinitionParserTests
     {

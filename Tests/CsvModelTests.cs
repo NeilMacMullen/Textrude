@@ -4,8 +4,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
+    /// <summary>
+    ///     Tests for CSV models
+    /// </summary>
     [TestClass]
-    public class CsvTests
+    public class CsvModelTests
     {
         private readonly MockFileSystem _files = new();
 

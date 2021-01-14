@@ -7,6 +7,8 @@ using YamlDotNet.Serialization;
 
 namespace Tests
 {
+    /// <summary>
+    /// </summary>
     [TestClass]
     public class YamlAssumptionTests
     {

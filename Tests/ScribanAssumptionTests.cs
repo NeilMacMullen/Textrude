@@ -1,26 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scriban;
-using Scriban.Parsing;
 using Scriban.Runtime;
 
 namespace Tests
 {
-    internal class DummyLoader : ITemplateLoader
-    {
-        public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
-            => templateName;
-
-        public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
-            => "some text";
-
-        public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
-            => ValueTask.FromResult(Load(context, callerSpan, templatePath));
-    }
-
+    /// <remarks>
+    ///     These tests track issues/behaviour with the SCRIBAN engine
+    /// </remarks>
+    /// >
     [TestClass]
     public class ScribanAssumptionTests
     {
@@ -42,7 +32,7 @@ namespace Tests
         public void Include()
         {
             var text = @"{{include 'testfile'}}";
-            var context = new TemplateContext {TemplateLoader = new DummyLoader()};
+            var context = new TemplateContext {TemplateLoader = new MockTemplateLoader()};
             //NOTE - setting strict variables causes the test to fail
             context.StrictVariables = true;
             var compiledTemplate = Template.Parse(text);

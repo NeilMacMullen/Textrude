@@ -5,6 +5,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
+    /// <summary>
+    ///     Tests to ensure the built-in extension methods are added
+    /// </summary>
     [TestClass]
     public class ExtensionTests
     {

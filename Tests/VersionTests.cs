@@ -32,7 +32,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Deserialisation()
+        public void DeserialisationOfChangeListIsAsExpected()
         {
             var text = @"[
 {
