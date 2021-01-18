@@ -83,13 +83,35 @@
 
                                     <ComboBox Name="format0" SelectionChanged="OnModelFormatChanged"
                                               DockPanel.Dock="Top" />
+                                    <TabControl>
+                                        <TabItem Header="old">
+                                            <TextBox Name="ModelTextBox0"
+                                                 DockPanel.Dock="Bottom"
 
-                                    <TextBox Name="ModelTextBox0"
-                                             DockPanel.Dock="Bottom"
+                                                 TextChanged="OnModelTextChanged"
+                                                 Foreground="LightSeaGreen"
+                                        />
+                            </TabItem>
+                                        <TabItem Header="avalon"
+                                            >
+                                            <avalonEdit:TextEditor
 
-                                             TextChanged="OnModelTextChanged"
-                                             Foreground="LightSeaGreen"
-                                             />
+                                                xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+
+                                                Name="avalon1"
+
+                                                FontFamily="Consolas"
+
+                                                SyntaxHighlighting="C#"
+
+                                                FontSize="10pt"
+                                                TextChanged="Avalon1_OnTextChanged"
+ShowLineNumbers="True"                                                
+                                                />
+
+                                        </TabItem>
+
+                        </TabControl>
 
 
                                 </DockPanel>

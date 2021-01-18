@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedApplication", "SharedApplication\SharedApplication.csproj", "{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedApplication", "SharedApplication\SharedApplication.csproj", "{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonTest", "AvalonTest\AvalonTest.csproj", "{A73C08E2-2E82-407B-A98E-5020090E39CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A73C08E2-2E82-407B-A98E-5020090E39CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73C08E2-2E82-407B-A98E-5020090E39CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73C08E2-2E82-407B-A98E-5020090E39CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73C08E2-2E82-407B-A98E-5020090E39CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

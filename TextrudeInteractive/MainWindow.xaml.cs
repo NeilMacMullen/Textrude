@@ -137,6 +137,7 @@ namespace TextrudeInteractive
 
         public EngineInputSet CollectInput()
         {
+            var text = avalon1.Text;
             var models = Enumerable.Range(0, formats.Length)
                 .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
                 .ToArray();
@@ -245,6 +246,12 @@ namespace TextrudeInteractive
         private void ExportInvocation(object sender, RoutedEventArgs e)
         {
             _projectManager.ExportProject();
+        }
+
+        private void Avalon1_OnTextChanged(object? sender, EventArgs e)
+        {
+            //code completion.... http://avalonedit.net/documentation/html/47c58b63-f30c-4290-a2f2-881d21227446.htm
+            OnModelChanged();
         }
     }
 }
