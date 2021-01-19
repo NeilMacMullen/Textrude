@@ -43,6 +43,15 @@ namespace Tests
             graph["A"].Should().Be(true);
         }
 
+
+        [TestMethod]
+        public void SequenceCanBeDeserialized()
+        {
+            var graph = GetArray(new[] {"cat", "dog"});
+            graph.Should().BeEquivalentTo(new[] {"cat", "dog"});
+        }
+
+
         [TestMethod]
         public void StringsThatLookLikeNumbersAreNotDeserializedAsNumbers()
         {
@@ -59,14 +68,6 @@ namespace Tests
                 as Dictionary<string, object>;
             ;
             graph["A"].Should().Be("true");
-        }
-
-
-        [TestMethod]
-        public void SequenceCanBeDeserialized()
-        {
-            var graph = GetArray(new[] {"cat", "dog"});
-            graph.Should().BeEquivalentTo(new[] {"cat", "dog"});
         }
     }
 }
