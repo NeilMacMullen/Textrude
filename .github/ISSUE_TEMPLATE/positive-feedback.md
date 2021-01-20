@@ -1,6 +1,6 @@
 ---
-name: Positive feedback
-about: Allows users to post nice things about Textrude
+name: Send a smile
+about: Tell me what you like - it keeps me motivated!
 title: I like Textrude because....
 labels: ''
 assignees: ''
