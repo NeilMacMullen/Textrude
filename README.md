@@ -24,16 +24,31 @@ Let's face it, there are any number of code-generation technologies you might co
 - Allows template re-use via include mechanism
 - Real-time prototyping tool  (TextrudeInteractive)
 
-## Download
+## Download/build
 
 The current release is **v1.1.0**.
 
-Get pre-built binaries from the [Releases](https://github.com/NeilMacMullen/Textrude/releases) area or build yourself from source.
+ - Get binaries from [Releases](https://github.com/NeilMacMullen/Textrude/releases).   These are provided as single-file executables bundled with example projects and library scripts. 
+
+ - Build from source by cloning this repo and opening **Textrude.sln** in Visual Studio
+
+ - Create a [Docker image](Docker.md)
+
 
 You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) if it is not already on your machine.
 
-The binaries are provided in the form of a zip which includes single-file executables as well as example projects and library scripts. 
+## What's new
 
+### vNext
+- Turn StrictVariables back on
+- AvalonEdit used for edit boxes in TextrudeInteractive allowing:
+  - line numbers
+  - text size can be changed
+  - CTRL-Z etc
+  - basic auto-complete when '.' is typed
+
+### v1.1.0
+- first public release
 
 ## Known issues...
 
@@ -59,7 +74,7 @@ Textrude makes heavy use of the following components:
 - [Json.Net](https://www.newtonsoft.com/json) for Json deserialisation
 - [Humanizr](https://github.com/Humanizr/Humanizer) for useful text-processing
 - [MaterialDesignToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit),   [MaterialDesignExtensions](https://spiegelp.github.io/MaterialDesignExtensions) and [Ookii Dialogs](https://github.com/augustoproiete/ookii-dialogs-wpf)to make the UI a bit less clunky
-  
+ - [AvalonEdit](http://avalonedit.net/) for text-editing goodness
 
 
 
@@ -69,8 +84,7 @@ If you fancy making Textrude better, I'd be happy to have help! Some ideas for i
 
 - UI
     - Change the current scratch code to a more formal MVVM architecture
-    - Improve the text-edit boxes to show line numbers, syntax-hightlighting etc (maybe use AvalonEdit?)
-    - Intellisense for template editing (we should be able to walk the models and suggest sensible dot completions)
+    - Improve code-completion
 - Documentation and example projects
 - Library methods and helpers
   - More library functions for common tasks
