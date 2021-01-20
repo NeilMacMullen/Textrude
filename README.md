@@ -36,22 +36,22 @@ The binaries are provided in the form of a zip which includes single-file execut
 
 
 ## Known issues...
+
 - YAML and CSV deserialisers will always attempt to force strings that look like numbers or booleans into that format rather than leaving them as strings.  Most of the time this does not matter but please raise an issue if this causes particular problems
 - TextrudeInteractive does not warn when closing if project is dirty.
 - Textrude.exe is untested on Linux - please raise an issue if you run into problems
 
 ## Documentation
+
 - [Getting started with template generation](doc/gettingStarted.md) 
 - [Built in functions and helpers](doc/builtIns.md)
 - [Environment variables and user-definitions](doc/environmentAndDefinitions.md)
 - [Multiple models and/or output files](doc/multiModel.md)
-
 - [Creating and using library functions](doc/userlibrary.md)
 - [Using Textrude in a build system](doc/buildSystemIntegration.md)
-
+- [Docker image](Docker.md])
 
 ## Credits
-
 Textrude makes heavy use of the following components:
 - [Scriban](https://github.com/scriban/scriban) as the template language engine
 - [CsvHelper](https://github.com/JoshClose/CsvHelper) for command-line parsing
@@ -82,6 +82,7 @@ If you fancy making Textrude better, I'd be happy to have help! Some ideas for i
 
 
 ## What's with the name 
+
 It's short for Text-extrude but if you can't stop seeing it as Text-Rude you are not alone.
 
 It is unrelated to both the rather cool (but apparently abandoned project) [Textruder](https://github.com/arrogantrobot/textruder) and the plastics company [Tex-Trude](http://www.tex-trude.com/)
