@@ -49,7 +49,7 @@ The binaries are provided in the form of a zip which includes single-file execut
 - [Multiple models and/or output files](doc/multiModel.md)
 - [Creating and using library functions](doc/userlibrary.md)
 - [Using Textrude in a build system](doc/buildSystemIntegration.md)
-- [Docker image](Docker.md])
+- [Docker image](Docker.md)
 
 ## Credits
 Textrude makes heavy use of the following components:
