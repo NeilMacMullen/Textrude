@@ -57,3 +57,5 @@ end}}
 ```
 Depending on the relative amount of code to text and your tolerance for braces or quotes you may prefer one style over the other. 
 
+See the [Scriban language reference](https://github.com/scriban/scriban/blob/master/doc/language.md) for more information.
+

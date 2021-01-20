@@ -13,7 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextrudeInteractive", "Text
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0A-4643-9B89-C03AFC72D707}"
 	ProjectSection(SolutionItems) = preProject
+		doc\buildSystemIntegration.md = doc\buildSystemIntegration.md
+		doc\builtIns.md = doc\builtIns.md
+		doc\changelist.json = doc\changelist.json
+		doc\environmentAndDefinitions.md = doc\environmentAndDefinitions.md
+		doc\gettingStarted.md = doc\gettingStarted.md
+		doc\multiModel.md = doc\multiModel.md
 		README.md = README.md
+		doc\userLibrary.md = doc\userLibrary.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedApplication", "SharedApplication\SharedApplication.csproj", "{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}"
