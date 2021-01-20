@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scriban;
@@ -93,6 +94,26 @@ namespace Tests
             var result = compiledTemplate.Render(context);
             compiledTemplate.HasErrors.Should().BeFalse();
             result.Should().Be("123");
+        }
+
+        [TestMethod]
+        public void BuiltInsCanBeLocated()
+        {
+            var context = new TemplateContext();
+
+
+            string[] funcNames(ScriptObject o, string prefix) => o.Where(kv => kv.Value is IScriptFunctionInfo)
+                .Select(kv => $"{prefix}.{kv.Key}").ToArray();
+
+            var builtins = context
+                .BuiltinObject
+                .Select(kv => new {Name = kv.Key, FunctionList = kv.Value as ScriptObject})
+                .Where(o => o.FunctionList != null)
+                .SelectMany(ns => funcNames(ns.FunctionList, ns.Name))
+                .ToArray();
+
+            builtins.Should().Contain("string.contains");
+            builtins.Should().Contain("date.now");
         }
     }
 }

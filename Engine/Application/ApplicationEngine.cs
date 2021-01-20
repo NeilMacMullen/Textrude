@@ -69,6 +69,8 @@ namespace Engine.Application
         /// </summary>
         public bool HasErrors => Errors.Any();
 
+        public string[] GetIntellisense() => _templateManager.GetIntellisense();
+
         /// <summary>
         ///     Parses and adds a new model to engine
         /// </summary>
@@ -99,14 +101,14 @@ namespace Engine.Application
         }
 
         /// <summary>
-        ///     Makes the current environment variable set available to the tempate engine
+        ///     Makes the current environment variable set available to the template engine
         /// </summary>
         public ApplicationEngine WithEnvironmentVariables()
         {
             var environmentVariables =
                 Environment.GetEnvironmentVariables()
                     .Cast<DictionaryEntry>()
-                    .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString());
+                    .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value);
             //Add run-time information
             environmentVariables[ApplicationStrings.TextrudeExe] = _environment.ApplicationPath();
             _templateManager.AddVariable(ApplicationStrings.EnvironmentNamespace, environmentVariables);
@@ -124,7 +126,8 @@ namespace Engine.Application
         {
             try
             {
-                var definitions = DefinitionParser.CreateDefinitions(definitionAssignments);
+                var definitions = DefinitionParser.CreateDefinitions(definitionAssignments)
+                    .ToDictionary(kv => kv.Key, kv => (object) kv.Value);
                 _templateManager.AddVariable(ApplicationStrings.DefinitionsNamespace, definitions);
             }
             catch (ArgumentException e)

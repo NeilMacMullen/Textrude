@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Scriban;
@@ -40,7 +41,6 @@ namespace Engine.Application
         public TemplateManager(IFileSystemOperations ops)
         {
             _context.StrictVariables = true;
-
             _scriptLoader = new ScriptLoader(ops);
             _context.TemplateLoader = _scriptLoader;
             _context.PushGlobal(_top);
@@ -127,5 +127,44 @@ namespace Engine.Application
                 return string.Empty;
             }
         }
+
+
+        public static string[] Walk(IDictionary<string, object> container,
+            Func<IDictionary<string, object>, string, string[]> combiner)
+        {
+            return container
+                .Select(kv => new {Name = kv.Key.ToString(), FunctionList = kv.Value as IDictionary<string, object>})
+                .Where(o => o.FunctionList != null)
+                .SelectMany(ns => combiner(ns.FunctionList, ns.Name))
+                .ToArray();
+        }
+
+        public static string[] GetFunctions(IDictionary<string, object> container)
+        {
+            string[] funcNames(IDictionary<string, object> o, string prefix) => o
+                .Where(kv => kv.Value is IScriptFunctionInfo)
+                .Select(kv => $"{prefix}.{kv.Key}").ToArray();
+
+            return Walk(container, funcNames);
+        }
+
+        public static string[] GetStrings(ScriptObject container)
+        {
+            string[] strNames(IDictionary<string, object> o, string prefix) => o
+                .Where(kv => kv.Value is string)
+                .Select(kv => $"{prefix}.{kv.Key}").ToArray();
+
+            return Walk(container, strNames);
+        }
+
+
+        public string[] GetBuiltInFunctions() => GetFunctions(new TemplateContext().BuiltinObject);
+
+        public string[] GetHelperFunctions() => GetFunctions(_top);
+
+
+        public string[] GetIntellisense() => GetBuiltInFunctions().Concat(GetHelperFunctions())
+            .Concat(GetStrings(_top))
+            .ToArray();
     }
 }

@@ -6,21 +6,26 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Engine.Application;
+using ICSharpCode.AvalonEdit;
 using MaterialDesignExtensions.Controls;
+using TextrudeInteractive.Annotations;
+using TextrudeInteractive.AutoCompletion;
 
 namespace TextrudeInteractive
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MaterialWindow
+    public partial class MainWindow : MaterialWindow, INotifyPropertyChanged
     {
+        private readonly AvalonEditCompletionHelper _mainEditWindow;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
@@ -29,9 +34,15 @@ namespace TextrudeInteractive
         private readonly ISubject<EngineInputSet> InputStream =
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
-        private readonly TextBox[] modelBoxes;
-        private readonly TextBox[] OutputBoxes;
+        private readonly TextEditor[] modelBoxes;
+        private readonly TextEditor[] OutputBoxes;
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
+
+        private bool _lineNumbersOn = true;
+
+        private double _textSize = 14;
+
+        private bool _wordWrapOn;
 
         public MainWindow()
         {
@@ -40,6 +51,9 @@ namespace TextrudeInteractive
             formats = new[] {format0, format1, format2};
             modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
             OutputBoxes = new[] {OutputText0, OutputText1, OutputText2};
+
+            _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
+
             _projectManager = new ProjectManager(this);
             foreach (var comboBox in formats)
             {
@@ -57,7 +71,40 @@ namespace TextrudeInteractive
                 .Subscribe(HandleRenderResults);
             _uiIsReady = true;
             RunBackgroundUpgradeCheck();
+            DataContext = this;
         }
+
+        public bool LineNumbersOn
+        {
+            get => _lineNumbersOn;
+            set
+            {
+                _lineNumbersOn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double TextSize
+        {
+            get => _textSize;
+            set
+            {
+                _textSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool WordWrapOn
+        {
+            get => _wordWrapOn;
+            set
+            {
+                _wordWrapOn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void RunBackgroundUpgradeCheck()
         {
@@ -132,12 +179,13 @@ namespace TextrudeInteractive
                 Errors.Foreground = Brushes.GreenYellow;
                 Errors.Text += "No errors";
             }
+
+            _mainEditWindow.SetCompletion(engine.GetIntellisense());
         }
 
 
         public EngineInputSet CollectInput()
         {
-            var text = avalon1.Text;
             var models = Enumerable.Range(0, formats.Length)
                 .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
                 .ToArray();
@@ -160,11 +208,6 @@ namespace TextrudeInteractive
             {
                 Errors.Text = exception.Message;
             }
-        }
-
-        private void OnModelTextChanged(object sender, TextChangedEventArgs e)
-        {
-            OnModelChanged();
         }
 
         private void OnModelFormatChanged(object sender, SelectionChangedEventArgs e)
@@ -248,10 +291,40 @@ namespace TextrudeInteractive
             _projectManager.ExportProject();
         }
 
-        private void Avalon1_OnTextChanged(object? sender, EventArgs e)
+        private void Avalon1_OnTextChanged(object sender, EventArgs e)
         {
-            //code completion.... http://avalonedit.net/documentation/html/47c58b63-f30c-4290-a2f2-881d21227446.htm
             OnModelChanged();
+        }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _mainEditWindow.Register();
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SmallerFont(object sender, RoutedEventArgs e)
+        {
+            TextSize = Math.Max(TextSize - 2, 10);
+        }
+
+        private void LargerFont(object sender, RoutedEventArgs e)
+        {
+            TextSize = Math.Min(TextSize + 2, 36);
+        }
+
+        private void ToggleLineNumbers(object sender, RoutedEventArgs e)
+        {
+            LineNumbersOn = !LineNumbersOn;
+        }
+
+        private void ToggleWordWrap(object sender, RoutedEventArgs e)
+        {
+            WordWrapOn = !WordWrapOn;
         }
     }
 }

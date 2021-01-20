@@ -4,6 +4,7 @@
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:local="clr-namespace:TextrudeInteractive"
+                         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
                          mc:Ignorable="d"
                          Title="Textrude Interactive" Height="800" Width="1000"
                          Closing="MainWindow_OnClosing"
@@ -15,6 +16,7 @@
                          TextOptions.TextRenderingMode="Auto"
                          Background="{DynamicResource MaterialDesignPaper}"
                          FontFamily="{DynamicResource MaterialDesignFont}"
+                         Loaded="MainWindow_OnLoaded"
 
                          xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
     <Window.Resources>
@@ -39,6 +41,15 @@
             <Setter Property="Padding" Value="2" />
 
         </Style>
+        <Style TargetType="avalonEdit:TextEditor">
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+            <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
+            <Setter Property="FontSize" Value="{Binding TextSize}"/>
+            <Setter Property="WordWrap" Value="{Binding  WordWrapOn}" />
+            <Setter Property="Padding" Value="4" />
+           
+        </Style>
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
@@ -50,6 +61,12 @@
                 <Separator/>
                 <MenuItem Click="ExportInvocation" Header="Export as invocation"/>
             </MenuItem>
+            <MenuItem Header ="_View">
+                <MenuItem Header ="Toggle Line _Numbers" Click="ToggleLineNumbers" />
+                <MenuItem Header ="Toggle _Word Wrap" Click="ToggleWordWrap" />
+                <MenuItem Header ="_Smaller font" Click="SmallerFont"/>
+                <MenuItem Header ="_Larger font" Click="LargerFont"/>
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="Home page..." Click="ShowAbout" />
                 <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
@@ -57,6 +74,8 @@
                 <MenuItem Header="Report a problem..." Click="NewIssue" />
             </MenuItem>
         </Menu>
+        <DockPanel DockPanel.Dock="Bottom">
+       
         <Grid DockPanel.Dock="Bottom" Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="6*" />
@@ -79,39 +98,13 @@
                         <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}"  >
                             <TabItem Header="model">
                                 <DockPanel>
-
-
                                     <ComboBox Name="format0" SelectionChanged="OnModelFormatChanged"
                                               DockPanel.Dock="Top" />
-                                    <TabControl>
-                                        <TabItem Header="old">
-                                            <TextBox Name="ModelTextBox0"
-                                                 DockPanel.Dock="Bottom"
-
-                                                 TextChanged="OnModelTextChanged"
-                                                 Foreground="LightSeaGreen"
-                                        />
-                            </TabItem>
-                                        <TabItem Header="avalon"
-                                            >
-                                            <avalonEdit:TextEditor
-
-                                                xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-
-                                                Name="avalon1"
-
-                                                FontFamily="Consolas"
-
-                                                SyntaxHighlighting="C#"
-
-                                                FontSize="10pt"
-                                                TextChanged="Avalon1_OnTextChanged"
-ShowLineNumbers="True"                                                
-                                                />
-
-                                        </TabItem>
-
-                        </TabControl>
+                                            <avalonEdit:TextEditor 
+                                                Foreground="LightSeaGreen"
+                                                Name="ModelTextBox0"
+                                                DockPanel.Dock="Bottom"
+                                                TextChanged="Avalon1_OnTextChanged" />
 
 
                                 </DockPanel>
@@ -121,10 +114,11 @@ ShowLineNumbers="True"
                                 <DockPanel>
                                     <ComboBox Name="format1" SelectionChanged="OnModelFormatChanged"
                                               DockPanel.Dock="Top" />
-                                    <TextBox Name="ModelTextBox1"
-                                             TextChanged="OnModelTextChanged"
-                                             DockPanel.Dock="Bottom"
-                                             Foreground="LightSeaGreen"/>
+                                    <avalonEdit:TextEditor 
+                                        Name="ModelTextBox1"
+                                        Foreground="LightSeaGreen"
+                                        DockPanel.Dock="Bottom"
+                                        TextChanged="Avalon1_OnTextChanged" />
 
                                 </DockPanel>
                             </TabItem>
@@ -133,10 +127,11 @@ ShowLineNumbers="True"
 
                                     <ComboBox Name="format2" SelectionChanged="OnModelFormatChanged"
                                               DockPanel.Dock="Top" />
-                                    <TextBox Name="ModelTextBox2"
-                                             TextChanged="OnModelTextChanged"
-                                             DockPanel.Dock="Bottom"
-                                             Foreground="LightSeaGreen"/>
+                                    <avalonEdit:TextEditor 
+                                        Name="ModelTextBox2"
+                                        Foreground="LightSeaGreen"
+                                        DockPanel.Dock="Bottom"
+                                        TextChanged="Avalon1_OnTextChanged" />
 
                                 </DockPanel>
                             </TabItem>
@@ -146,14 +141,16 @@ ShowLineNumbers="True"
 
                         <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
                             <TabItem Header="definitions">
-                                <TextBox Name="DefinitionsTextBox"
-                                         TextChanged="OnModelTextChanged" 
-                                         Foreground="Yellow"/>
+                                <avalonEdit:TextEditor 
+                                    Name="DefinitionsTextBox"
+                                    Foreground="Yellow"
+                                    TextChanged="Avalon1_OnTextChanged" />
                             </TabItem>
                             <TabItem Header="include folders">
-                                <TextBox Name="IncludesTextBox"
-                                         TextChanged="OnModelTextChanged" 
-                                         Foreground="Pink"/>
+                                <avalonEdit:TextEditor 
+                                    Name="IncludesTextBox"
+                                    Foreground="Pink"
+                                    TextChanged="Avalon1_OnTextChanged" />
                             </TabItem>
                         </TabControl>
                     </TabItem>
@@ -166,9 +163,11 @@ ShowLineNumbers="True"
 
                 <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
                     <TabItem Header="Template">
-                        <TextBox Name="TemplateTextBox"
-                                 TextChanged="OnModelTextChanged"
-                                 Foreground="White"/>
+                        <avalonEdit:TextEditor 
+                                               Name="TemplateTextBox"
+                                               TextChanged="Avalon1_OnTextChanged"
+                                               Foreground="White"
+                        />
                     </TabItem>
                 </TabControl>
 
@@ -178,23 +177,27 @@ ShowLineNumbers="True"
 
                 <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4">
                     <TabItem Header="output">
-
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText0"
-                                 IsReadOnly="True"
-                                 Foreground="GreenYellow" />
+                      
+                        <avalonEdit:TextEditor 
+                            Name="OutputText0"
+                            Foreground="GreenYellow"
+                            IsReadOnly="True"/>
+                           
                     </TabItem>
                     <TabItem Header="output1">
 
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText1"
-                                 IsReadOnly="True"
-                                 Foreground="GreenYellow"/>
-                    </TabItem>
+                        <avalonEdit:TextEditor 
+                            Name="OutputText1"
+                            Foreground="GreenYellow"
+                            IsReadOnly="True"/>
+                        </TabItem>
                     <TabItem Header="output2">
 
-                        <TextBox DockPanel.Dock="Bottom" Name="OutputText2"
-                                 IsReadOnly="True" 
-                                 Foreground="GreenYellow"/>
-                    </TabItem>
+                        <avalonEdit:TextEditor 
+                            Name="OutputText2"
+                            Foreground="GreenYellow"
+                            IsReadOnly="True"/>
+                        </TabItem>
                 </TabControl>
 
 
@@ -209,7 +212,7 @@ ShowLineNumbers="True"
                      FontSize="16" />
 
         </Grid>
-
+        </DockPanel>
     </DockPanel>
 
 </controls:MaterialWindow>
