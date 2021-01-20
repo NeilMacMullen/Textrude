@@ -36,7 +36,7 @@ namespace Engine.Application
         }
 
         /// <summary>
-        ///     Parse a set of assigments and return them as a dictionary
+        ///     Parse a set of assignments and return them as a dictionary
         /// </summary>
         /// <remarks>
         ///     Models can accept dictionaries directly so that's our preferred output format

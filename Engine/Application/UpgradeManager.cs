@@ -6,6 +6,12 @@ using Newtonsoft.Json;
 
 namespace Engine.Application
 {
+    /// <summary>
+    ///     Provides a way of checking whether the current version is out of date
+    /// </summary>
+    /// <remarks>
+    ///     We look for new versions on the github page
+    /// </remarks>
     public static class UpgradeManager
     {
         public const string ReleaseSite = "https://github.com/NeilMacMullen/Textrude";

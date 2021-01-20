@@ -73,8 +73,7 @@ namespace Engine.Application
         ///     Compile a template
         /// </summary>
         /// <remarks>
-        ///     This should not be able to throw an exception but there appears to be a
-        ///     bug in the Scriban parser
+        ///     This should not be able to throw an exception but we want to ensure that we catch any Scriban bugs
         /// </remarks>
         public void SetTemplate(string templateText)
         {
@@ -129,42 +128,27 @@ namespace Engine.Application
         }
 
 
-        public static string[] Walk(IDictionary<string, object> container,
-            Func<IDictionary<string, object>, string, string[]> combiner)
+        public static ImmutableArray<ModelPath> PathsForObjectTree(IDictionary<string, object> container,
+            ModelPath prefix)
         {
-            return container
-                .Select(kv => new {Name = kv.Key.ToString(), FunctionList = kv.Value as IDictionary<string, object>})
-                .Where(o => o.FunctionList != null)
-                .SelectMany(ns => combiner(ns.FunctionList, ns.Name))
-                .ToArray();
+            var ret = new List<ModelPath>();
+
+
+            foreach (var keyValuePair in container)
+            {
+                var p = prefix.WithChild(keyValuePair.Key);
+                if (keyValuePair.Value is IDictionary<string, object> child)
+                    ret.AddRange(PathsForObjectTree(child, p));
+                else ret.Add(p);
+            }
+
+            return ret.ToImmutableArray();
         }
 
-        public static string[] GetFunctions(IDictionary<string, object> container)
-        {
-            string[] funcNames(IDictionary<string, object> o, string prefix) => o
-                .Where(kv => kv.Value is IScriptFunctionInfo)
-                .Select(kv => $"{prefix}.{kv.Key}").ToArray();
+        public ImmutableArray<ModelPath> GetBuiltIns() => PathsForObjectTree(_context.BuiltinObject, ModelPath.Empty);
+        public ImmutableArray<ModelPath> GetObjectTree() => PathsForObjectTree(_top, ModelPath.Empty);
 
-            return Walk(container, funcNames);
-        }
-
-        public static string[] GetStrings(ScriptObject container)
-        {
-            string[] strNames(IDictionary<string, object> o, string prefix) => o
-                .Where(kv => kv.Value is string)
-                .Select(kv => $"{prefix}.{kv.Key}").ToArray();
-
-            return Walk(container, strNames);
-        }
-
-
-        public string[] GetBuiltInFunctions() => GetFunctions(new TemplateContext().BuiltinObject);
-
-        public string[] GetHelperFunctions() => GetFunctions(_top);
-
-
-        public string[] GetIntellisense() => GetBuiltInFunctions().Concat(GetHelperFunctions())
-            .Concat(GetStrings(_top))
-            .ToArray();
+        public ImmutableArray<ModelPath> ModelPaths() => GetBuiltIns().Concat(GetObjectTree())
+            .ToImmutableArray();
     }
 }

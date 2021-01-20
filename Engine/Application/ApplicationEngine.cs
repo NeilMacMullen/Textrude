@@ -12,7 +12,7 @@ namespace Engine.Application
     /// </summary>
     /// <remarks>
     ///     Both the UI and CLI applications perform the same task.
-    ///     The only significant difference is that the CLI marshalls
+    ///     The only significant difference is that the CLI marshals
     ///     arguments from the command line and then writes the
     ///     output streams to files.
     ///     Some logic is delegated to the TemplateManager; the intention
@@ -40,7 +40,6 @@ namespace Engine.Application
         /// <summary>
         ///     Create a new application engine
         /// </summary>
-        /// <param name="fileSystem">abstract file system to allow for testing</param>
         public ApplicationEngine(RunTimeEnvironment environment)
         {
             _environment = environment;
@@ -69,7 +68,7 @@ namespace Engine.Application
         /// </summary>
         public bool HasErrors => Errors.Any();
 
-        public string[] GetIntellisense() => _templateManager.GetIntellisense();
+        public ImmutableArray<ModelPath> ModelPaths() => _templateManager.ModelPaths();
 
         /// <summary>
         ///     Parses and adds a new model to engine
@@ -198,16 +197,16 @@ namespace Engine.Application
         /// </summary>
         /// <remarks>
         ///     A template can render to multiple output streams.  By convention they are named
-        ///     output,output1,output2 etc but in future we may allow more flexib;e naming
+        ///     output,output1,output2 etc but in future we may allow more flexible naming
         /// </remarks>
-        public string[] GetOutput(int count)
+        public ImmutableArray<string> GetOutput(int count)
         {
             return
                 Enumerable.Range(0, count).Select(i =>
                     i == 0
                         ? Output
                         : _templateManager.TryGetVariable($"{ApplicationStrings.OutputPrefix}{i}")
-                ).ToArray();
+                ).ToImmutableArray();
         }
 
         /// <summary>

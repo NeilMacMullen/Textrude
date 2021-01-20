@@ -15,7 +15,7 @@ namespace Engine.Application
             Misc
         }
 
-        private static readonly Dictionary<KnownAssemblies, ScriptObject> _cachedResults =
+        private static readonly Dictionary<KnownAssemblies, ScriptObject> CachedResults =
             new();
 
         public static ScriptObject GetHumanizrMethods()
@@ -37,12 +37,12 @@ namespace Engine.Application
 
         private static ScriptObject GetOrCreate(KnownAssemblies name, Func<IEnumerable<Type>> typeFetcher)
         {
-            if (_cachedResults.TryGetValue(name, out var scriptObject))
+            if (CachedResults.TryGetValue(name, out var scriptObject))
                 return scriptObject;
             scriptObject = new ScriptObject();
             foreach (var extensionClass in typeFetcher())
                 scriptObject.Import(extensionClass);
-            _cachedResults[name] = scriptObject;
+            CachedResults[name] = scriptObject;
 
             return scriptObject;
         }
@@ -56,17 +56,6 @@ namespace Engine.Application
         public static ScriptObject GetMiscMethods()
         {
             return GetOrCreate(KnownAssemblies.Misc, () => new[] {typeof(MiscMethods)});
-        }
-
-        public static ScriptObject MakeScriptObject(IEnumerable<Type> types)
-        {
-            var scriptObject1 = new ScriptObject();
-            foreach (var extensionClass in types)
-            {
-                scriptObject1.Import(extensionClass);
-            }
-
-            return scriptObject1;
         }
     }
 }

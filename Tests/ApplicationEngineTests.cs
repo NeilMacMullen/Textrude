@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using Engine.Application;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,141 +11,42 @@ namespace Tests
         private readonly MockFileSystem _files = new();
         private readonly RunTimeEnvironment _rte;
 
-        private readonly ModelFormat[] _structParsers =
-        {
-            ModelFormat.Yaml,
-            ModelFormat.Json
-        };
 
         public ApplicationEngineTests() => _rte = new RunTimeEnvironment(_files);
 
-
-        private void Test(object obj, string template, Action<string> act)
+        [TestMethod]
+        public void CodeCompletionShowsModel()
         {
-            foreach (var type in _structParsers)
-            {
-                var text = ModelDeserializerFactory.Serialise(obj, type);
-                var result = new ApplicationEngine(_rte)
-                    .WithTemplate(template)
-                    .WithModel(text, type)
-                    .Render()
-                    .Output;
-                act(result);
-            }
+            var model =
+                @"str: a";
+
+            new ApplicationEngine(_rte)
+                .WithModel(model, ModelFormat.Yaml)
+                .ModelPaths()
+                .Select(p => p.Render())
+                .Should()
+                .Contain("model.str");
         }
 
         [TestMethod]
-        public void SimpleStringCanBeInterpreted()
+        public void CodeCompletionShowsDefinitions()
         {
-            Test(new
-                {
-                    Test = "testval"
-                },
-                "{{model.Test}}",
-                result =>
-                    result.Should().Be("testval")
-            );
-        }
-
-
-        [TestMethod]
-        public void SimpleIntCanBeInterpreted()
-        {
-            Test(new
-                {
-                    Test = "5"
-                },
-                "{{model.Test}}",
-                result =>
-                    result.Should().Be("5")
-            );
+            new ApplicationEngine(_rte)
+                .WithDefinitions(new[] {"abc=def"})
+                .ModelPaths()
+                .Select(p => p.Render())
+                .Should()
+                .Contain("def.abc");
         }
 
         [TestMethod]
-        public void NestedObjectCanBeInterpreted()
+        public void CodeCompletionShowsEnvironment()
         {
-            Test(
-                new
-                {
-                    Test = new {Sub = "sub"}
-                },
-                "{{model.Test.Sub}}",
-                result =>
-                    result.Should().Be("sub")
-            );
-        }
-
-        [TestMethod]
-        public void ArrayCanBeInterpreted()
-        {
-            Test(
-                new[] {1, 2, 3},
-                "{{model[0]}}",
-                result =>
-                    result.Should().Be("1")
-            );
-        }
-
-        [TestMethod]
-        public void ArrayOfObjectsCanBeInterpreted()
-        {
-            Test(new
-                {
-                    Test = new[] {new {Sub = "sub0"}}
-                },
-                "{{model.Test[0].Sub}}",
-                result =>
-                    result.Should().Be("sub0")
-            );
-        }
-
-        [TestMethod]
-        public void ObjectWithAllTheTypes()
-        {
-            Test(
-                new
-                {
-                    S = "sub0",
-                    I = 123,
-                    F = 45.6,
-                    G = Guid.Empty,
-                    D = DateTime.UtcNow,
-                    B = true
-                },
-                "-",
-                result =>
-                    result.Should().NotBeEmpty()
-            );
-        }
-
-        [TestMethod]
-        public void NumericTypesCanBeAdded()
-        {
-            Test(
-                new
-                {
-                    A = 1,
-                    B = 2
-                },
-                "{{model.A + model.B}}",
-                result =>
-                    result.Should().Be("3")
-            );
-        }
-
-        [TestMethod]
-        public void BooleanTypesAreEvaluated()
-        {
-            Test(
-                new
-                {
-                    A = false,
-                    B = true
-                },
-                "{{model.A || model.B}}",
-                result =>
-                    result.Should().Be("true")
-            );
+            new ApplicationEngine(_rte)
+                .WithEnvironmentVariables()
+                .ModelPaths()
+                .Select(p => p.Render())
+                .Should().Contain("env.USERNAME");
         }
     }
 }

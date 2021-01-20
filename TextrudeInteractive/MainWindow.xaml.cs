@@ -180,7 +180,7 @@ namespace TextrudeInteractive
                 Errors.Text += "No errors";
             }
 
-            _mainEditWindow.SetCompletion(engine.GetIntellisense());
+            _mainEditWindow.SetCompletion(engine.ModelPaths());
         }
 
 
