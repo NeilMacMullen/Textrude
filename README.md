@@ -39,13 +39,14 @@ You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/
 
 ## What's new
 
-### vNext
+### v1.2.0
 - Turn StrictVariables back on
 - AvalonEdit used for edit boxes in TextrudeInteractive allowing:
-  - line numbers
+  - line numberss
   - text size can be changed
   - CTRL-Z etc
   - basic auto-complete when '.' is typed
+- Docker image support - thanks to [Martin Hochstrasser](https://github.com/highstreeto)
 
 ### v1.1.0
 - first public release
