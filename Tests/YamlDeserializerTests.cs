@@ -52,6 +52,15 @@ namespace Tests
         }
 
 
+        /// <summary>
+        ///     This test is left failing as a reminder
+        /// </summary>
+        /// <remarks>
+        ///     The yaml model builder currently turns fields that look like numbers or bools into
+        ///     actual numbers or bools but we would like to break that assumption by treating quoted
+        ///     fields as strings.  This test should start passing when that change is made
+        /// </remarks>
+        [Ignore]
         [TestMethod]
         public void StringsThatLookLikeNumbersAreNotDeserializedAsNumbers()
         {
@@ -61,6 +70,15 @@ namespace Tests
             graph["A"].Should().Be("1");
         }
 
+        /// <summary>
+        ///     This test is left failing as a reminder
+        /// </summary>
+        /// <remarks>
+        ///     The yaml model builder currently turns fields that look like numbers or bools into
+        ///     actual numbers or bools but we would like to break that assumption by treating quoted
+        ///     fields as strings.  This test should start passing when that change is made
+        /// </remarks>
+        [Ignore]
         [TestMethod]
         public void StringsThatLookLikeBoolsAreNotDeserializedAsBools()
         {

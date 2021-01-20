@@ -39,8 +39,7 @@ namespace Engine.Application
 
         public TemplateManager(IFileSystemOperations ops)
         {
-            //TODO - disabled until bug-fix in Scriban - otherwise 'include' operation fails
-            //_context.StrictVariables = true;
+            _context.StrictVariables = true;
 
             _scriptLoader = new ScriptLoader(ops);
             _context.TemplateLoader = _scriptLoader;

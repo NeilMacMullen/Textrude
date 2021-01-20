@@ -10,7 +10,7 @@ namespace Tests
         private readonly MockFileSystem _files = new();
 
         [TestMethod]
-        public void TemplateLoaderShouldWork()
+        public void TemplateLoaderShouldBeAbleToSupplyFile()
         {
             var mgr = new TemplateManager(_files);
             _files.WriteAllText("test", "abcde");
