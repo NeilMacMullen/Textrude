@@ -26,7 +26,7 @@ Let's face it, there are any number of code-generation technologies you might co
 
 ## Download/build
 
-The current release is **v1.1.0**.
+The current release is **v1.2.0**.
 
  - Get binaries from [Releases](https://github.com/NeilMacMullen/Textrude/releases).   These are provided as single-file executables bundled with example projects and library scripts. 
 
