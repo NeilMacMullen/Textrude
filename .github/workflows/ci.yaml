@@ -12,8 +12,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore -p:Configuration=Linux-Debug
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -p:Configuration=Linux-Debug --no-restore
     - name: Test
-      run: dotnet test --no-build
+      run: dotnet test -p:Configuration=Linux-Debug --no-build
