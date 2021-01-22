@@ -30,7 +30,6 @@ namespace Tests
             var scriptObject1 = new ScriptObject();
             var context = new TemplateContext();
             context.PushGlobal(scriptObject1);
-
             var result = compiledTemplate.Render(context);
             result.Should().Be("outer1outer2");
             context.Output.ToString().Should().Be("outer1outer2");
@@ -114,6 +113,24 @@ namespace Tests
 
             builtins.Should().Contain("string.contains");
             builtins.Should().Contain("date.now");
+        }
+
+
+        /// <summary>
+        /// Tracks https://github.com/scriban/scriban/issues/315
+        /// </summary>
+        [TestMethod]
+        public void ArrayEachExistsAndWorksAsExpected()
+        {
+            var script = @"
+{{ [""  a  "", ""  b  "", ""  c   ""] | array.each @string.strip }}
+";
+            var template = Template.Parse(script);
+            string result=string.Empty;
+             Action render = () => result = template.Render() ;
+            render.Should().NotThrow();
+            result.Should().NotContain("not found", "because function should exist");
+            result.Trim().Should().Be(@"[""a"", ""b"", ""c""]");
         }
     }
 }
