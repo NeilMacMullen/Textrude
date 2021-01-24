@@ -42,11 +42,16 @@ namespace Tests
         [TestMethod]
         public void CodeCompletionShowsEnvironment()
         {
+            var envKeys = System.Environment.GetEnvironmentVariables()
+                .Keys
+                .Cast<string>()
+                .Select(e => $"env.{e}");
+
             new ApplicationEngine(_rte)
                 .WithEnvironmentVariables()
                 .ModelPaths()
                 .Select(p => p.Render())
-                .Should().Contain("env.USERNAME");
+                .Should().Contain(envKeys);
         }
     }
 }
