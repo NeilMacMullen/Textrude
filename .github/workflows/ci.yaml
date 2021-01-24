@@ -3,10 +3,18 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  test_linux:
+  test:
     env:
       DisableGitVersionTask: true
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            build_config: Debug
+          - os: ubuntu-latest
+            build_config: Linux-Debug
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -14,24 +22,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore -p:Configuration=Linux-Debug
+      run: dotnet restore -p:Configuration=${{ matrix.build_config }}
     - name: Build
-      run: dotnet build -p:Configuration=Linux-Debug --no-restore
+      run: dotnet build -p:Configuration=${{ matrix.build_config }} --no-restore
     - name: Test
-      run: dotnet test -p:Configuration=Linux-Debug --no-build
-  test_windows:
-    env:
-      DisableGitVersionTask: true
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build
+      run: dotnet test -p:Configuration=${{ matrix.build_config }} --no-build
