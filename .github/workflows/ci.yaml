@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  test_linux:
     env:
       DisableGitVersionTask: true
     runs-on: ubuntu-latest
@@ -19,3 +19,19 @@ jobs:
       run: dotnet build -p:Configuration=Linux-Debug --no-restore
     - name: Test
       run: dotnet test -p:Configuration=Linux-Debug --no-build
+  test_windows:
+    env:
+      DisableGitVersionTask: true
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build
