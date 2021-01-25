@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -44,15 +45,18 @@ namespace TextrudeInteractive
 
         private bool _wordWrapOn;
 
+        private Microsoft.Web.WebView2.Core.CoreWebView2Environment _webEnv;
+
         public MainWindow()
         {
             InitializeComponent();
             SetTitle(string.Empty);
             formats = new[] {format0, format1, format2};
             modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
-            OutputBoxes = new[] {OutputText0, OutputText1, OutputText2};
+            OutputBoxes = new[] {/*OutputText0,*/ OutputText1, OutputText2};
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
+            InitWebView();
 
             _projectManager = new ProjectManager(this);
             foreach (var comboBox in formats)
@@ -74,7 +78,68 @@ namespace TextrudeInteractive
             DataContext = this;
         }
 
-        public bool LineNumbersOn
+        private async void InitWebView() {
+            _webEnv = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync();
+            await webView.EnsureCoreWebView2Async(_webEnv);
+
+            webView.CoreWebView2.AddWebResourceRequestedFilter("http://*", Microsoft.Web.WebView2.Core.CoreWebView2WebResourceContext.All);
+            webView.CoreWebView2.WebResourceRequested += CoreWebView2_WebResourceRequested; ;
+
+            webView.CoreWebView2.Navigate("http://monaco-editor");
+            webView.CoreWebView2.OpenDevToolsWindow();
+        }
+
+		private void CoreWebView2_WebResourceRequested(object sender, Microsoft.Web.WebView2.Core.CoreWebView2WebResourceRequestedEventArgs e)
+		{
+			if (e.Request.Uri == "http://monaco-editor/")
+            {
+                e.Response = _webEnv.CreateWebResourceResponse(
+                    new MemoryStream(System.Text.Encoding.UTF8.GetBytes(Properties.Resources.monaco)),
+                    200,
+                    "OK",
+                    ""
+                );
+			} else if (e.Request.Uri.StartsWith("http://monaco-editor/vs"))
+			{
+                var path = e.Request.Uri.Replace("http://monaco-editor/", "");
+				using (var zipStream = new MemoryStream(Properties.Resources.monaco_editor_0_21_2))
+				{
+					using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Read))
+					{
+                        var file = zip.GetEntry(path);
+                        var response = new MemoryStream(); // cache into local stream so is not disposed
+                        file.Open().CopyTo(response);
+                        response.Position = 0;
+
+                        string mimeType;
+                        switch (Path.GetExtension(path))
+						{
+                            case ".js":
+                                mimeType = "text/javascript";
+                                break;
+                            case ".css":
+                                mimeType = "text/css";
+                                break;
+                            case ".ttf":
+                                mimeType = "font/ttf";
+                                break;
+							default:
+                                mimeType = "application/octet-stream";
+                                break;
+						}
+
+                        e.Response = _webEnv.CreateWebResourceResponse(
+                            response,
+                            200,
+                            "OK",
+                            $"Content-Type: {mimeType}\nContent-Length: {response.Length}"
+                        );
+                    }
+				}
+			}
+		}
+
+		public bool LineNumbersOn
         {
             get => _lineNumbersOn;
             set

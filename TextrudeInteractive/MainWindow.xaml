@@ -1,218 +1,216 @@
-﻿<controls:MaterialWindow x:Class="TextrudeInteractive.MainWindow"
-                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:local="clr-namespace:TextrudeInteractive"
-                         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-                         mc:Ignorable="d"
-                         Title="Textrude Interactive" Height="800" Width="1000"
-                         Closing="MainWindow_OnClosing"
-                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                         TextElement.FontWeight="Regular"
-                         TextElement.FontSize="13"
-                         TextOptions.TextFormattingMode="Ideal"
-                         TextOptions.TextRenderingMode="Auto"
-                         Background="{DynamicResource MaterialDesignPaper}"
-                         FontFamily="{DynamicResource MaterialDesignFont}"
-                         Loaded="MainWindow_OnLoaded"
+﻿<controls:MaterialWindow
+  x:Class="TextrudeInteractive.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+  xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:TextrudeInteractive"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+  Title="Textrude Interactive"
+  Width="1000"
+  Height="800"
+  Background="{DynamicResource MaterialDesignPaper}"
+  Closing="MainWindow_OnClosing"
+  FontFamily="{DynamicResource MaterialDesignFont}"
+  Loaded="MainWindow_OnLoaded"
+  TextElement.FontSize="13"
+  TextElement.FontWeight="Regular"
+  TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+  TextOptions.TextFormattingMode="Ideal"
+  TextOptions.TextRenderingMode="Auto"
+  mc:Ignorable="d">
+  <Window.Resources>
+    <Style BasedOn="{StaticResource MaterialDesignGridSplitterPreview}" TargetType="GridSplitter">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
 
-                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
-    <Window.Resources>
-        <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-        </Style>
+    <Style BasedOn="{StaticResource MaterialDesignComboBox}" TargetType="ComboBox">
+      <Setter Property="Foreground" Value="Azure" />
+      <Setter Property="HorizontalContentAlignment" Value="Right" />
+    </Style>
 
-        <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
-            <Setter Property="Foreground" Value="Azure" />
-            <Setter Property="HorizontalContentAlignment" Value="Right" />
-        </Style>
-        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-            <Setter Property="FontFamily" Value="Consolas" />
+    <Style BasedOn="{StaticResource MaterialDesignTextBox}" TargetType="TextBox">
+      <Setter Property="FontFamily" Value="Consolas" />
 
-            <Setter Property="AcceptsReturn" Value="True" />
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="Margin" Value="2" />
-            <Setter Property="BorderBrush" Value="DarkSlateGray" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Padding" Value="2" />
+      <Setter Property="AcceptsReturn" Value="True" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+      <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+      <Setter Property="Margin" Value="2" />
+      <Setter Property="BorderBrush" Value="DarkSlateGray" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="Padding" Value="2" />
+    </Style>
 
-        </Style>
-        <Style TargetType="avalonEdit:TextEditor">
-            <Setter Property="FontFamily" Value="Consolas" />
-            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
-            <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
-            <Setter Property="FontSize" Value="{Binding TextSize}"/>
-            <Setter Property="WordWrap" Value="{Binding  WordWrapOn}" />
-            <Setter Property="Padding" Value="4" />
-           
-        </Style>
-    </Window.Resources>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" IsMainMenu="True">
-            <MenuItem Header="_Project">
-                <MenuItem Click="NewProject" Header="New" />
-                <MenuItem Click="LoadProject" Header="Load" />
-                <MenuItem Click="SaveProject" Header="Save" />
-                <MenuItem Click="SaveProjectAs" Header="Save as..." />
-                <Separator/>
-                <MenuItem Click="ExportInvocation" Header="Export as invocation"/>
-            </MenuItem>
-            <MenuItem Header ="_View">
-                <MenuItem Header ="Toggle Line _Numbers" Click="ToggleLineNumbers" />
-                <MenuItem Header ="Toggle _Word Wrap" Click="ToggleWordWrap" />
-                <MenuItem Header ="_Smaller font" Click="SmallerFont"/>
-                <MenuItem Header ="_Larger font" Click="LargerFont"/>
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="Home page..." Click="ShowAbout" />
-                <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
-                <Separator/>
-                <MenuItem Header="Report a problem..." Click="NewIssue" />
-            </MenuItem>
-        </Menu>
-        <DockPanel DockPanel.Dock="Bottom">
-       
-        <Grid DockPanel.Dock="Bottom" Margin="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="6*" />
-                <RowDefinition Height="3" />
-                <RowDefinition Height="3*" />
-            </Grid.RowDefinitions>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+    <Style TargetType="avalonEdit:TextEditor">
+      <Setter Property="FontFamily" Value="Consolas" />
+      <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+      <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
+      <Setter Property="FontSize" Value="{Binding TextSize}" />
+      <Setter Property="WordWrap" Value="{Binding WordWrapOn}" />
+      <Setter Property="Padding" Value="4" />
+    </Style>
+  </Window.Resources>
 
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" IsMainMenu="True">
+      <MenuItem Header="_Project">
+        <MenuItem Click="NewProject" Header="New" />
+        <MenuItem Click="LoadProject" Header="Load" />
+        <MenuItem Click="SaveProject" Header="Save" />
+        <MenuItem Click="SaveProjectAs" Header="Save as..." />
+        <Separator />
+        <MenuItem Click="ExportInvocation" Header="Export as invocation" />
+      </MenuItem>
+      <MenuItem Header="_View">
+        <MenuItem Click="ToggleLineNumbers" Header="Toggle Line _Numbers" />
+        <MenuItem Click="ToggleWordWrap" Header="Toggle _Word Wrap" />
+        <MenuItem Click="SmallerFont" Header="_Smaller font" />
+        <MenuItem Click="LargerFont" Header="_Larger font" />
+      </MenuItem>
+      <MenuItem Header="_Help">
+        <MenuItem Click="ShowAbout" Header="Home page..." />
+        <MenuItem Click="ShowLanguageRef" Header="Scriban language reference..." />
+        <Separator />
+        <MenuItem Click="NewIssue" Header="Report a problem..." />
+      </MenuItem>
+    </Menu>
 
-                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
-                    <TabItem Header="models">
+    <DockPanel DockPanel.Dock="Bottom">
+      <Grid Margin="2" DockPanel.Dock="Bottom">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="6*" />
+          <RowDefinition Height="3" />
+          <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
 
-                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}"  >
-                            <TabItem Header="model">
-                                <DockPanel>
-                                    <ComboBox Name="format0" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                            <avalonEdit:TextEditor 
-                                                Foreground="LightSeaGreen"
-                                                Name="ModelTextBox0"
-                                                DockPanel.Dock="Bottom"
-                                                TextChanged="Avalon1_OnTextChanged" />
+          <TabControl Grid.Column="0" Style="{StaticResource MaterialDesignTabControl}">
+            <TabItem Header="models">
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
+                <TabItem Header="model">
+                  <DockPanel>
+                    <ComboBox
+                      Name="format0"
+                      DockPanel.Dock="Top"
+                      SelectionChanged="OnModelFormatChanged" />
+                    <avalonEdit:TextEditor
+                      Name="ModelTextBox0"
+                      DockPanel.Dock="Bottom"
+                      Foreground="LightSeaGreen"
+                      TextChanged="Avalon1_OnTextChanged" />
+                  </DockPanel>
+                </TabItem>
 
+                <TabItem Header="model1">
+                  <DockPanel>
+                    <ComboBox
+                      Name="format1"
+                      DockPanel.Dock="Top"
+                      SelectionChanged="OnModelFormatChanged" />
+                    <avalonEdit:TextEditor
+                      Name="ModelTextBox1"
+                      DockPanel.Dock="Bottom"
+                      Foreground="LightSeaGreen"
+                      TextChanged="Avalon1_OnTextChanged" />
+                  </DockPanel>
+                </TabItem>
 
-                                </DockPanel>
+                <TabItem Header="model2">
+                  <DockPanel>
+                    <ComboBox
+                      Name="format2"
+                      DockPanel.Dock="Top"
+                      SelectionChanged="OnModelFormatChanged" />
+                    <avalonEdit:TextEditor
+                      Name="ModelTextBox2"
+                      DockPanel.Dock="Bottom"
+                      Foreground="LightSeaGreen"
+                      TextChanged="Avalon1_OnTextChanged" />
+                  </DockPanel>
+                </TabItem>
+              </TabControl>
+            </TabItem>
 
-                            </TabItem>
-                            <TabItem Header="model1">
-                                <DockPanel>
-                                    <ComboBox Name="format1" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                    <avalonEdit:TextEditor 
-                                        Name="ModelTextBox1"
-                                        Foreground="LightSeaGreen"
-                                        DockPanel.Dock="Bottom"
-                                        TextChanged="Avalon1_OnTextChanged" />
+            <TabItem Header="other">
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
+                <TabItem Header="definitions">
+                  <avalonEdit:TextEditor
+                    Name="DefinitionsTextBox"
+                    Foreground="Yellow"
+                    TextChanged="Avalon1_OnTextChanged" />
+                </TabItem>
 
-                                </DockPanel>
-                            </TabItem>
-                            <TabItem Header="model2">
-                                <DockPanel>
+                <TabItem Header="include folders">
+                  <avalonEdit:TextEditor
+                    Name="IncludesTextBox"
+                    Foreground="Pink"
+                    TextChanged="Avalon1_OnTextChanged" />
+                </TabItem>
+              </TabControl>
+            </TabItem>
+          </TabControl>
 
-                                    <ComboBox Name="format2" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                    <avalonEdit:TextEditor 
-                                        Name="ModelTextBox2"
-                                        Foreground="LightSeaGreen"
-                                        DockPanel.Dock="Bottom"
-                                        TextChanged="Avalon1_OnTextChanged" />
+          <GridSplitter Grid.Column="1" />
 
-                                </DockPanel>
-                            </TabItem>
-                        </TabControl>
-                    </TabItem>
-                    <TabItem Header="other">
+          <TabControl Grid.Column="2" Style="{StaticResource MaterialDesignTabControl}">
+            <TabItem Header="Template">
+              <avalonEdit:TextEditor
+                Name="TemplateTextBox"
+                Foreground="White"
+                TextChanged="Avalon1_OnTextChanged" />
+            </TabItem>
+          </TabControl>
 
-                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
-                            <TabItem Header="definitions">
-                                <avalonEdit:TextEditor 
-                                    Name="DefinitionsTextBox"
-                                    Foreground="Yellow"
-                                    TextChanged="Avalon1_OnTextChanged" />
-                            </TabItem>
-                            <TabItem Header="include folders">
-                                <avalonEdit:TextEditor 
-                                    Name="IncludesTextBox"
-                                    Foreground="Pink"
-                                    TextChanged="Avalon1_OnTextChanged" />
-                            </TabItem>
-                        </TabControl>
-                    </TabItem>
+          <GridSplitter Grid.Column="3" />
 
+          <TabControl Grid.Column="4" Style="{StaticResource MaterialDesignTabControl}">
+            <TabItem Header="output web">
+              <!--<avalonEdit:TextEditor
+                Name="OutputText0"
+                Foreground="GreenYellow"
+                IsReadOnly="True" />-->
+              <DockPanel>
+                <wv2:WebView2 Name="webView" />
+              </DockPanel>
+            </TabItem>
 
-                </TabControl>
+            <TabItem Header="output1">
+              <avalonEdit:TextEditor
+                Name="OutputText1"
+                Foreground="GreenYellow"
+                IsReadOnly="True" />
+            </TabItem>
 
-
-                <GridSplitter Grid.Column="1" />
-
-                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
-                    <TabItem Header="Template">
-                        <avalonEdit:TextEditor 
-                                               Name="TemplateTextBox"
-                                               TextChanged="Avalon1_OnTextChanged"
-                                               Foreground="White"
-                        />
-                    </TabItem>
-                </TabControl>
-
-
-                <GridSplitter Grid.Column="3" />
-
-
-                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4">
-                    <TabItem Header="output">
-                      
-                        <avalonEdit:TextEditor 
-                            Name="OutputText0"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                           
-                    </TabItem>
-                    <TabItem Header="output1">
-
-                        <avalonEdit:TextEditor 
-                            Name="OutputText1"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                        </TabItem>
-                    <TabItem Header="output2">
-
-                        <avalonEdit:TextEditor 
-                            Name="OutputText2"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                        </TabItem>
-                </TabControl>
-
-
-            </Grid>
-            <GridSplitter Grid.Row="1" />
-
-
-            <TextBox Grid.Row="2" Name="Errors"
-                     FontWeight="Normal"
-                     IsReadOnly="True"
-                     Foreground="OrangeRed"
-                     FontSize="16" />
-
+            <TabItem Header="output2">
+              <avalonEdit:TextEditor
+                Name="OutputText2"
+                Foreground="GreenYellow"
+                IsReadOnly="True" />
+            </TabItem>
+          </TabControl>
         </Grid>
-        </DockPanel>
-    </DockPanel>
 
+        <GridSplitter Grid.Row="1" />
+
+        <TextBox
+          Name="Errors"
+          Grid.Row="2"
+          FontSize="16"
+          FontWeight="Normal"
+          Foreground="OrangeRed"
+          IsReadOnly="True" />
+      </Grid>
+    </DockPanel>
+  </DockPanel>
 </controls:MaterialWindow>
