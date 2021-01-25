@@ -180,9 +180,10 @@
                 Name="OutputText0"
                 Foreground="GreenYellow"
                 IsReadOnly="True" />-->
-              <DockPanel>
-                <wv2:WebView2 Name="webView" />
-              </DockPanel>
+              <wv2:WebView2
+                Name="webView"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
             </TabItem>
 
             <TabItem Header="output1">
