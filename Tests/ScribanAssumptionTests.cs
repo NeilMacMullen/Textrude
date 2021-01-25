@@ -117,7 +117,7 @@ namespace Tests
 
 
         /// <summary>
-        /// Tracks https://github.com/scriban/scriban/issues/315
+        ///     Tracks https://github.com/scriban/scriban/issues/315
         /// </summary>
         [TestMethod]
         public void ArrayEachExistsAndWorksAsExpected()
@@ -126,11 +126,25 @@ namespace Tests
 {{ [""  a  "", ""  b  "", ""  c   ""] | array.each @string.strip }}
 ";
             var template = Template.Parse(script);
-            string result=string.Empty;
-             Action render = () => result = template.Render() ;
+            var result = string.Empty;
+            Action render = () => result = template.Render();
             render.Should().NotThrow();
             result.Should().NotContain("not found", "because function should exist");
             result.Trim().Should().Be(@"[""a"", ""b"", ""c""]");
+        }
+
+
+        [TestMethod]
+        public void CurryingWorks()
+        {
+            var script = @"{{func a(lst,x)
+for i in lst;i+x;end
+end
+[1,2,3] | a 5 -}}
+";
+            var template = Template.Parse(script);
+            var result = template.Render();
+            result.Should().Be("678");
         }
     }
 }

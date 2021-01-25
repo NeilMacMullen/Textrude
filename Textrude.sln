@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0
 		doc\changelist.json = doc\changelist.json
 		doc\environmentAndDefinitions.md = doc\environmentAndDefinitions.md
 		doc\gettingStarted.md = doc\gettingStarted.md
+		doc\lib.md = doc\lib.md
 		doc\multiModel.md = doc\multiModel.md
 		README.md = README.md
 		doc\userLibrary.md = doc\userLibrary.md
@@ -25,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedApplication", "SharedApplication\SharedApplication.csproj", "{AF646DF2-B431-4DB5-9DAD-B54D31216ACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptLibrary", "ScriptLibrary\ScriptLibrary.csproj", "{B82D3016-E1F3-42E1-87B8-2BF1310FBE48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptLibrary", "ScriptLibrary\ScriptLibrary.csproj", "{B82D3016-E1F3-42E1-87B8-2BF1310FBE48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
