@@ -70,7 +70,8 @@ You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/
 ## Credits
 Textrude makes heavy use of the following components:
 - [Scriban](https://github.com/scriban/scriban) as the template language engine
-- [CsvHelper](https://github.com/JoshClose/CsvHelper) for command-line parsing
+- [CommandLineParser](https://github.com/commandlineparser/commandline) for command-line parsing
+- [CsvHelper](https://github.com/JoshClose/CsvHelper) for CSV deserialisation
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet) for YAML deserialisation
 - [Json.Net](https://www.newtonsoft.com/json) for Json deserialisation
 - [Humanizr](https://github.com/Humanizr/Humanizer) for useful text-processing
