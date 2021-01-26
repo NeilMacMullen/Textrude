@@ -4,6 +4,7 @@ WORKDIR /app
 COPY Engine/*.csproj ./Engine/
 COPY SharedApplication/*.csproj ./SharedApplication/
 COPY Textrude/*.csproj ./Textrude/
+COPY ScriptLibrary/*.csproj ./ScriptLibrary/
 RUN dotnet restore Textrude
 
 COPY . ./
@@ -11,9 +12,9 @@ COPY . ./
 # A newer version seems to be installed - closer investigation needed
 # (Of course currently this CANNOT work because of no local git clone)
 ENV DisableGitVersionTask=true
-RUN dotnet publish Textrude -c Release -o out
+RUN dotnet publish Textrude -c Release -o out -r linux-musl-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true
 
-FROM mcr.microsoft.com/dotnet/runtime:5.0
+FROM mcr.microsoft.com/dotnet/runtime-deps:5.0-alpine3.12
 WORKDIR /app
 COPY --from=builder /app/out .
-ENTRYPOINT ["dotnet", "Textrude.dll"]
+ENTRYPOINT ["/app/Textrude"]
