@@ -66,8 +66,22 @@ namespace TextrudeInteractive
 				comboBox.ItemsSource = Enum.GetValues(typeof(ModelFormat));
 			}
 
-			SetUI(EngineInputSet.EmptyYaml);
+			using (var zipStream = new MemoryStream(Properties.Resources.monaco_editor_0_21_2))
+			{
+				using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Read))
+				{
+					var monacoLangRegex = new System.Text.RegularExpressions.Regex(@"vs/basic-languages/(?<name>.+)/$");
+					var monacoLangs = zip.Entries
+						.Select(e => monacoLangRegex.Match(e.FullName))
+						.Where(m => m.Success)
+						.Select(m => m.Groups["name"].Value)
+						.ToList();
+					outpuFormat.ItemsSource = monacoLangs;
+					outpuFormat.SelectedValue = "html";
+				}
+			}
 
+			SetUI(EngineInputSet.EmptyYaml);
 
 			InputStream
 				.Throttle(TimeSpan.FromMilliseconds(300))
@@ -233,7 +247,7 @@ namespace TextrudeInteractive
 			if (webView != null && webView.CoreWebView2 != null)
 			{
 				webView.CoreWebView2.PostWebMessageAsJson(
-					new UpdateMonacoTextMessage(outputs[0], "csharp").ToJson()
+					new UpdateMonacoTextMessage(outputs[0], outpuFormat.SelectedValue.ToString()).ToJson()
 				);
 			}
 
@@ -293,6 +307,16 @@ namespace TextrudeInteractive
 		private void OnModelFormatChanged(object sender, SelectionChangedEventArgs e)
 		{
 			OnModelChanged();
+		}
+
+		private void OnOutputFormatChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (webView != null && webView.CoreWebView2 != null)
+			{
+				webView.CoreWebView2.PostWebMessageAsJson(
+					new UpdateMonacoLanguageMessage(outpuFormat.SelectedValue.ToString()).ToJson()
+				);
+			}
 		}
 
 		private void LoadProject(object sender, RoutedEventArgs e)
@@ -415,13 +439,29 @@ namespace TextrudeInteractive
 				Language = language;
 			}
 
+			[JsonPropertyName("type")]
+			public string Type { get; } = "UpdateText";
 			[JsonPropertyName("text")]
 			public string Text { get; }
 			[JsonPropertyName("language")]
 			public string Language { get; }
 
 			public string ToJson() => JsonSerializer.Serialize(this);
+		}
 
+		private record UpdateMonacoLanguageMessage
+		{
+			public UpdateMonacoLanguageMessage(string language)
+			{
+				Language = language;
+			}
+
+			[JsonPropertyName("type")]
+			public string Type { get; } = "UpdateLanguage";
+			[JsonPropertyName("language")]
+			public string Language { get; }
+
+			public string ToJson() => JsonSerializer.Serialize(this);
 		}
 	}
 }

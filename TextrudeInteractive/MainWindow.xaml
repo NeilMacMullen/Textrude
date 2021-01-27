@@ -180,10 +180,16 @@
                 Name="OutputText0"
                 Foreground="GreenYellow"
                 IsReadOnly="True" />-->
-              <wv2:WebView2
-                Name="webView"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" />
+              <DockPanel>
+                <WrapPanel DockPanel.Dock="Bottom">
+                  <Label Margin="0,0,10,0" VerticalAlignment="Center">Format:</Label>
+                  <ComboBox
+                    Name="outpuFormat"
+                    MinWidth="100"
+                    SelectionChanged="OnOutputFormatChanged" />
+                </WrapPanel>
+                <wv2:WebView2 Name="webView" />
+              </DockPanel>
             </TabItem>
 
             <TabItem Header="output1">
