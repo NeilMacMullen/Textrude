@@ -9,4 +9,8 @@
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ScriptLibrary\ScriptLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

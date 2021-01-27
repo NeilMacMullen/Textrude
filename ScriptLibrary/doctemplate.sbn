@@ -1,0 +1,54 @@
+﻿{{include "lib/warnings.sbn"}}
+{{include "lib/misc.sbn"}}
+<!---
+{{autogenwarning}}
+--->
+
+
+# Library functions
+
+This document describes the standard functions distributed with Textrude in the `lib` folder.
+
+{{for file in model
+filename = file.filename}}
+- [`{{filename}}`](#lib/{{filename}}.sbn)
+{{-end}}
+
+
+{{for file in model
+filename = file.filename}}
+
+## `lib/{{filename}}.sbn`
+
+{{for f in file.functions}}
+- [`{{f.name}}`](#{{filename}}/{{f.name}})
+{{end}}
+{{end}}
+
+{{for file in model}}
+{{for f in file.functions}}
+
+### `{{file.filename}}/{{f.name}}`
+```
+{{f.name}} {{f.usage}}
+```
+
+#### Description
+{{f.description}}
+
+#### Examples
+> **input**
+```scriban-html
+include "lib/{{file.filename}}.sbn"
+{{f.example}}
+```
+> **output**
+```html
+{{"{{"+f.example + "}}" | object.eval_template}}
+```
+
+{{end}}
+
+{{end}}
+
+

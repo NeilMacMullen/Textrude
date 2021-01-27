@@ -29,15 +29,3 @@ See the *humanizr.txtproj* project in the examples folder for more examples
 
 See the *misc.txtproj* project in the examples folder for more examples
 
-
-## Libraries 
-
-### warnings
-The *autogenwarning* function provides a useful warning block at the beginning of the output.
-```
-{{include "lib/warnings.sbn}}
-{{autogenwarning}}
-```
-See the *includeExample* project in the examples folder. 
-
-

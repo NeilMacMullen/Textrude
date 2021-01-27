@@ -1,0 +1,9 @@
+{{#read the README.md in Scriptlibrary if adding functions}}
+{{-
+#applies a function to an array
+#e.g. [1,2,3] | apply @(do;ret $0+1;end)
+func apply(lst,fn)
+for item in lst
+   @fn item
+end
+end-}}

@@ -60,7 +60,8 @@ You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/
 ## Documentation
 
 - [Getting started with template generation](doc/gettingStarted.md) 
-- [Built in functions and helpers](doc/builtIns.md)
+- [Built in helpers](doc/builtIns.md)
+- [Library functions](doc/lib.md)
 - [Environment variables and user-definitions](doc/environmentAndDefinitions.md)
 - [Multiple models and/or output files](doc/multiModel.md)
 - [Creating and using library functions](doc/userlibrary.md)
@@ -76,7 +77,7 @@ Textrude makes heavy use of the following components:
 - [Json.Net](https://www.newtonsoft.com/json) for Json deserialisation
 - [Humanizr](https://github.com/Humanizr/Humanizer) for useful text-processing
 - [MaterialDesignToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit),   [MaterialDesignExtensions](https://spiegelp.github.io/MaterialDesignExtensions) and [Ookii Dialogs](https://github.com/augustoproiete/ookii-dialogs-wpf)to make the UI a bit less clunky
- - [AvalonEdit](http://avalonedit.net/) for text-editing goodness
+- [AvalonEdit](http://avalonedit.net/) for text-editing goodness
 
 
 
