@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using Engine.Application;
+using Microsoft.Win32;
 
 namespace TextrudeInteractive
 {
@@ -62,6 +65,26 @@ namespace TextrudeInteractive
         private void TextBox_OnTextChanged(object? sender, EventArgs e)
         {
             OnUserInput();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Filter =
+                "csv files (*.csv)|*.csv|" +
+                "yaml files (*.yaml)|*.yaml|" +
+                "json files (*.json)|*.json|" +
+                "txt files (*.txt)|*.txt|" +
+                "All files (*.*)|*.*";
+            if (dlg.ShowDialog() != true) return;
+            try
+            {
+                Text = File.ReadAllText(dlg.FileName);
+                Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(dlg.FileName));
+            }
+            catch
+            {
+            }
         }
     }
 }

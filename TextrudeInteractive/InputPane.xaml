@@ -8,8 +8,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
-        <ComboBox Name="FormatSelection" SelectionChanged="FormatSelectionChanged" DockPanel.Dock="Bottom"
-                  HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+        <DockPanel   DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Left" FontSize="8" Click="ButtonBase_OnClick">Load File...</Button>
+            <ComboBox Name="FormatSelection" DockPanel.Dock="Right" SelectionChanged="FormatSelectionChanged"
+                      HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+
+        </DockPanel>
 
         <avalonedit:TextEditor DockPanel.Dock="Top"
                                Foreground="LightSeaGreen"

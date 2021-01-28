@@ -60,6 +60,8 @@
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />
                 <Separator/>
                 <MenuItem Click="ExportInvocation" Header="Export as invocation"/>
+                <Separator/>
+
             </MenuItem>
             <MenuItem Header ="_View">
                 <MenuItem Header ="Toggle Line _Numbers" Click="ToggleLineNumbers" />
