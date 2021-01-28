@@ -95,46 +95,8 @@
                 <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
                     <TabItem Header="models">
 
-                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}"  >
-                            <TabItem Header="model">
-                                <DockPanel>
-                                    <ComboBox Name="format0" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                            <avalonEdit:TextEditor 
-                                                Foreground="LightSeaGreen"
-                                                Name="ModelTextBox0"
-                                                DockPanel.Dock="Bottom"
-                                                TextChanged="Avalon1_OnTextChanged" />
-
-
-                                </DockPanel>
-
-                            </TabItem>
-                            <TabItem Header="model1">
-                                <DockPanel>
-                                    <ComboBox Name="format1" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                    <avalonEdit:TextEditor 
-                                        Name="ModelTextBox1"
-                                        Foreground="LightSeaGreen"
-                                        DockPanel.Dock="Bottom"
-                                        TextChanged="Avalon1_OnTextChanged" />
-
-                                </DockPanel>
-                            </TabItem>
-                            <TabItem Header="model2">
-                                <DockPanel>
-
-                                    <ComboBox Name="format2" SelectionChanged="OnModelFormatChanged"
-                                              DockPanel.Dock="Top" />
-                                    <avalonEdit:TextEditor 
-                                        Name="ModelTextBox2"
-                                        Foreground="LightSeaGreen"
-                                        DockPanel.Dock="Bottom"
-                                        TextChanged="Avalon1_OnTextChanged" />
-
-                                </DockPanel>
-                            </TabItem>
+                        <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" >
+                           
                         </TabControl>
                     </TabItem>
                     <TabItem Header="other">

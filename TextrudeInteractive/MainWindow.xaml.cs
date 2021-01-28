@@ -13,7 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Engine.Application;
-using ICSharpCode.AvalonEdit;
 using MaterialDesignExtensions.Controls;
 using TextrudeInteractive.Annotations;
 using TextrudeInteractive.AutoCompletion;
@@ -29,12 +28,12 @@ namespace TextrudeInteractive
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
-        private readonly ComboBox[] formats;
+        //private readonly ComboBox[] formats;
 
         private readonly ISubject<EngineInputSet> InputStream =
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
-        private readonly TextEditor[] modelBoxes;
+        private readonly InputPane[] modelBoxes;
         private readonly OutputPane[] OutputBoxes;
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
 
@@ -48,8 +47,19 @@ namespace TextrudeInteractive
         {
             InitializeComponent();
             SetTitle(string.Empty);
-            formats = new[] {format0, format1, format2};
-            modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
+            modelBoxes = new[] {new InputPane(), new InputPane(), new InputPane()};
+
+            for (var i = 0; i < modelBoxes.Length; i++)
+            {
+                var pane = modelBoxes[i];
+                pane.OnUserInput = OnModelChanged;
+                InputModels.Items.Add(
+                    new TabItem
+                    {
+                        Content = modelBoxes[i],
+                        Header = $"model{i}"
+                    });
+            }
 
 
             OutputBoxes = new[] {new OutputPane(), new OutputPane(), new OutputPane()};
@@ -59,17 +69,14 @@ namespace TextrudeInteractive
                     new TabItem
                     {
                         Content = OutputBoxes[i],
-                        Header = $"Output{i}"
+                        Header = $"output{i}"
                     });
             }
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
 
             _projectManager = new ProjectManager(this);
-            foreach (var comboBox in formats)
-            {
-                comboBox.ItemsSource = Enum.GetValues(typeof(ModelFormat));
-            }
+
 
             SetUI(EngineInputSet.EmptyYaml);
 
@@ -197,8 +204,8 @@ namespace TextrudeInteractive
 
         public EngineInputSet CollectInput()
         {
-            var models = Enumerable.Range(0, formats.Length)
-                .Select(i => new ModelText(modelBoxes[i].Text, (ModelFormat) formats[i].SelectedValue))
+            var models = Enumerable.Range(0, modelBoxes.Length)
+                .Select(i => new ModelText(modelBoxes[i].Text, modelBoxes[i].Format))
                 .ToArray();
 
             return new EngineInputSet(TemplateTextBox.Text,
@@ -261,11 +268,12 @@ namespace TextrudeInteractive
         {
             DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
 
-            for (var i = 0; i < formats.Length; i++)
+            for (var i = 0; i < modelBoxes.Length; i++)
             {
                 var model = (i < gi.Models.Length) ? gi.Models[i] : ModelText.EmptyYaml;
-                formats[i].SelectedValue = model.Format;
-                modelBoxes[i].Text = model.Text;
+                var pane = modelBoxes[i];
+                pane.Format = model.Format;
+                pane.Text = model.Text;
             }
 
             TemplateTextBox.Text = gi.Template;
