@@ -175,29 +175,8 @@
                 <GridSplitter Grid.Column="3" />
 
 
-                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4">
-                    <TabItem Header="output">
-                      
-                        <avalonEdit:TextEditor 
-                            Name="OutputText0"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                           
-                    </TabItem>
-                    <TabItem Header="output1">
-
-                        <avalonEdit:TextEditor 
-                            Name="OutputText1"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                        </TabItem>
-                    <TabItem Header="output2">
-
-                        <avalonEdit:TextEditor 
-                            Name="OutputText2"
-                            Foreground="GreenYellow"
-                            IsReadOnly="True"/>
-                        </TabItem>
+                <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4" Name="OutputTab">
+                   
                 </TabControl>
 
 

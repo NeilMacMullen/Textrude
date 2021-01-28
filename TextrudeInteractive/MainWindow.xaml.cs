@@ -35,7 +35,7 @@ namespace TextrudeInteractive
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
         private readonly TextEditor[] modelBoxes;
-        private readonly TextEditor[] OutputBoxes;
+        private readonly OutputPane[] OutputBoxes;
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
 
         private bool _lineNumbersOn = true;
@@ -50,7 +50,18 @@ namespace TextrudeInteractive
             SetTitle(string.Empty);
             formats = new[] {format0, format1, format2};
             modelBoxes = new[] {ModelTextBox0, ModelTextBox1, ModelTextBox2};
-            OutputBoxes = new[] {OutputText0, OutputText1, OutputText2};
+
+
+            OutputBoxes = new[] {new OutputPane(), new OutputPane(), new OutputPane()};
+            for (var i = 0; i < OutputBoxes.Length; i++)
+            {
+                OutputTab.Items.Add(
+                    new TabItem
+                    {
+                        Content = OutputBoxes[i],
+                        Header = $"Output{i}"
+                    });
+            }
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
 
@@ -196,6 +207,13 @@ namespace TextrudeInteractive
                 IncludesTextBox.Text);
         }
 
+        public EngineOutputSet CollectOutput()
+        {
+            return new EngineOutputSet(
+                OutputBoxes.Select(b => new OutputPaneModel(b.Format))
+            );
+        }
+
         private void OnModelChanged()
         {
             if (!_uiIsReady)
@@ -325,6 +343,15 @@ namespace TextrudeInteractive
         private void ToggleWordWrap(object sender, RoutedEventArgs e)
         {
             WordWrapOn = !WordWrapOn;
+        }
+
+        public void SetOutputPanes(EngineOutputSet outputControl)
+        {
+            var cnt = Math.Min(OutputBoxes.Length, outputControl.Outputs.Length);
+            for (var i = 0; i < cnt; i++)
+            {
+                OutputBoxes[i].Format = outputControl.Outputs[i].Format;
+            }
         }
     }
 }
