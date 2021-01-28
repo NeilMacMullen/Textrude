@@ -13,7 +13,7 @@ namespace TextrudeInteractive
     public partial class InputPane : UserControl
     {
         private ModelFormat _format = ModelFormat.Line;
-        private string _text = string.Empty;
+
 
         public Action OnUserInput = () => { };
 
@@ -22,16 +22,13 @@ namespace TextrudeInteractive
         {
             InitializeComponent();
             FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
+            FormatSelection.SelectedItem = ModelFormat.Yaml;
         }
 
         public string Text
         {
-            get => _text;
-            set
-            {
-                _text = value;
-                SetText(_text);
-            }
+            get => textBox.Text;
+            set => textBox.Text = value;
         }
 
         /// <summary>
@@ -51,11 +48,6 @@ namespace TextrudeInteractive
         }
 
 
-        private void SetText(string str)
-        {
-            textBox.Text = str;
-        }
-
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Format = (ModelFormat) FormatSelection.SelectedItem;
@@ -67,7 +59,7 @@ namespace TextrudeInteractive
             OnUserInput();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void LoadFromFile(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog();
             dlg.Filter =

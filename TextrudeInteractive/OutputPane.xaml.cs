@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Highlighting;
+using Microsoft.Win32;
 
 namespace TextrudeInteractive
 {
@@ -70,6 +72,20 @@ namespace TextrudeInteractive
         private void OutputPane_OnLoaded(object sender, RoutedEventArgs e)
         {
             //Beware - if this is in a TabItem, this occurs every time a tab is switched
+        }
+
+        private void SaveToFile(object sender, RoutedEventArgs e)
+        {
+            var dlg = new SaveFileDialog();
+
+            if (dlg.ShowDialog() != true) return;
+            try
+            {
+                File.WriteAllText(dlg.FileName, Text);
+            }
+            catch
+            {
+            }
         }
     }
 }

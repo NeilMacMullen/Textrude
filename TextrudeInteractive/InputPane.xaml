@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <DockPanel   DockPanel.Dock="Bottom">
-            <Button DockPanel.Dock="Left" FontSize="8" Click="ButtonBase_OnClick">Load File...</Button>
+            <Button DockPanel.Dock="Left" FontSize="8" Click="LoadFromFile">Load File...</Button>
             <ComboBox Name="FormatSelection" DockPanel.Dock="Right" SelectionChanged="FormatSelectionChanged"
                       HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
 

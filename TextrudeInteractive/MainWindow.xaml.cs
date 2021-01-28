@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
@@ -24,17 +23,16 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class MainWindow : MaterialWindow, INotifyPropertyChanged
     {
+        private readonly ISubject<EngineInputSet> _inputStream =
+            new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
+
         private readonly AvalonEditCompletionHelper _mainEditWindow;
+
+        private readonly TabControlManager<InputPane> _modelManager;
+        private readonly TabControlManager<OutputPane> _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
-        //private readonly ComboBox[] formats;
-
-        private readonly ISubject<EngineInputSet> InputStream =
-            new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
-
-        private readonly InputPane[] modelBoxes;
-        private readonly OutputPane[] OutputBoxes;
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
 
         private bool _lineNumbersOn = true;
@@ -47,41 +45,18 @@ namespace TextrudeInteractive
         {
             InitializeComponent();
             SetTitle(string.Empty);
-            modelBoxes = new[] {new InputPane(), new InputPane(), new InputPane()};
-
-            for (var i = 0; i < modelBoxes.Length; i++)
-            {
-                var pane = modelBoxes[i];
-                pane.OnUserInput = OnModelChanged;
-                InputModels.Items.Add(
-                    new TabItem
-                    {
-                        Content = modelBoxes[i],
-                        Header = $"model{i}"
-                    });
-            }
-
-
-            OutputBoxes = new[] {new OutputPane(), new OutputPane(), new OutputPane()};
-            for (var i = 0; i < OutputBoxes.Length; i++)
-            {
-                OutputTab.Items.Add(
-                    new TabItem
-                    {
-                        Content = OutputBoxes[i],
-                        Header = $"output{i}"
-                    });
-            }
+            _modelManager = new("model", InputModels, p => p.OnUserInput = OnModelChanged);
+            _outputManager = new("output", OutputTab, _ => { });
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
 
             _projectManager = new ProjectManager(this);
 
 
-            SetUI(EngineInputSet.EmptyYaml);
+            SetUi(EngineInputSet.EmptyYaml);
+            SetOutputPanes(EngineOutputSet.Empty);
 
-
-            InputStream
+            _inputStream
                 .Throttle(TimeSpan.FromMilliseconds(300))
                 .ObserveOn(NewThreadScheduler.Default)
                 .Select(Render)
@@ -123,6 +98,7 @@ namespace TextrudeInteractive
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
 
         private void RunBackgroundUpgradeCheck()
         {
@@ -170,10 +146,11 @@ namespace TextrudeInteractive
         {
             var elapsedMs = (int) timedEngine.Timer.ElapsedMilliseconds;
             var engine = timedEngine.Value;
-            var outputs = engine.GetOutput(OutputBoxes.Length);
-            for (var i = 0; i < outputs.Length; i++)
+            var outputPanes = _outputManager.Panes.ToArray();
+            var outputs = engine.GetOutput(outputPanes.Length);
+            for (var i = 0; i < Math.Min(outputs.Length, outputPanes.Length); i++)
             {
-                OutputBoxes[i].Text = outputs[i];
+                outputPanes[i].Text = outputs[i];
             }
 
             Errors.Text = string.Empty;
@@ -204,8 +181,8 @@ namespace TextrudeInteractive
 
         public EngineInputSet CollectInput()
         {
-            var models = Enumerable.Range(0, modelBoxes.Length)
-                .Select(i => new ModelText(modelBoxes[i].Text, modelBoxes[i].Format))
+            var models = _modelManager.Panes
+                .Select(m => new ModelText(m.Text, m.Format))
                 .ToArray();
 
             return new EngineInputSet(TemplateTextBox.Text,
@@ -216,8 +193,8 @@ namespace TextrudeInteractive
 
         public EngineOutputSet CollectOutput()
         {
-            return new EngineOutputSet(
-                OutputBoxes.Select(b => new OutputPaneModel(b.Format))
+            return new(
+                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format))
             );
         }
 
@@ -227,7 +204,7 @@ namespace TextrudeInteractive
                 return;
             try
             {
-                InputStream.OnNext(CollectInput());
+                _inputStream.OnNext(CollectInput());
             }
             catch (Exception exception)
             {
@@ -235,47 +212,33 @@ namespace TextrudeInteractive
             }
         }
 
-        private void OnModelFormatChanged(object sender, SelectionChangedEventArgs e)
-        {
-            OnModelChanged();
-        }
 
-        private void LoadProject(object sender, RoutedEventArgs e)
-        {
-            _projectManager.LoadProject();
-        }
+        private void LoadProject(object sender, RoutedEventArgs e) => _projectManager.LoadProject();
 
 
-        private void SaveProject(object sender, RoutedEventArgs e)
-        {
-            _projectManager.SaveProject();
-        }
+        private void SaveProject(object sender, RoutedEventArgs e) => _projectManager.SaveProject();
 
 
-        private void SaveProjectAs(object sender, RoutedEventArgs e)
-        {
-            _projectManager.SaveProjectAs();
-        }
+        private void SaveProjectAs(object sender, RoutedEventArgs e) => _projectManager.SaveProjectAs();
 
 
-        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
-        {
-            InputStream.OnCompleted();
-        }
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e) => _inputStream.OnCompleted();
 
 
-        public void SetUI(EngineInputSet gi)
+        public void SetUi(EngineInputSet gi)
         {
             DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
-
-            for (var i = 0; i < modelBoxes.Length; i++)
+            _modelManager.Clear();
+            foreach (var giModel in gi.Models)
             {
-                var model = (i < gi.Models.Length) ? gi.Models[i] : ModelText.EmptyYaml;
-                var pane = modelBoxes[i];
-                pane.Format = model.Format;
-                pane.Text = model.Text;
+                var pane = _modelManager.AddPane();
+                pane.Format = giModel.Format;
+                pane.Text = giModel.Text;
             }
 
+            //ensure we start with at least one model to avoid confusing the user
+            if (!_modelManager.Panes.Any())
+                _modelManager.AddPane();
             TemplateTextBox.Text = gi.Template;
 
             IncludesTextBox.Text = string.Join(Environment.NewLine, gi.IncludePaths);
@@ -292,74 +255,57 @@ namespace TextrudeInteractive
         }
 
 
-        private void ShowAbout(object sender, RoutedEventArgs e)
-        {
+        private void ShowAbout(object sender, RoutedEventArgs e) =>
             OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude"));
-        }
 
-        private void ShowLanguageRef(object sender, RoutedEventArgs e)
-        {
+        private void ShowLanguageRef(object sender, RoutedEventArgs e) =>
             OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
-        }
 
-        private void NewProject(object sender, RoutedEventArgs e)
-        {
-            _projectManager.NewProject();
-        }
+        private void NewProject(object sender, RoutedEventArgs e) => _projectManager.NewProject();
 
-        private void NewIssue(object sender, RoutedEventArgs e)
-        {
+        private void NewIssue(object sender, RoutedEventArgs e) =>
             OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude/issues/new"));
-        }
 
-        private void ExportInvocation(object sender, RoutedEventArgs e)
-        {
-            _projectManager.ExportProject();
-        }
+        private void ExportInvocation(object sender, RoutedEventArgs e) => _projectManager.ExportProject();
 
-        private void Avalon1_OnTextChanged(object sender, EventArgs e)
-        {
-            OnModelChanged();
-        }
+        private void Avalon1_OnTextChanged(object sender, EventArgs e) => OnModelChanged();
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _mainEditWindow.Register();
-        }
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) => _mainEditWindow.Register();
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        private void SmallerFont(object sender, RoutedEventArgs e)
-        {
-            TextSize = Math.Max(TextSize - 2, 10);
-        }
+        private void SmallerFont(object sender, RoutedEventArgs e) => TextSize = Math.Max(TextSize - 2, 10);
 
-        private void LargerFont(object sender, RoutedEventArgs e)
-        {
-            TextSize = Math.Min(TextSize + 2, 36);
-        }
+        private void LargerFont(object sender, RoutedEventArgs e) => TextSize = Math.Min(TextSize + 2, 36);
 
-        private void ToggleLineNumbers(object sender, RoutedEventArgs e)
-        {
-            LineNumbersOn = !LineNumbersOn;
-        }
+        private void ToggleLineNumbers(object sender, RoutedEventArgs e) => LineNumbersOn = !LineNumbersOn;
 
-        private void ToggleWordWrap(object sender, RoutedEventArgs e)
-        {
-            WordWrapOn = !WordWrapOn;
-        }
+        private void ToggleWordWrap(object sender, RoutedEventArgs e) => WordWrapOn = !WordWrapOn;
 
         public void SetOutputPanes(EngineOutputSet outputControl)
         {
-            var cnt = Math.Min(OutputBoxes.Length, outputControl.Outputs.Length);
-            for (var i = 0; i < cnt; i++)
+            _outputManager.Clear();
+            foreach (var f in outputControl.Outputs)
             {
-                OutputBoxes[i].Format = outputControl.Outputs[i].Format;
+                var pane = _outputManager.AddPane();
+                pane.Format = f.Format;
             }
+
+            //ensure there is always at least one output - otherwise things can get confusing for the user
+            if (!_outputManager.Panes.Any())
+                _outputManager.AddPane();
         }
+
+
+        private void AddModel(object sender, RoutedEventArgs e) =>
+            _modelManager.AddPane();
+
+        private void RemoveModel(object sender, RoutedEventArgs e) => _modelManager.RemoveLast();
+
+        private void AddOutput(object sender, RoutedEventArgs e) => _outputManager.AddPane();
+
+        private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
     }
 }

@@ -91,7 +91,7 @@ namespace TextrudeInteractive
 
         private void UpdateUI(TextrudeProject project)
         {
-            _owner.SetUI(project.EngineInput);
+            _owner.SetUi(project.EngineInput);
             _owner.SetTitle(_currentProjectPath);
             _owner.SetOutputPanes(project.OutputControl);
         }

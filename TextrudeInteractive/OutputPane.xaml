@@ -10,8 +10,12 @@
              Loaded="OutputPane_OnLoaded">
     <DockPanel>
 
-        <ComboBox Name="FormatSelection" SelectionChanged="FormatSelection_OnSelectionChanged" DockPanel.Dock="Bottom"
-                  HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+        <DockPanel   DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Left" FontSize="8" Click="SaveToFile">Save File...</Button>
+            <ComboBox Name="FormatSelection" DockPanel.Dock="Right" SelectionChanged="FormatSelection_OnSelectionChanged"
+                      HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+
+        </DockPanel>
 
         <avalonedit:TextEditor DockPanel.Dock="Top"
                                Foreground="LightSeaGreen"
