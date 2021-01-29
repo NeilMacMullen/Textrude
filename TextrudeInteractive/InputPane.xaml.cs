@@ -5,10 +5,15 @@ using Engine.Application;
 
 namespace TextrudeInteractive
 {
+    public interface IPane
+    {
+        void Clear();
+    }
+
     /// <summary>
     ///     Interaction logic for InputPane.xaml
     /// </summary>
-    public partial class InputPane : UserControl
+    public partial class InputPane : UserControl, IPane
     {
         private ModelFormat _format = ModelFormat.Line;
 
@@ -58,6 +63,14 @@ namespace TextrudeInteractive
         ///     Currently unused - the name of the model
         /// </summary>
         public string ModelName { get; set; } = string.Empty;
+
+        public void Clear()
+        {
+            ModelName = string.Empty;
+            ModelPath = string.Empty;
+            Text = string.Empty;
+            Format = ModelFormat.Line;
+        }
 
         private void NewFileLoaded(string text, bool wasNewFile)
         {

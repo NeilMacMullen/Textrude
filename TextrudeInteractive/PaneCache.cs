@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TextrudeInteractive
 {
-    public class PaneCache<T> where T : new()
+    public class PaneCache<T> where T : IPane, new()
     {
         private readonly Action<T> _onNew;
         private readonly Queue<T> _panes = new();
@@ -23,6 +23,10 @@ namespace TextrudeInteractive
             return _panes.Dequeue();
         }
 
-        public void Release(T pane) => _panes.Enqueue(pane);
+        public void Release(T pane)
+        {
+            pane.Clear();
+            _panes.Enqueue(pane);
+        }
     }
 }

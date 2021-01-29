@@ -8,8 +8,9 @@ namespace TextrudeInteractive
     /// <summary>
     ///     Interaction logic for EditPane.xaml
     /// </summary>
-    public partial class OutputPane : UserControl
+    public partial class OutputPane : UserControl, IPane
     {
+        private const string DefaultFormat = "text";
         private string _format = string.Empty;
 
         private string _text = string.Empty;
@@ -21,7 +22,7 @@ namespace TextrudeInteractive
             InitializeComponent();
 
             var definitionNames =
-                new[] {"text"}
+                new[] {DefaultFormat}
                     .Concat(HighlightingManager.Instance.HighlightingDefinitions.Select(d => d.Name))
                     .ToArray();
 
@@ -69,6 +70,13 @@ namespace TextrudeInteractive
         {
             get => fileBar.PathName;
             set => fileBar.PathName = value;
+        }
+
+        public void Clear()
+        {
+            Text = string.Empty;
+            OutputPath = string.Empty;
+            Format = DefaultFormat;
         }
 
         private void SetText(string str)

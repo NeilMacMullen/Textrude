@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace TextrudeInteractive
 {
-    public class TabControlManager<T> where T : class, new()
+    public class TabControlManager<T> where T : class, IPane, new()
     {
         private readonly PaneCache<T> _cache;
         private readonly string _prefix;
