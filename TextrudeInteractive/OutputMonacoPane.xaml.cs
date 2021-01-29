@@ -29,8 +29,9 @@ namespace TextrudeInteractive
 			InitializeComponent();
 			InitWebView();
 
-			FormatSelection.ItemsSource = GetMonacoSupportedFormats();
-			FormatSelection.SelectedIndex = 0;
+			var formats = GetMonacoSupportedFormats();
+			FormatSelection.ItemsSource = formats;
+			FormatSelection.SelectedIndex = formats.IndexOf("text");
 		}
 
 		public string Text
@@ -166,7 +167,7 @@ namespace TextrudeInteractive
 
 		private static List<string> GetMonacoSupportedFormats()
 		{
-			var monacoLangRegex = new System.Text.RegularExpressions.Regex(@"vs/basic-languages/(?<name>.+)/$");
+			var monacoLangRegex = new System.Text.RegularExpressions.Regex(@"vs/(basic-languages|language)/(?<name>.+)/$");
 			using (var zipStream = new MemoryStream(Properties.Resources.monaco_editor_0_21_2))
 			{
 				using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Read))
@@ -175,6 +176,9 @@ namespace TextrudeInteractive
 						.Select(e => monacoLangRegex.Match(e.FullName))
 						.Where(m => m.Success)
 						.Select(m => m.Groups["name"].Value)
+						.Concat(new[] { "text" })
+						.OrderBy(l => l)
+						.Distinct()
 						.ToList();
 					return langs;
 				}
