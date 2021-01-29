@@ -22,10 +22,10 @@ namespace TextrudeInteractive
 
         private TextrudeProject CreateProject()
         {
-            var g = _owner.CollectInput();
             var proj = new TextrudeProject
             {
-                EngineInput = g
+                EngineInput = _owner.CollectInput(),
+                OutputControl = _owner.CollectOutput()
             };
 
             return proj;
@@ -91,9 +91,9 @@ namespace TextrudeInteractive
 
         private void UpdateUI(TextrudeProject project)
         {
-            _owner.SetUI(project.EngineInput);
-
+            _owner.SetUi(project.EngineInput);
             _owner.SetTitle(_currentProjectPath);
+            _owner.SetOutputPanes(project.OutputControl);
         }
 
         public void ExportProject()
