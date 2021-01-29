@@ -65,15 +65,27 @@ namespace TextrudeInteractive.Properties {
         ///&lt;html&gt;
         ///&lt;head&gt;
         ///    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=utf-8&quot;&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        html,
+        ///        body {
+        ///            height: 100%;
+        ///            margin: 0;
+        ///            overflow: hidden;
+        ///        }
+        ///
+        ///        #container {
+        ///            width: 100%;
+        ///            height: 100%;
+        ///        }
+        ///    &lt;/style&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///    &lt;div id=&quot;container&quot; style=&quot;width:800px;height:600px;border:1px solid grey&quot;&gt;&lt;/div&gt;
-        ///    &lt;script src=&quot;monaco-editor/min/vs/loader.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;div id=&quot;container&quot; /&gt;
+        ///
+        ///    &lt;script src=&quot;vs/loader.js&quot;&gt;&lt;/script&gt;
         ///    &lt;script&gt;
-        ///        require.config({ paths: { &apos;vs&apos;: &apos;monaco-editor/min/vs&apos; } });
-        ///        require([&apos;vs/editor/editor.main&apos;], function () {
-        ///            var editor = monaco.editor.create(document.getElementById(&apos;container&apos;), {
-        ///               [rest of string was truncated]&quot;;.
+        ///        require.config({ paths: { &apos;vs&apos;: &apos;vs&apos; }  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string monaco {
             get {
