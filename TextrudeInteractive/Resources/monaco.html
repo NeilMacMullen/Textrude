@@ -36,11 +36,11 @@
             });
 
             window.chrome.webview.addEventListener('message', (event) => {
+                const model = editor.getModel();
                 if (event.data.type === "UpdateText") {
-                    const newModel = monaco.editor.createModel(event.data.text, event.data.language);
-                    editor.setModel(newModel);
+                    model.setValue(event.data.text);
+                    monaco.editor.setModelLanguage(model, event.data.language);
                 } else if (event.data.type === "UpdateLanguage") {
-                    const model = editor.getModel();
                     monaco.editor.setModelLanguage(model, event.data.language);
                 }
             })
