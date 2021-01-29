@@ -12,22 +12,25 @@ namespace TextrudeInteractive
 	/// </summary>
 	public partial class InputMonacoPane : UserControl
 	{
-		private string _text = "";
 		private ModelFormat _format = ModelFormat.Line;
+		private MonacoBinding _monacoBinding;
 
 		public Action OnUserInput = () => { };
 
 		public InputMonacoPane()
 		{
 			InitializeComponent();
+			_monacoBinding = new MonacoBinding(WebView, isReadOnly: false, _ => this.OnUserInput());
+			_monacoBinding.Initialize().ConfigureAwait(false);
+
 			FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
 			FormatSelection.SelectedItem = ModelFormat.Yaml;
 		}
 
 		public string Text
 		{
-			get => _text;
-			set => _text = value;
+			get => _monacoBinding.Text;
+			set => _monacoBinding.Text = value;
 		}
 
 		/// <summary>
@@ -41,6 +44,7 @@ namespace TextrudeInteractive
 				if (_format != value)
 				{
 					_format = value;
+					_monacoBinding.Format = Format.ToString().ToLower();
 					FormatSelection.SelectedItem = _format;
 				}
 			}

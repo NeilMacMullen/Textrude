@@ -18,7 +18,7 @@ namespace TextrudeInteractive
 		public OutputMonacoPane()
 		{
 			InitializeComponent();
-			_monacoBinding = new MonacoBinding(WebView);
+			_monacoBinding = new MonacoBinding(WebView, isReadOnly: true, _ => { });
 			_monacoBinding.Initialize().ConfigureAwait(false);
 
 			var formats = MonacoBinding.GetSupportedFormats();
@@ -47,6 +47,7 @@ namespace TextrudeInteractive
 				if (_format != value)
 				{
 					_format = value;
+					_monacoBinding.Format = Format;
 					FormatSelection.SelectedItem = _format;
 				}
 			}
@@ -55,7 +56,6 @@ namespace TextrudeInteractive
 		private void FormatSelection_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Format = FormatSelection.SelectedItem as string;
-			_monacoBinding.Format = Format;
 		}
 
 		private void OutputPane_OnLoaded(object sender, RoutedEventArgs e)

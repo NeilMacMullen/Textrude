@@ -30,20 +30,42 @@
                 readOnly: true,
                 theme: "vs-dark",
             });
+            const model = editor.getModel();
+            var settingText = false;
 
             window.addEventListener('resize', (event) => {
                 editor.layout();
             });
 
+            model.onDidChangeContent((event) => {
+                if (settingText === false) {
+                    window.chrome.webview.postMessage({
+                        type: "UpdatedText",
+                        text: editor.getModel().getValue()
+                    });
+                } else {
+                    settingText = false;
+                }
+            });
+
             window.chrome.webview.addEventListener('message', (event) => {
-                const model = editor.getModel();
-                if (event.data.type === "UpdateText") {
-                    model.setValue(event.data.text);
+                if (event.data.type === "Setup") {
+                    editor.updateOptions({
+                        readOnly: event.data.isReadOnly,
+                    });
                     monaco.editor.setModelLanguage(model, event.data.language);
+                } else if (event.data.type === "UpdateText") {
+                    settingText = true;
+                    model.setValue(event.data.text);
+                    //monaco.editor.setModelLanguage(model, event.data.language);
                 } else if (event.data.type === "UpdateLanguage") {
                     monaco.editor.setModelLanguage(model, event.data.language);
                 }
             })
+
+            window.chrome.webview.postMessage({
+                type: "Ready"
+            });
         });
     </script>
 </body>

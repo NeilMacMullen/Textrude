@@ -7,14 +7,6 @@
       {
         "Format": 1,
         "Text": "text\r\na variable\r\nNameOfThing\r\nThe title of this book is\r\n\u0022  with spaces   \u0022"
-      },
-      {
-        "Format": 2,
-        "Text": ""
-      },
-      {
-        "Format": 2,
-        "Text": ""
       }
     ],
     "Template": "{{for v in model}}\r\n \r\n\u0027{{v.text}}\u0027\r\n   PASCALIZE:   \u0027{{v.text | humanizr.pascalize}}\u0027\r\n   CAMEL:       \u0027{{v.text | humanizr.camelize}}\u0027\r\n   UNDERSCORE:  \u0027{{v.text | humanizr.underscore}}\u0027\r\n   TITLE:       \u0027{{v.text | humanizr.titleize}}\u0027\r\n   KEBAB:       \u0027{{v.text | humanizr.kebaberize}}\u0027\r\n\r\n{{end}}"

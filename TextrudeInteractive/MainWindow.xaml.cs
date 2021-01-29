@@ -28,7 +28,7 @@ namespace TextrudeInteractive
 
         private readonly AvalonEditCompletionHelper _mainEditWindow;
 
-        private readonly TabControlManager<InputPane> _modelManager;
+        private readonly TabControlManager<InputMonacoPane> _modelManager;
         private readonly TabControlManager<OutputMonacoPane> _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
