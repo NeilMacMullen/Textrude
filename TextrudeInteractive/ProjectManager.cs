@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
@@ -44,7 +43,7 @@ namespace TextrudeInteractive
                     _currentProjectPath = dlg.FileName;
                     UpdateUI(proj);
                 }
-                catch (Exception e)
+                catch
                 {
                     MessageBox.Show(_owner, "Error - unable to open project");
                 }
@@ -151,7 +150,7 @@ namespace TextrudeInteractive
                 WriteToFile(yamlArgs, yaml);
                 WriteToFile("yamlrender.bat", yamlCmd);
             }
-            catch (Exception e)
+            catch
             {
                 MessageBox.Show("Sorry - couldn't export invocation");
             }

@@ -31,6 +31,7 @@ namespace TextrudeInteractive
                     Content = pane,
                     Header = $"{_prefix}{currentCount}"
                 });
+            _tab.SelectedIndex = _tab.Items.Count - 1;
             return pane;
         }
 

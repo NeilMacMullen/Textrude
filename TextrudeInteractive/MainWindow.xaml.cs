@@ -44,6 +44,8 @@ namespace TextrudeInteractive
         public MainWindow()
         {
             InitializeComponent();
+            templateFileBar.OnSave = () => TemplateTextBox.Text;
+            templateFileBar.OnLoad = OnTemplatedLoadedFromFile;
             SetTitle(string.Empty);
             _modelManager = new("model", InputModels, p => p.OnUserInput = OnModelChanged);
             _outputManager = new("output", OutputTab, _ => { });
@@ -97,7 +99,12 @@ namespace TextrudeInteractive
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnTemplatedLoadedFromFile(string text, bool isNewFile)
+        {
+            TemplateTextBox.Text = text;
+        }
 
 
         private void RunBackgroundUpgradeCheck()
@@ -182,10 +189,11 @@ namespace TextrudeInteractive
         public EngineInputSet CollectInput()
         {
             var models = _modelManager.Panes
-                .Select(m => new ModelText(m.Text, m.Format))
+                .Select(m => new ModelText(m.Text, m.Format, m.ModelName, m.ModelPath))
                 .ToArray();
 
             return new EngineInputSet(TemplateTextBox.Text,
+                templateFileBar.PathName,
                 models,
                 DefinitionsTextBox.Text,
                 IncludesTextBox.Text);
@@ -194,7 +202,7 @@ namespace TextrudeInteractive
         public EngineOutputSet CollectOutput()
         {
             return new(
-                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format))
+                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.Name, b.OutputPath))
             );
         }
 
@@ -234,12 +242,15 @@ namespace TextrudeInteractive
                 var pane = _modelManager.AddPane();
                 pane.Format = giModel.Format;
                 pane.Text = giModel.Text;
+                pane.ModelName = giModel.Name;
+                pane.ModelPath = giModel.Path;
             }
 
             //ensure we start with at least one model to avoid confusing the user
             if (!_modelManager.Panes.Any())
                 _modelManager.AddPane();
             TemplateTextBox.Text = gi.Template;
+            templateFileBar.PathName = gi.TemplatePath;
 
             IncludesTextBox.Text = string.Join(Environment.NewLine, gi.IncludePaths);
         }
@@ -291,6 +302,8 @@ namespace TextrudeInteractive
             {
                 var pane = _outputManager.AddPane();
                 pane.Format = f.Format;
+                pane.OutputPath = f.Path;
+                pane.OutputName = f.Name;
             }
 
             //ensure there is always at least one output - otherwise things can get confusing for the user

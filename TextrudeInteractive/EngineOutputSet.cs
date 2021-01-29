@@ -24,14 +24,21 @@ namespace TextrudeInteractive
     /// </summary>
     public record OutputPaneModel
     {
-        public OutputPaneModel(string format) => Format = format;
+        public OutputPaneModel(string format, string name, string path)
+        {
+            Format = format;
+            Name = name;
+            Path = path;
+        }
 
         /// <summary>
         ///     Useful default object
         /// </summary>
-        public static OutputPaneModel Empty { get; } = new(string.Empty);
+        public static OutputPaneModel Empty { get; } = new(string.Empty, string.Empty, string.Empty);
 
 
         public string Format { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string Path { get; init; } = string.Empty;
     }
 }

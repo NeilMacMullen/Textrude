@@ -1,10 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Highlighting;
-using Microsoft.Win32;
 
 namespace TextrudeInteractive
 {
@@ -14,6 +11,7 @@ namespace TextrudeInteractive
     public partial class OutputPane : UserControl
     {
         private string _format = string.Empty;
+
         private string _text = string.Empty;
 
         public ObservableCollection<string> Highglighting = new ObservableCollection<string>();
@@ -30,6 +28,7 @@ namespace TextrudeInteractive
             Highglighting = new ObservableCollection<string>(definitionNames);
             FormatSelection.ItemsSource = Highglighting;
             FormatSelection.SelectedIndex = 0;
+            fileBar.OnSave = () => Text;
         }
 
         public string Text
@@ -58,6 +57,20 @@ namespace TextrudeInteractive
             }
         }
 
+        /// <summary>
+        ///     Currently unused - the name of the output
+        /// </summary>
+        public string OutputName { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Path to file that the output is connected to
+        /// </summary>
+        public string OutputPath
+        {
+            get => fileBar.PathName;
+            set => fileBar.PathName = value;
+        }
+
         private void SetText(string str)
         {
             textBox.Text = str;
@@ -67,25 +80,6 @@ namespace TextrudeInteractive
         {
             Format = FormatSelection.SelectedItem as string;
             textBox.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(Format);
-        }
-
-        private void OutputPane_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //Beware - if this is in a TabItem, this occurs every time a tab is switched
-        }
-
-        private void SaveToFile(object sender, RoutedEventArgs e)
-        {
-            var dlg = new SaveFileDialog();
-
-            if (dlg.ShowDialog() != true) return;
-            try
-            {
-                File.WriteAllText(dlg.FileName, Text);
-            }
-            catch
-            {
-            }
         }
     }
 }
