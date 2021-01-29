@@ -17,7 +17,7 @@ namespace TextrudeInteractive
             {
                 var newPane = new T();
                 _onNew(newPane);
-                _panes.Enqueue(new T());
+                _panes.Enqueue(newPane);
             }
 
             return _panes.Dequeue();
