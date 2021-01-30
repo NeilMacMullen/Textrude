@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -91,5 +92,21 @@ namespace TextrudeInteractive
         }
 
         public void SaveIfLinked() => fileBar.SaveIfLinked();
+
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        {
+            var maxAttempts = 3;
+            for (var i = 0; i < maxAttempts; i++)
+            {
+                try
+                {
+                    Clipboard.SetText(Text);
+                    return;
+                }
+                catch
+                {
+                }
+            }
+        }
     }
 }
