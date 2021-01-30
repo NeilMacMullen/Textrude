@@ -113,19 +113,29 @@
 
                     <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
                         <TabItem Header="models">
-
                             <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" />
                         </TabItem>
                         <TabItem Header="other">
-
+<TabItem.ToolTip>
+    definitions and include paths
+</TabItem.ToolTip>
                             <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
                                 <TabItem Header="definitions">
+                                    <TabItem.ToolTip>
+                                        <TextBlock>
+                                            Add definitions 1-per-line <LineBreak/>
+                                            name1=value1
+                                        </TextBlock>
+                                    </TabItem.ToolTip>
                                     <avalonEdit:TextEditor
                                         Name="DefinitionsTextBox"
                                         Foreground="Yellow"
                                         TextChanged="Avalon1_OnTextChanged" />
                                 </TabItem>
                                 <TabItem Header="include folders">
+                                    <TabItem.ToolTip>
+                                        Add paths 1-per-line
+                                    </TabItem.ToolTip>
                                     <avalonEdit:TextEditor
                                         Name="IncludesTextBox"
                                         Foreground="Pink"

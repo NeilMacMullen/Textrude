@@ -11,8 +11,13 @@
     <DockPanel>
 
         <DockPanel   DockPanel.Dock="Bottom">
-            <ComboBox Name="FormatSelection" DockPanel.Dock="Right" SelectionChanged="FormatSelection_OnSelectionChanged"
-                      HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Button  Name ="ChooseButton"  Style="{StaticResource MaterialDesignFlatButton}" Click="CopyToClipboard" ToolTip="Copy to clipboard" Content="&#x1F4CB;"/>
+                <ComboBox Name="FormatSelection"  SelectionChanged="FormatSelection_OnSelectionChanged"
+                          HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
+
+            </StackPanel>
+
             <local:FileBar x:Name="fileBar" DockPanel.Dock="Left" IsSaveOnly="True"/>
         </DockPanel>
 
