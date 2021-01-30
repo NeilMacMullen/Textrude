@@ -30,9 +30,9 @@ The current release is **v1.2.0**.
 
 **Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will need to install it.** 
 
- - You can get binaries from [Releases](https://github.com/NeilMacMullen/Textrude/releases).   These are provided as single-file executables bundled with example projects and library scripts. 
+ - If you just want the binaries,  [go here](doc/getBinaries.md).
 
- - [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
+ - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
   
  - Or you can create a [Docker image](Docker.md)
 

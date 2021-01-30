@@ -27,6 +27,10 @@ dotnet publish Textrude\Textrude.csproj /p:PublishProfile=Textrude\Properties\Pu
 dotnet publish TextrudeInteractive\TextrudeInteractive.csproj /p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml
 ```
 
+## Example projects
+
+There are a number of example projects in the *examples* folder - this is a good place to start if you want to get an idea of what Textrude can do. 
+
 ## Git-less builds
 
 Textrude uses *gitversion* so that it can search for updates.  If you want to build from the source *without* a git checkout you can do so by setting 
