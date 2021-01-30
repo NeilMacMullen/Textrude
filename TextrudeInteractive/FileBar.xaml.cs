@@ -37,11 +37,9 @@ namespace TextrudeInteractive
             }
         }
 
-        private void ChooseFile(object sender, RoutedEventArgs e)
+        private void UnlinkFile(object sender, RoutedEventArgs e)
         {
-            if (!IsSaveOnly)
-                LoadFromFile();
-            else SaveToFile();
+            PathName = string.Empty;
         }
 
 
@@ -93,8 +91,7 @@ namespace TextrudeInteractive
 
         private void SaveToFile()
         {
-            var dlg = new SaveFileDialog();
-            dlg.FileName = PathName;
+            var dlg = new SaveFileDialog {FileName = PathName};
             if (dlg.ShowDialog() != true) return;
             TrySave(dlg.FileName);
         }
@@ -119,5 +116,9 @@ namespace TextrudeInteractive
             else
                 TrySave(PathName);
         }
+
+        public void SaveIfLinked() => TrySave(PathName);
+
+        public void LoadIfLinked() => TryLoadFile(PathName, false);
     }
 }

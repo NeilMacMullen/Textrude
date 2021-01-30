@@ -90,5 +90,8 @@ namespace TextrudeInteractive
         {
             OnUserInput();
         }
+
+        public void SaveIfLinked() => fileBar.SaveIfLinked();
+        public void LoadIfLinked() => fileBar.LoadIfLinked();
     }
 }
