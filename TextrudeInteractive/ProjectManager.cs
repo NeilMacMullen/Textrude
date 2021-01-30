@@ -99,17 +99,46 @@ namespace TextrudeInteractive
         {
             var dlg = new VistaFolderBrowserDialog();
             if (dlg.ShowDialog(_owner) == false)
-                return;
+            {
+            }
+        }
+    }
+
+    public class InvocationManager
+    {
+        private const string exeName = "textrude.exe";
+        private readonly string _folder;
+        private readonly TextrudeProject _project;
+
+        public InvocationManager(TextrudeProject project, string folder)
+        {
+            _project = project;
+            _folder = folder;
+        }
+
+        public void BuildCommandLine()
+        {
+            var engine = _project.EngineInput;
+            var options = new RenderOptions {Definitions = engine.Definitions, Include = engine.IncludePaths};
+            var exe =
+                Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder(),
+                    exeName);
+            options.Models = engine.Models.Select(m => m.Path).ToArray();
+            options.Template = engine.TemplatePath;
+            options.Output = _project.OutputControl.Outputs.Select(o => o.Path).ToArray();
+            var builder = new CommandLineBuilder(options).WithExe(exe);
+        }
+
+        private void WriteToFile(string fileName, string content)
+            => File.WriteAllText(Path.Combine(_folder, fileName), content);
+
+        public void ExportToFolder()
+        {
             try
             {
-                var folder = dlg.SelectedPath;
-
-                var engine = CreateProject().EngineInput;
+                var engine = _project.EngineInput;
                 var options = new RenderOptions {Definitions = engine.Definitions, Include = engine.IncludePaths};
 
-
-                void WriteToFile(string fileName, string content)
-                    => File.WriteAllText(Path.Combine(folder, fileName), content);
 
                 for (var i = 0; i < engine.Models.Length; i++)
                 {
@@ -130,7 +159,7 @@ namespace TextrudeInteractive
 
                 var exe =
                     Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder(),
-                        "textrude.exe");
+                        exeName);
 
                 var builder = new CommandLineBuilder(options).WithExe(exe);
 
