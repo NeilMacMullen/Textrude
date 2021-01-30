@@ -51,5 +51,11 @@ namespace TextrudeInteractive
             while (Panes.Count > 0)
                 RemoveLast();
         }
+
+        public void ForAll(Action<T> func)
+        {
+            foreach (var p in Panes)
+                func(p);
+        }
     }
 }

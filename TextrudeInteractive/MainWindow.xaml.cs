@@ -23,6 +23,8 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class MainWindow : MaterialWindow, INotifyPropertyChanged
     {
+        private const string HomePage = @"https://github.com/NeilMacMullen/Textrude";
+
         private readonly ISubject<EngineInputSet> _inputStream =
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
@@ -265,17 +267,30 @@ namespace TextrudeInteractive
             Process.Start(ps);
         }
 
-
-        private void ShowAbout(object sender, RoutedEventArgs e) =>
-            OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude"));
-
         private void ShowLanguageRef(object sender, RoutedEventArgs e) =>
             OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
+
+        private void OpenHome(string path) =>
+            OpenBrowserTo(new Uri(HomePage + "/" + path));
+
+        private void ShowAbout(object sender, RoutedEventArgs e) =>
+            OpenHome(string.Empty);
+
 
         private void NewProject(object sender, RoutedEventArgs e) => _projectManager.NewProject();
 
         private void NewIssue(object sender, RoutedEventArgs e) =>
-            OpenBrowserTo(new Uri("https://github.com/NeilMacMullen/Textrude/issues/new"));
+            OpenHome("issues/new?assignees=&labels=bug&template=bug_report.md&title=Bug");
+
+        private void NewIdea(object sender, RoutedEventArgs e) =>
+            OpenHome("issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Suggestion");
+
+        private void SendASmile(object sender, RoutedEventArgs e) =>
+            OpenHome("issues/new?assignees=&labels=smile&template=positive-feedback.md&title=I%20like%20it%21");
+
+
+        private void Questions(object sender, RoutedEventArgs e) =>
+            OpenHome("issues/new?assignees=&labels=question&template=ask-a-question.md&title=Help");
 
         private void ExportInvocation(object sender, RoutedEventArgs e) => _projectManager.ExportProject();
 
@@ -320,5 +335,22 @@ namespace TextrudeInteractive
         private void AddOutput(object sender, RoutedEventArgs e) => _outputManager.AddPane();
 
         private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
+
+        private void ReloadAllInputs(object sender, RoutedEventArgs e)
+        {
+            _modelManager.ForAll(p => p.LoadIfLinked());
+            templateFileBar.LoadIfLinked();
+        }
+
+        private void SaveAllOutputs(object sender, RoutedEventArgs e)
+        {
+            _outputManager.ForAll(p => p.SaveIfLinked());
+        }
+
+        private void SaveAllInputs(object sender, RoutedEventArgs e)
+        {
+            _modelManager.ForAll(p => p.SaveIfLinked());
+            templateFileBar.SaveIfLinked();
+        }
     }
 }

@@ -89,5 +89,7 @@ namespace TextrudeInteractive
             Format = FormatSelection.SelectedItem as string;
             textBox.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(Format);
         }
+
+        public void SaveIfLinked() => fileBar.SaveIfLinked();
     }
 }
