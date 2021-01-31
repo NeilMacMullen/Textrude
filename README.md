@@ -28,7 +28,9 @@ Let's face it, there are any number of code-generation technologies you might co
 
 The current release is **v1.2.0**.
 
-**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will need to install it.** 
+**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will need to install it.**
+
+**To run TextrudeInteractive you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
 
@@ -48,6 +50,7 @@ The current release is **v1.2.0**.
 - default rendering throttle reduced to 50ms for better responsiveness
 - Taskbar icon now shows jumplist, TextrudeInteractive can be started with name of project as parameter
 - TextrudeInteractive now opens last used project when reopened
+- TextrudeInteractive now uses the Monaco editor (from VS Code) hugely improving the syntax highlighting abilities.   Massive thanks to [Martin Hochstrasser](https://github.com/highstreeto) for this! 
 
 
 ### v1.2.0
@@ -73,7 +76,7 @@ The current release is **v1.2.0**.
 - [Using Textrude in a build system](doc/buildSystemIntegration.md)
 - [Docker image](Docker.md)
 
-## Credits
+## Credits and contributors
 Textrude makes heavy use of the following components:
 - [Scriban](https://github.com/scriban/scriban) as the template language engine
 - [CommandLineParser](https://github.com/commandlineparser/commandline) for command-line parsing
@@ -84,6 +87,9 @@ Textrude makes heavy use of the following components:
 - [MaterialDesignToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit),   [MaterialDesignExtensions](https://spiegelp.github.io/MaterialDesignExtensions) and [Ookii Dialogs](https://github.com/augustoproiete/ookii-dialogs-wpf)to make the UI a bit less clunky
 - [AvalonEdit](http://avalonedit.net/) for text-editing goodness
 
+Huge thanks to the contributors:
+- [Martin Hochstrasser](https://github.com/highstreeto) - Docker support, general build enhancements and integration of the Monaco editor
+- [Neil MacMullen](https://github.com/NeilMacMullen) - original application concept and implementation
 
 
 ## Help wanted 
