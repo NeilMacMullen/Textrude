@@ -45,6 +45,7 @@ The current release is **v1.2.0**.
 - Input/ouput panes can be "linked" to files and load/save are supported
 - fontsize, wordwrap and line-number settings are now persisted
 - warning dialog is now shown if the current project has unsaved changes
+- default rendering throttle reduced to 50ms for better responsiveness
 
 ### v1.2.0
 - Turn StrictVariables back on
