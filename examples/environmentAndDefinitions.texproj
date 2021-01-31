@@ -10,14 +10,6 @@
       {
         "Format": 2,
         "Text": ""
-      },
-      {
-        "Format": 2,
-        "Text": ""
-      },
-      {
-        "Format": 2,
-        "Text": ""
       }
     ],
     "Template": "Access environment variables via the \u0027env\u0027 namespace:\r\n\r\n{{env.USERNAME}}\r\n\r\n\r\nAdd definitions from the other-\u003Edefintions tab and \r\naccess them via the \u0027def\u0027 namespace:\r\n\r\n{{def.LANGUAGE}} / {{def.COUNTRY}}\r\n\r\nYou can easily list all environment variables like this:\r\n\r\n{{debug.dump env}}\r\n"
