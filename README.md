@@ -43,6 +43,7 @@ The current release is **v1.2.0**.
 - Models and outputs can be added/removed on a per-project basis
 - Syntax highlighting for output panes
 - Input/ouput panes can be "linked" to files and load/save are supported
+- fontsize, wordwrap and line-number settings are now persisted
 
 ### v1.2.0
 - Turn StrictVariables back on

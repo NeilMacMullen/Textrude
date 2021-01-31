@@ -18,7 +18,8 @@
                          FontFamily="{DynamicResource MaterialDesignFont}"
                          Loaded="MainWindow_OnLoaded"
 
-                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+                         >
     <Window.Resources>
         <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
