@@ -1,58 +1,55 @@
-﻿using Engine.Application;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
+using Engine.Application;
 
 namespace TextrudeInteractive
 {
     /// <summary>
-    /// Interaction logic for InputMonacoPane.xaml
+    ///     Interaction logic for InputMonacoPane.xaml
     /// </summary>
     // TODO InputMonacoPane is extended-copy of InputPane -> maybe use inheritance?
     public partial class InputMonacoPane : UserControl, IPane
     {
-		private ModelFormat _format = ModelFormat.Line;
-		private MonacoBinding _monacoBinding;
+        private readonly MonacoBinding _monacoBinding;
+        private ModelFormat _format = ModelFormat.Line;
 
-		public InputMonacoPane()
-		{
-			InitializeComponent();
-			_monacoBinding = new MonacoBinding(WebView, isReadOnly: false);
-            _monacoBinding.OnUserInput = _ => this.OnUserInput();
-			_monacoBinding.Initialize().ConfigureAwait(false);
+        public Action OnUserInput = () => { };
 
-			FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
-			FormatSelection.SelectedItem = ModelFormat.Yaml;
+        public InputMonacoPane()
+        {
+            InitializeComponent();
+            _monacoBinding = new MonacoBinding(WebView, false) {OnUserInput = _ => OnUserInput()};
+            _monacoBinding.Initialize().ConfigureAwait(false);
+
+            FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
+            FormatSelection.SelectedItem = ModelFormat.Yaml;
             FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
         }
 
-        public Action OnUserInput = () => { };
-
         public string Text
-		{
-			get => _monacoBinding.Text;
-			set => _monacoBinding.Text = value;
-		}
+        {
+            get => _monacoBinding.Text;
+            set => _monacoBinding.Text = value;
+        }
 
-		/// <summary>
-		///     Serialisable Format to be persisted in project
-		/// </summary>
-		public ModelFormat Format
-		{
-			get => _format;
-			set
-			{
-				if (_format != value)
-				{
-					_format = value;
-					_monacoBinding.Format = Format.ToString().ToLower();
-					FormatSelection.SelectedItem = _format;
-				}
-			}
-		}
+        /// <summary>
+        ///     Serialisable Format to be persisted in project
+        /// </summary>
+        public ModelFormat Format
+        {
+            get => _format;
+            set
+            {
+                if (_format != value)
+                {
+                    _format = value;
+                    _monacoBinding.Format = Format.ToString().ToLower();
+                    FormatSelection.SelectedItem = _format;
+                }
+            }
+        }
 
         /// <summary>
         ///     Currently unused - the name of the model
@@ -84,9 +81,9 @@ namespace TextrudeInteractive
         }
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			Format = (ModelFormat)FormatSelection.SelectedItem;
-			OnUserInput();
-		}
-	}
+        {
+            Format = (ModelFormat) FormatSelection.SelectedItem;
+            OnUserInput();
+        }
+    }
 }

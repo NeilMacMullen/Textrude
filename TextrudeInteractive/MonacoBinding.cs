@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.Wpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -8,36 +6,40 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+using TextrudeInteractive.Properties;
 
 namespace TextrudeInteractive
 {
     public class MonacoBinding
     {
         // TODO Use Uri instead of string
-        private static readonly string monacoBaseUri = "http://monaco-editor/";
-
-        private string _text;
-        private string _format;
+        private const string MonacoBaseUri = "http://monaco-editor/";
+        private readonly bool _isReadOnly;
+        private readonly Queue<Messages> _messagesToBeDelivered;
+        private readonly WebView2 _webView;
+        private string _format = string.Empty;
         private bool _isReady;
-        private bool _isReadOnly;
+
+        private string _text = string.Empty;
         private CoreWebView2Environment _webEnv;
-        private WebView2 _webView;
-        private Queue<Messages> _messagesToBeDelvivered;
+
+        public Action<MonacoBinding> OnUserInput = _ => { };
 
         public MonacoBinding(WebView2 webView, bool isReadOnly)
         {
             _webView = webView;
             _isReadOnly = isReadOnly;
             _isReady = false;
-            _messagesToBeDelvivered = new Queue<Messages>();
+            _messagesToBeDelivered = new Queue<Messages>();
         }
-
-        public Action<MonacoBinding> OnUserInput = _ => { };
 
         public string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 if (_text != value)
@@ -50,14 +52,12 @@ namespace TextrudeInteractive
 
         public string Format
         {
-            get { return _format; }
+            get => _format;
             set
             {
-                if (_format != value)
-                {
-                    _format = value;
-                    PostMessage(new Messages.UpdateLanguage(Format));
-                }
+                if (_format == value) return;
+                _format = value;
+                PostMessage(new Messages.UpdateLanguage(Format));
             }
         }
 
@@ -71,7 +71,7 @@ namespace TextrudeInteractive
             _webView.CoreWebView2.WebResourceRequested += OnWebResourceRequested;
             _webView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
 
-            _webView.CoreWebView2.Navigate(monacoBaseUri);
+            _webView.CoreWebView2.Navigate(MonacoBaseUri);
         }
 
         public void OpenDevTools()
@@ -92,22 +92,18 @@ namespace TextrudeInteractive
 
         public static List<string> GetSupportedFormats()
         {
-            var monacoLangRegex = new System.Text.RegularExpressions.Regex(@"vs/(basic-languages|language)/(?<name>.+)/$");
-            using (var zipStream = new MemoryStream(Properties.Resources.monaco_editor_0_21_2))
-            {
-                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Read))
-                {
-                    var langs = zip.Entries
-                        .Select(e => monacoLangRegex.Match(e.FullName))
-                        .Where(m => m.Success)
-                        .Select(m => m.Groups["name"].Value)
-                        .Concat(new[] { "text" })
-                        .OrderBy(l => l)
-                        .Distinct()
-                        .ToList();
-                    return langs;
-                }
-            }
+            var monacoLangRegex = new Regex(@"vs/(basic-languages|language)/(?<name>.+)/$");
+            using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
+            using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+            var languages = zip.Entries
+                .Select(e => monacoLangRegex.Match(e.FullName))
+                .Where(m => m.Success)
+                .Select(m => m.Groups["name"].Value)
+                .Concat(new[] {"text"})
+                .OrderBy(l => l)
+                .Distinct()
+                .ToList();
+            return languages;
         }
 
         private void PostMessage(Messages msg)
@@ -115,7 +111,7 @@ namespace TextrudeInteractive
             if (_isReady)
                 _webView.CoreWebView2.PostWebMessageAsJson(msg.ToJson());
             else
-                _messagesToBeDelvivered.Enqueue(msg);
+                _messagesToBeDelivered.Enqueue(msg);
         }
 
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
@@ -127,81 +123,72 @@ namespace TextrudeInteractive
                 case nameof(Messages.Ready):
                     _isReady = true;
                     PostMessage(new Messages.Setup(_isReadOnly, Format));
-                    while (_messagesToBeDelvivered.TryDequeue(out var delayedMsg))
+                    while (_messagesToBeDelivered.TryDequeue(out var delayedMsg))
                     {
                         PostMessage(delayedMsg);
                     }
+
                     break;
                 case nameof(Messages.UpdatedText):
                     var msg = Messages.UpdatedText.FromJson(e.WebMessageAsJson);
                     _text = msg.Text;
                     OnUserInput(this);
                     break;
-                default:
-                    break;
             }
         }
 
-        private void OnWebResourceRequested(object sender, Microsoft.Web.WebView2.Core.CoreWebView2WebResourceRequestedEventArgs e)
+        private void OnWebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
-            if (e.Request.Uri == monacoBaseUri)
+            if (e.Request.Uri == MonacoBaseUri)
             {
                 e.Response = _webEnv.CreateWebResourceResponse(
-                    new MemoryStream(Encoding.UTF8.GetBytes(Properties.Resources.monaco)),
+                    new MemoryStream(Encoding.UTF8.GetBytes(Resources.monaco)),
                     200,
                     "OK",
                     ""
                 );
             }
-            else if (e.Request.Uri.StartsWith($"{monacoBaseUri}vs"))
+            else if (e.Request.Uri.StartsWith($"{MonacoBaseUri}vs"))
             {
-                var path = e.Request.Uri.Replace(monacoBaseUri, "");
-                using (var zipStream = new MemoryStream(Properties.Resources.monaco_editor_0_21_2))
+                var path = e.Request.Uri.Replace(MonacoBaseUri, "");
+                using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
+                using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+                var file = zip.GetEntry(path);
+                var response = new MemoryStream(); // cache into local stream so is not disposed
+                file.Open().CopyTo(response);
+                response.Position = 0;
+
+                string mimeType;
+                switch (Path.GetExtension(path))
                 {
-                    using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Read))
-                    {
-                        var file = zip.GetEntry(path);
-                        var response = new MemoryStream(); // cache into local stream so is not disposed
-                        file.Open().CopyTo(response);
-                        response.Position = 0;
-
-                        string mimeType;
-                        switch (Path.GetExtension(path))
-                        {
-                            case ".js":
-                                mimeType = "text/javascript";
-                                break;
-                            case ".css":
-                                mimeType = "text/css";
-                                break;
-                            case ".ttf":
-                                mimeType = "font/ttf";
-                                break;
-                            default:
-                                mimeType = "application/octet-stream";
-                                break;
-                        }
-
-                        e.Response = _webEnv.CreateWebResourceResponse(
-                            response,
-                            200,
-                            "OK",
-                            $"Content-Type: {mimeType}\nContent-Length: {response.Length}"
-                        );
-                    }
+                    case ".js":
+                        mimeType = "text/javascript";
+                        break;
+                    case ".css":
+                        mimeType = "text/css";
+                        break;
+                    case ".ttf":
+                        mimeType = "font/ttf";
+                        break;
+                    default:
+                        mimeType = "application/octet-stream";
+                        break;
                 }
+
+                e.Response = _webEnv.CreateWebResourceResponse(
+                    response,
+                    200,
+                    "OK",
+                    $"Content-Type: {mimeType}\nContent-Length: {response.Length}"
+                );
             }
         }
 
         private abstract record Messages
         {
-            protected Messages()
-            {
-                Type = GetType().Name;
-            }
+            protected Messages() => Type = GetType().Name;
 
-            [JsonPropertyName("type")]
-            public string Type { get; }
+            [JsonPropertyName("type")] public string Type { get; }
 
             public string ToJson() => JsonSerializer.Serialize(this, GetType());
 
@@ -219,21 +206,16 @@ namespace TextrudeInteractive
                     Language = format;
                 }
 
-                [JsonPropertyName("isReadOnly")]
-                public bool IsReadOnly { get; }
-                [JsonPropertyName("language")]
-                public string Language { get; }
+                [JsonPropertyName("isReadOnly")] public bool IsReadOnly { get; }
+
+                [JsonPropertyName("language")] public string Language { get; }
             }
 
             public record UpdatedText : Messages
             {
-                public UpdatedText(string text)
-                {
-                    Text = text;
-                }
+                public UpdatedText(string text) => Text = text;
 
-                [JsonPropertyName("text")]
-                public string Text { get; }
+                [JsonPropertyName("text")] public string Text { get; }
 
                 public static UpdatedText FromJson(string json)
                     => JsonSerializer.Deserialize<UpdatedText>(json);
@@ -241,24 +223,16 @@ namespace TextrudeInteractive
 
             public record UpdateText : Messages
             {
-                public UpdateText(string text)
-                {
-                    Text = text;
-                }
+                public UpdateText(string text) => Text = text;
 
-                [JsonPropertyName("text")]
-                public string Text { get; }
+                [JsonPropertyName("text")] public string Text { get; }
             }
 
             public record UpdateLanguage : Messages
             {
-                public UpdateLanguage(string language)
-                {
-                    Language = language;
-                }
+                public UpdateLanguage(string language) => Language = language;
 
-                [JsonPropertyName("language")]
-                public string Language { get; }
+                [JsonPropertyName("language")] public string Language { get; }
             }
         }
     }
