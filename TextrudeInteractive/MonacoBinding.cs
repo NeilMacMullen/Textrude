@@ -19,19 +19,23 @@ namespace TextrudeInteractive
 
 		private string _text;
 		private string _format;
+        private bool _isReady;
 		private bool _isReadOnly;
 		private CoreWebView2Environment _webEnv;
 		private WebView2 _webView;
-		private Action<MonacoBinding> _onUserInput;
+        private Queue<Messages> _messagesToBeDelvivered;
 
-		public MonacoBinding(WebView2 webView, bool isReadOnly, Action<MonacoBinding> onUserInput)
+		public MonacoBinding(WebView2 webView, bool isReadOnly)
 		{
 			_webView = webView;
 			_isReadOnly = isReadOnly;
-			_onUserInput = onUserInput;
+            _isReady = false;
+            _messagesToBeDelvivered = new Queue<Messages>();
 		}
 
-		public string Text
+        public Action<MonacoBinding> OnUserInput = _ => { };
+
+        public string Text
 		{
 			get { return _text; }
 			set
@@ -39,12 +43,7 @@ namespace TextrudeInteractive
 				if (_text != value)
 				{
 					_text = value;
-					if (_webView != null && _webView.CoreWebView2 != null)
-					{
-						_webView.CoreWebView2.PostWebMessageAsJson(
-							new UpdateTextMessage(Text).ToJson()
-						);
-					}
+                    PostMessage(new Messages.UpdateText(Text));
 				}
 			}
 		}
@@ -57,12 +56,7 @@ namespace TextrudeInteractive
 				if (_format != value)
 				{
 					_format = value;
-					if (_webView != null && _webView.CoreWebView2 != null)
-					{
-						_webView.CoreWebView2.PostWebMessageAsJson(
-							new UpdateMonacoLanguageMessage(Format).ToJson()
-						);
-					}
+                    PostMessage(new Messages.UpdateLanguage(Format));
 				}
 			}
 		}
@@ -103,21 +97,32 @@ namespace TextrudeInteractive
 			}
 		}
 
+        private void PostMessage(Messages msg)
+        {
+            if (_isReady)
+                _webView.CoreWebView2.PostWebMessageAsJson(msg.ToJson());
+            else
+                _messagesToBeDelvivered.Enqueue(msg);
+        }
+
 		private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
 		{
 			var json = JsonDocument.Parse(e.WebMessageAsJson);
 			var type = json.RootElement.GetProperty("type").GetString();
 			switch (type)
 			{
-				case ReadyMessage.Type:
-					_webView.CoreWebView2.PostWebMessageAsJson(
-						new SetupMessage(_isReadOnly, Format).ToJson()
-					);
+				case nameof(Messages.Ready):
+                    _isReady = true;
+                    PostMessage(new Messages.Setup(_isReadOnly, Format));
+                    while (_messagesToBeDelvivered.TryDequeue(out var delayedMsg))
+                    {
+                        PostMessage(delayedMsg);
+                    }
 					break;
-				case UpdatedTextMessage.Type:
-					var msg = UpdatedTextMessage.FromJson(e.WebMessageAsJson);
+				case nameof(Messages.UpdatedText):
+					var msg = Messages.UpdatedText.FromJson(e.WebMessageAsJson);
 					_text = msg.Text;
-					_onUserInput(this);
+					OnUserInput(this);
 					break;
 				default:
 					break;
@@ -175,91 +180,73 @@ namespace TextrudeInteractive
 			}
 		}
 
-		private record ReadyMessage
-		{
-			public const string Type = "Ready";
+        private abstract record Messages
+        {
+            protected Messages()
+            {
+                Type = GetType().Name;
+            }
 
-			public ReadyMessage()
-			{
-			}
+            [JsonPropertyName("type")]
+            public string Type { get; }
 
-			[JsonPropertyName("type")]
-			public string JsonType { get; } = Type;
+            public string ToJson() => JsonSerializer.Serialize(this, GetType());
 
-			public static ReadyMessage FromJson(string json)
-				=> JsonSerializer.Deserialize<ReadyMessage>(json);
-		}
+            public record Ready : Messages
+            {
+                public static Ready FromJson(string json)
+                    => JsonSerializer.Deserialize<Ready>(json);
+            }
 
-		private record SetupMessage
-		{
-			public const string Type = "Setup";
+            public record Setup : Messages
+            {
+                public Setup(bool isReadOnly, string format)
+                {
+                    IsReadOnly = isReadOnly;
+                    Language = format;
+                }
 
-			public SetupMessage(bool isReadOnly, string format)
-			{
-				IsReadOnly = isReadOnly;
-				Language = format;
-			}
+                [JsonPropertyName("isReadOnly")]
+                public bool IsReadOnly { get; }
+                [JsonPropertyName("language")]
+                public string Language { get; }
+            }
 
-			[JsonPropertyName("type")]
-			public string JsonType { get; } = Type;
-			[JsonPropertyName("isReadOnly")]
-			public bool IsReadOnly { get; }
-			[JsonPropertyName("language")]
-			public string Language { get; }
+            public record UpdatedText : Messages
+            {
+                public UpdatedText(string text)
+                {
+                    Text = text;
+                }
 
-			public string ToJson() => JsonSerializer.Serialize(this);
-		}
+                [JsonPropertyName("text")]
+                public string Text { get; }
 
-		private record UpdatedTextMessage
-		{
-			public const string Type = "UpdatedText";
+                public static UpdatedText FromJson(string json)
+                    => JsonSerializer.Deserialize<UpdatedText>(json);
+            }
 
-			public UpdatedTextMessage(string text)
-			{
-				Text = text;
-			}
+            public record UpdateText : Messages
+            {
+                public UpdateText(string text)
+                {
+                    Text = text;
+                }
 
-			[JsonPropertyName("type")]
-			public string JsonType { get; } = Type;
-			[JsonPropertyName("text")]
-			public string Text { get; }
+                [JsonPropertyName("text")]
+                public string Text { get; }
+            }
 
-			public static UpdatedTextMessage FromJson(string json)
-				=> JsonSerializer.Deserialize<UpdatedTextMessage>(json);
-		}
+            public record UpdateLanguage : Messages
+            {
+                public UpdateLanguage(string language)
+                {
+                    Language = language;
+                }
 
-		private record UpdateTextMessage
-		{
-			public const string Type = "UpdateText";
-
-			public UpdateTextMessage(string text)
-			{
-				Text = text;
-			}
-
-			[JsonPropertyName("type")]
-			public string JsonType { get; } = Type;
-			[JsonPropertyName("text")]
-			public string Text { get; }
-
-			public string ToJson() => JsonSerializer.Serialize(this);
-		}
-
-		private record UpdateMonacoLanguageMessage
-		{
-			public const string Type = "UpdateLanguage";
-
-			public UpdateMonacoLanguageMessage(string language)
-			{
-				Language = language;
-			}
-
-			[JsonPropertyName("type")]
-			public string JsonType { get; } = Type;
-			[JsonPropertyName("language")]
-			public string Language { get; }
-
-			public string ToJson() => JsonSerializer.Serialize(this);
-		}
+                [JsonPropertyName("language")]
+                public string Language { get; }
+            }
+        }
 	}
 }

@@ -11,18 +11,24 @@
   mc:Ignorable="d">
   <DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
-      <Button
-        Click="SaveToFile"
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <Button
+          Name="ChooseButton"
+          Click="CopyToClipboard"
+          Content="&#x1F4CB;"
+          Style="{StaticResource MaterialDesignFlatButton}"
+          ToolTip="Copy to clipboard" />
+        <ComboBox
+          Name="FormatSelection"
+          HorizontalAlignment="Right"
+          HorizontalContentAlignment="Right"
+          SelectionChanged="FormatSelection_OnSelectionChanged" />
+      </StackPanel>
+
+      <local:FileBar
+        x:Name="FileBar"
         DockPanel.Dock="Left"
-        FontSize="8">
-        Save File...
-      </Button>
-      <ComboBox
-        Name="FormatSelection"
-        HorizontalAlignment="Right"
-        HorizontalContentAlignment="Right"
-        DockPanel.Dock="Right"
-        SelectionChanged="FormatSelection_OnSelectionChanged" />
+        IsSaveOnly="True" />
     </DockPanel>
 
     <wv2:WebView2

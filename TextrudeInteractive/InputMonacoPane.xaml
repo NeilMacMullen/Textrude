@@ -11,19 +11,18 @@
   mc:Ignorable="d">
   <DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
-      <Button
-        Click="LoadFromFile"
-        DockPanel.Dock="Left"
-        FontSize="8">
-        Load File...
-      </Button>
       <ComboBox
         Name="FormatSelection"
         HorizontalAlignment="Right"
         HorizontalContentAlignment="Right"
         DockPanel.Dock="Right"
         SelectionChanged="FormatSelectionChanged" />
+      <local:FileBar
+        x:Name="FileBar"
+        DockPanel.Dock="Left"
+        IsSaveOnly="False" />
     </DockPanel>
+
     <wv2:WebView2
       Name="WebView"
       HorizontalAlignment="Stretch"
