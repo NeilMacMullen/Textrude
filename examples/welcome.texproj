@@ -1,4 +1,5 @@
 {
+  "Version": 1,
   "Description": "",
   "EngineInput": {
     "Definitions": [
@@ -9,17 +10,38 @@
     "Models": [
       {
         "Format": 2,
-        "Text": "str: a string\r\nnum: 100\r\nlst:\r\n - 45\r\n - 23\r\n"
+        "Text": "str: a string\r\nnum: 100\r\nlst:\r\n - 45\r\n - 23\r\n",
+        "Path": null,
+        "Name": null
       },
       {
         "Format": 1,
-        "Text": "Num,Description\r\n100,failure\r\n200,breakage"
+        "Text": "Num,Description\r\n100,failure\r\n200,breakage",
+        "Path": null,
+        "Name": null
       },
       {
         "Format": 1,
-        "Text": "file,description\r\nexample1,Demonstrates how"
+        "Text": "file,description\r\nexample1,Demonstrates how",
+        "Path": null,
+        "Name": null
       }
     ],
-    "Template": "\r\nHello {{env.USERNAME}} \r\n\r\nIt is {{ date.now | date.to_string \u0022%r on %A, %d %h %Y\u0022}}\r\n\r\n\u003C===== Your YAML model is: {{model}}\r\n\r\nYou can access items like this...\r\n\r\n\u0022{{model.str}}\u0022 \r\n\r\nor \r\n\r\nsum of items in list is: {{model.lst[0] \u002B model.lst[1]}}\r\n\r\n\u003C===You can refer to multiple models from the same template.\r\nThere is another model with a CSV scheme in the \u0022model1\u0022 tab on the left \r\n\r\n{{debug.dump model1}}\r\n\r\nYou have the following definitions:\r\n\r\n{{for d in def~}}\r\n {{for.index}}.  \u0027{{d.key}}\u0027 is \u0027{{d.value}}\u0027\r\n {{~end}}\r\n\r\nIt\u0027s possible for a template to generate output for multiple files;  look \r\nin the \u0022output1\u0022 tab on the right ====\u003E\r\n{{capture output1}} \r\n  Here is some text that should appear in the output1 window \r\n{{end}}\r\n\r\nOutput is regenerated whenever you edit the template, models or definitions.\r\n\r\nMore examples are available - use Project-\u003ELoad from the menu. The full list is:\r\n\r\n{{for d in model2~}}\r\n - {{d.file}}: {{d.description}}\r\n {{end}}\r\n\r\n "
+    "Template": "\r\nHello {{env.USERNAME}} \r\n\r\nIt is {{ date.now | date.to_string \u0022%r on %A, %d %h %Y\u0022}}\r\n\r\n\u003C===== Your YAML model is: {{model}}\r\n\r\nYou can access items like this...\r\n\r\n\u0022{{model.str}}\u0022 \r\n\r\nor \r\n\r\nsum of items in list is: {{model.lst[0] \u002B model.lst[1]}}\r\n\r\n\u003C===You can refer to multiple models from the same template.\r\nThere is another model with a CSV scheme in the \u0022model1\u0022 tab on the left \r\n\r\n{{debug.dump model1}}\r\n\r\nYou have the following definitions:\r\n\r\n{{for d in def~}}\r\n {{for.index}}.  \u0027{{d.key}}\u0027 is \u0027{{d.value}}\u0027\r\n {{~end}}\r\n\r\nIt\u0027s possible for a template to generate output for multiple files;  look \r\nin the \u0022output1\u0022 tab on the right ====\u003E\r\n{{capture output1}} \r\n  Here is some text that should appear in the output1 window \r\n{{end}}\r\n\r\nOutput is regenerated whenever you edit the template, models or definitions.\r\n\r\nMore examples are available - use Project-\u003ELoad from the menu. The full list is:\r\n\r\n{{for d in model2~}}\r\n - {{d.file}}: {{d.description}}\r\n {{end}}\r\n\r\n ",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "text",
+        "Name": "",
+        "Path": ""
+      },
+      {
+        "Format": "text",
+        "Name": "",
+        "Path": ""
+      }
+    ]
   }
 }
