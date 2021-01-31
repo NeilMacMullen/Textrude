@@ -23,4 +23,4 @@ jobs:
     - name: Restore tools
       run: dotnet tool restore
     - name: Test
-      run: dotnet cake --target Test --config ${{ matrix.build_config }} --clean
+      run: dotnet cake --target Test --configuration ${{ matrix.build_config }} --clean
