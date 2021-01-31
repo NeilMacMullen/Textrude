@@ -46,6 +46,9 @@ The current release is **v1.2.0**.
 - fontsize, wordwrap and line-number settings are now persisted
 - warning dialog is now shown if the current project has unsaved changes
 - default rendering throttle reduced to 50ms for better responsiveness
+- Taskbar icon now shows jumplist, TextrudeInteractive can be started with name of project as parameter
+- TextrudeInteractive now opens last used project when reopened
+
 
 ### v1.2.0
 - Turn StrictVariables back on

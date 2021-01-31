@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Shell;
 using Engine.Application;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
@@ -11,12 +13,13 @@ namespace TextrudeInteractive
 {
     public class ProjectManager
     {
-        private const string Filter = "project files (*.texproj)|*.texproj|All files (*.*)|*.*";
+        private const string Extension = ".texproj";
+        private static readonly string Filter = $"project files (*{Extension})|*{Extension}|All files (*.*)|*.*";
         private readonly MainWindow _owner;
 
-        private string _currentProjectPath = string.Empty;
-
         public ProjectManager(MainWindow owner) => _owner = owner;
+
+        public string CurrentProjectPath { get; private set; } = string.Empty;
         public bool IsDirty { get; set; }
 
         private TextrudeProject CreateProject()
@@ -30,30 +33,41 @@ namespace TextrudeInteractive
             return proj;
         }
 
+
+        public void LoadProject(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return;
+
+            try
+            {
+                var text = File.ReadAllText(path);
+                var proj = JsonSerializer.Deserialize<TextrudeProject>(text);
+                CurrentProjectPath = path;
+                UpdateUi(proj);
+                IsDirty = false;
+                AddCurrentToJumpList();
+            }
+            catch
+            {
+                MessageBox.Show(_owner, $"Error - unable to open project '{path}'");
+            }
+        }
+
+
         public void LoadProject()
         {
             var dlg = new OpenFileDialog {Filter = Filter};
 
             if (dlg.ShowDialog(_owner) == true)
             {
-                try
-                {
-                    var text = File.ReadAllText(dlg.FileName);
-                    var proj = JsonSerializer.Deserialize<TextrudeProject>(text);
-                    _currentProjectPath = dlg.FileName;
-                    UpdateUI(proj);
-                    IsDirty = false;
-                }
-                catch
-                {
-                    MessageBox.Show(_owner, "Error - unable to open project");
-                }
+                LoadProject(dlg.FileName);
             }
         }
 
         public void SaveProject()
         {
-            if (string.IsNullOrWhiteSpace(_currentProjectPath))
+            if (string.IsNullOrWhiteSpace(CurrentProjectPath))
                 SaveProjectAs();
             else
             {
@@ -62,8 +76,9 @@ namespace TextrudeInteractive
                     var o = new JsonSerializerOptions {WriteIndented = true};
                     var text = JsonSerializer.Serialize(CreateProject(), o);
 
-                    File.WriteAllText(_currentProjectPath, text);
+                    File.WriteAllText(CurrentProjectPath, text);
                     IsDirty = false;
+                    AddCurrentToJumpList();
                 }
                 catch
                 {
@@ -77,25 +92,25 @@ namespace TextrudeInteractive
             var dlg = new SaveFileDialog {Filter = Filter};
             if (dlg.ShowDialog(_owner) == true)
             {
-                _currentProjectPath = dlg.FileName;
-                _owner.SetTitle(_currentProjectPath);
+                CurrentProjectPath = dlg.FileName;
+                _owner.SetTitle(CurrentProjectPath);
                 SaveProject();
             }
         }
 
         public void NewProject()
         {
-            _currentProjectPath = string.Empty;
+            CurrentProjectPath = string.Empty;
             var proj = new TextrudeProject();
-            UpdateUI(proj);
+            UpdateUi(proj);
             IsDirty = false;
         }
 
-        private void UpdateUI(TextrudeProject project)
+        private void UpdateUi(TextrudeProject project)
         {
             _owner.SetUi(project.EngineInput);
             _owner.SetOutputPanes(project.OutputControl);
-            _owner.SetTitle(_currentProjectPath);
+            _owner.SetTitle(CurrentProjectPath);
         }
 
         public void ExportProject()
@@ -157,6 +172,25 @@ namespace TextrudeInteractive
             {
                 MessageBox.Show("Sorry - couldn't export invocation");
             }
+        }
+
+        public static bool IsProject(string s) => Path.GetExtension(s) == Extension;
+
+
+        public void AddCurrentToJumpList()
+        {
+            if (string.IsNullOrWhiteSpace(CurrentProjectPath))
+                return;
+            var exe = Process.GetCurrentProcess().MainModule.FileName;
+            var task =
+                new JumpTask
+                {
+                    ApplicationPath = exe,
+                    Arguments = CurrentProjectPath,
+                    Title = Path.GetFileNameWithoutExtension(CurrentProjectPath),
+                    Description = CurrentProjectPath,
+                };
+            JumpList.AddToRecentCategory(task);
         }
     }
 }
