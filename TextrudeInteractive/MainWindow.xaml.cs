@@ -64,7 +64,21 @@ namespace TextrudeInteractive
             SetOutputPanes(EngineOutputSet.Empty);
 
             //do this before setting up the input stream so we can change the responsiveness
-            LoadSettings();
+            var settings = LoadSettings();
+
+
+            //check to see if the application was invoked with arguments
+            //if so open that project, otherwise open the last used
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length == 2 && ProjectManager.IsProject(args[1]))
+            {
+                _projectManager.LoadProject(args[1]);
+            }
+            else if (settings.RecentProjects.Any())
+            {
+                var mostRecentProject = settings.RecentProjects.OrderByDescending(p => p.LastLoaded).First();
+                _projectManager.LoadProject(mostRecentProject.Path);
+            }
 
             _inputStream
                 .Throttle(TimeSpan.FromMilliseconds(_responseTimeMs))
@@ -73,7 +87,6 @@ namespace TextrudeInteractive
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleRenderResults);
             _uiIsReady = true;
-
 
             RunBackgroundUpgradeCheck();
 
@@ -111,6 +124,10 @@ namespace TextrudeInteractive
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        #region jumplist
+
+        #endregion
 
         #region outputs menu
 
@@ -386,13 +403,14 @@ namespace TextrudeInteractive
         /// <summary>
         ///     Loads any persisted settings and applies them
         /// </summary>
-        private void LoadSettings()
+        private ApplicationSettings LoadSettings()
         {
             var settings = SettingsManager.ReadSettings();
             LineNumbersOn = settings.LineNumbersOn;
             TextSize = settings.FontSize;
             WordWrapOn = settings.WrapText;
             _responseTimeMs = settings.ResponseTime;
+            return settings;
         }
 
         /// <summary>
@@ -400,13 +418,23 @@ namespace TextrudeInteractive
         /// </summary>
         private void PersistSettings()
         {
-            //perist settings
+            //persist settings
             var settings = new ApplicationSettings
             {
                 FontSize = TextSize,
                 LineNumbersOn = LineNumbersOn,
                 WrapText = WordWrapOn,
-                ResponseTime = _responseTimeMs
+                ResponseTime = _responseTimeMs,
+                //TODO - this is a temporary hack. ProjectManager should actually track the projects that have been used
+                //and save them all so we can display them in the menu
+                RecentProjects = new[]
+                {
+                    new RecentlyUsedProject
+                    {
+                        LastLoaded = DateTime.UtcNow,
+                        Path = _projectManager.CurrentProjectPath
+                    }
+                }
             };
             SettingsManager.WriteSettings(settings);
         }

@@ -59,10 +59,10 @@
                 <MenuItem Click="LoadProject" Header="Load" />
                 <MenuItem Click="SaveProject" Header="Save" />
                 <MenuItem Click="SaveProjectAs" Header="Save as..." />
+                 
+            </MenuItem>
                 <Separator />
                 <MenuItem Click="ExportInvocation" Header="Export as invocation" ToolTip="Builds a commmand line invocation"/>
-
-            </MenuItem>
             <MenuItem Header="Inputs">
                 <MenuItem Click="AddModel" Header="Add model" ToolTip="Adds a new model" />
                 <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the last model"/>
