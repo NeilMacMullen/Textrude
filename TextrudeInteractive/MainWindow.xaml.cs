@@ -30,8 +30,8 @@ namespace TextrudeInteractive
 
         private readonly AvalonEditCompletionHelper _mainEditWindow;
 
-        private readonly TabControlManager<InputPane> _modelManager;
-        private readonly TabControlManager<OutputPane> _outputManager;
+        private readonly TabControlManager<InputMonacoPane> _modelManager;
+        private readonly TabControlManager<OutputMonacoPane> _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
@@ -47,6 +47,18 @@ namespace TextrudeInteractive
         public MainWindow()
         {
             InitializeComponent();
+
+            if (!MonacoBinding.IsWebView2RuntimeAvailable()) {
+                MessageBox.Show(
+                    "The WebView2 runtime or Edge (non-stable channel) must be installed for the editor to work!\n" +
+                    "Please install one of the two.\n" +
+                    "Textrude will now exit.",
+                    "Textrude: WebView2 runtime must be installed!",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                Application.Current.Shutdown();
+            }
 
             templateFileBar.OnSave = () => TemplateTextBox.Text;
             templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
