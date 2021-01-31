@@ -8,10 +8,6 @@ If you want to build one of the stable releases, checkout one of the release tag
 
 `git checkout tags/v1.2.0`
 
-## Requirements
-
-The [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) runtime must be installed for TextrudeInteractive to load the input- and output panels.
-
 ## Visual Studio
 
 Open the *Textrude.sln* solution file and just rebuild all
