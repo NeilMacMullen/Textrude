@@ -45,7 +45,7 @@ Task("Build")
         Verbosity = dotnetVerbosity
     });
     
-    DotNetCoreRun("Textrude", @"render --models ScriptLibrary\doc.yaml --template ScriptLibrary\doctemplate.sbn --output doc\lib.md");
+    DotNetCoreRun("Textrude", @"render --models ScriptLibrary/doc.yaml --template ScriptLibrary/doctemplate.sbn --output doc/lib.md");
 });
 
 Task("Test")
