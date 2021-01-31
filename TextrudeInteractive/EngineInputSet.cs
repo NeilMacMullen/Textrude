@@ -10,12 +10,13 @@ namespace TextrudeInteractive
     public record EngineInputSet
     {
         public static EngineInputSet EmptyYaml =
-            new(string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
+            new(string.Empty, string.Empty, Array.Empty<ModelText>(), string.Empty, string.Empty);
 
-        public EngineInputSet(string template, ModelText[] models, string definitionsText,
+        public EngineInputSet(string template, string templatePath, ModelText[] models, string definitionsText,
             string includes)
         {
             Template = template;
+            TemplatePath = templatePath;
             Models = models;
 
             Definitions = definitionsText
@@ -42,5 +43,6 @@ namespace TextrudeInteractive
         public ModelText[] Models { get; init; } = Array.Empty<ModelText>();
 
         public string Template { get; init; } = string.Empty;
+        public string TemplatePath { get; init; } = string.Empty;
     }
 }

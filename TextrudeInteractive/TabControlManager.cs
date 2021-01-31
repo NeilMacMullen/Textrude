@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace TextrudeInteractive
 {
-    public class TabControlManager<T> where T : class, new()
+    public class TabControlManager<T> where T : class, IPane, new()
     {
         private readonly PaneCache<T> _cache;
         private readonly string _prefix;
@@ -31,6 +31,7 @@ namespace TextrudeInteractive
                     Content = pane,
                     Header = $"{_prefix}{currentCount}"
                 });
+            _tab.SelectedIndex = _tab.Items.Count - 1;
             return pane;
         }
 
@@ -49,6 +50,12 @@ namespace TextrudeInteractive
         {
             while (Panes.Count > 0)
                 RemoveLast();
+        }
+
+        public void ForAll(Action<T> func)
+        {
+            foreach (var p in Panes)
+                func(p);
         }
     }
 }

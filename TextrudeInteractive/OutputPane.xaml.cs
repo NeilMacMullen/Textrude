@@ -1,19 +1,19 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Highlighting;
-using Microsoft.Win32;
 
 namespace TextrudeInteractive
 {
     /// <summary>
     ///     Interaction logic for EditPane.xaml
     /// </summary>
-    public partial class OutputPane : UserControl
+    public partial class OutputPane : UserControl, IPane
     {
+        private const string DefaultFormat = "text";
         private string _format = string.Empty;
+
         private string _text = string.Empty;
 
         public ObservableCollection<string> Highglighting = new ObservableCollection<string>();
@@ -23,13 +23,14 @@ namespace TextrudeInteractive
             InitializeComponent();
 
             var definitionNames =
-                new[] {"text"}
+                new[] {DefaultFormat}
                     .Concat(HighlightingManager.Instance.HighlightingDefinitions.Select(d => d.Name))
                     .ToArray();
 
             Highglighting = new ObservableCollection<string>(definitionNames);
             FormatSelection.ItemsSource = Highglighting;
             FormatSelection.SelectedIndex = 0;
+            fileBar.OnSave = () => Text;
         }
 
         public string Text
@@ -58,6 +59,27 @@ namespace TextrudeInteractive
             }
         }
 
+        /// <summary>
+        ///     Currently unused - the name of the output
+        /// </summary>
+        public string OutputName { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Path to file that the output is connected to
+        /// </summary>
+        public string OutputPath
+        {
+            get => fileBar.PathName;
+            set => fileBar.PathName = value;
+        }
+
+        public void Clear()
+        {
+            Text = string.Empty;
+            OutputPath = string.Empty;
+            Format = DefaultFormat;
+        }
+
         private void SetText(string str)
         {
             textBox.Text = str;
@@ -69,22 +91,21 @@ namespace TextrudeInteractive
             textBox.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(Format);
         }
 
-        private void OutputPane_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //Beware - if this is in a TabItem, this occurs every time a tab is switched
-        }
+        public void SaveIfLinked() => fileBar.SaveIfLinked();
 
-        private void SaveToFile(object sender, RoutedEventArgs e)
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog();
-
-            if (dlg.ShowDialog() != true) return;
-            try
+            var maxAttempts = 3;
+            for (var i = 0; i < maxAttempts; i++)
             {
-                File.WriteAllText(dlg.FileName, Text);
-            }
-            catch
-            {
+                try
+                {
+                    Clipboard.SetText(Text);
+                    return;
+                }
+                catch
+                {
+                }
             }
         }
     }

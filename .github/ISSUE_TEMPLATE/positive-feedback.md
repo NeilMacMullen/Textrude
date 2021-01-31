@@ -2,7 +2,7 @@
 name: Send a smile
 about: Tell me what you like - it keeps me motivated!
 title: I like Textrude because....
-labels: ''
+labels: smile
 assignees: ''
 
 ---

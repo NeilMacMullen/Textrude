@@ -28,16 +28,23 @@ Let's face it, there are any number of code-generation technologies you might co
 
 The current release is **v1.2.0**.
 
- - Get binaries from [Releases](https://github.com/NeilMacMullen/Textrude/releases).   These are provided as single-file executables bundled with example projects and library scripts. 
+**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will need to install it.** 
 
- - Build from source by cloning this repo and opening **Textrude.sln** in Visual Studio
+ - If you just want the binaries,  [go here](doc/getBinaries.md).
 
- - Create a [Docker image](Docker.md)
+ - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
+  
+ - Or you can create a [Docker image](Docker.md)
 
-
-You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) if it is not already on your machine.
 
 ## What's new
+
+### vNext (for source builds)
+- Models and outputs can be added/removed on a per-project basis
+- Syntax highlighting for output panes
+- Input/ouput panes can be "linked" to files and load/save are supported
+- fontsize, wordwrap and line-number settings are now persisted
+- warning dialog is now shown if the current project has unsaved changes
 
 ### v1.2.0
 - Turn StrictVariables back on
@@ -50,12 +57,6 @@ You may need to install [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/
 
 ### v1.1.0
 - first public release
-
-## Known issues...
-
-- YAML and CSV deserialisers will always attempt to force strings that look like numbers or booleans into that format rather than leaving them as strings.  Most of the time this does not matter but please raise an issue if this causes particular problems
-- TextrudeInteractive does not warn when closing if project is dirty.
-- Textrude.exe is untested on Linux - please raise an issue if you run into problems
 
 ## Documentation
 
@@ -83,19 +84,7 @@ Textrude makes heavy use of the following components:
 
 ## Help wanted 
 
-If you fancy making Textrude better, I'd be happy to have help! Some ideas for improvement...
-
-- UI
-    - Change the current scratch code to a more formal MVVM architecture
-    - Improve code-completion
-- Documentation and example projects
-- Library methods and helpers
-  - More library functions for common tasks
-  - Suggestions for 3rd party helper packages such as Humanizr
-- Distribution
-  - Chocolately package?  
-- General usage
-  - Bug-reporting, real-world usability, Linux testing
+If you fancy making Textrude better, I'd be happy to have help! Grab something from the issues list or suggest an idea. Alternatively you can contribute script snippets, improve the documentation or spread the word by writing an article!
 
 
 ## What's with the name 
