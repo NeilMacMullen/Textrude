@@ -26,6 +26,7 @@ namespace TextrudeInteractive
         {
             var proj = new TextrudeProject
             {
+                Version = 1,
                 EngineInput = _owner.CollectInput(),
                 OutputControl = _owner.CollectOutput()
             };
@@ -43,6 +44,7 @@ namespace TextrudeInteractive
             {
                 var text = File.ReadAllText(path);
                 var proj = JsonSerializer.Deserialize<TextrudeProject>(text);
+
                 CurrentProjectPath = path;
                 UpdateUi(proj);
                 IsDirty = false;
@@ -108,11 +110,18 @@ namespace TextrudeInteractive
 
         private void UpdateUi(TextrudeProject project)
         {
+            //TODO nasty hack to cope with old style projects where we always had 3 inputs and
+            //outputs.  Can be removed in a few months from Feb 01 2021
+            var trim = project.Version == 0;
+
+
             //Set up the OUTPUT first, otherwise they will not
             //be available when the input is set so the rendered output
             //won't appear!
-            _owner.SetOutputPanes(project.OutputControl);
-            _owner.SetUi(project.EngineInput);
+
+
+            _owner.SetOutputPanes(project.OutputControl, trim);
+            _owner.SetUi(project.EngineInput, trim);
             _owner.SetTitle(CurrentProjectPath);
         }
 

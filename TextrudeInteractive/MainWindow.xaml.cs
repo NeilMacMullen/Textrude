@@ -73,8 +73,8 @@ namespace TextrudeInteractive
             _projectManager = new ProjectManager(this);
 
 
-            SetUi(EngineInputSet.EmptyYaml);
-            SetOutputPanes(EngineOutputSet.Empty);
+            SetUi(EngineInputSet.EmptyYaml, false);
+            SetOutputPanes(EngineOutputSet.Empty, false);
 
             //do this before setting up the input stream so we can change the responsiveness
             var settings = LoadSettings();
@@ -229,10 +229,13 @@ namespace TextrudeInteractive
         /// <summary>
         ///     Sets up the output side of the UI when a new project is loaded
         /// </summary>
-        public void SetOutputPanes(EngineOutputSet outputControl)
+        public void SetOutputPanes(EngineOutputSet outputControl, bool trim)
         {
             _outputManager.Clear();
-            foreach (var f in outputControl.Outputs)
+            var outputs = outputControl.Outputs;
+            if (trim)
+                outputs = outputs.Take(1).ToArray();
+            foreach (var f in outputs)
             {
                 var pane = _outputManager.AddPane();
                 pane.Format = f.Format;
@@ -301,17 +304,19 @@ namespace TextrudeInteractive
         /// <summary>
         ///     Sets up the input side of the UI when a new project is loaded
         /// </summary>
-        public void SetUi(EngineInputSet gi)
+        public void SetUi(EngineInputSet inputSet, bool trim)
         {
-            DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
+            DefinitionsTextBox.Text = string.Join(Environment.NewLine, inputSet.Definitions);
             _modelManager.Clear();
-            foreach (var giModel in gi.Models)
+            foreach (var model in inputSet.Models)
             {
+                if (trim && string.IsNullOrWhiteSpace(model.Text))
+                    continue;
                 var pane = _modelManager.AddPane();
-                pane.Format = giModel.Format;
-                pane.Text = giModel.Text;
-                pane.ModelName = giModel.Name;
-                pane.ModelPath = giModel.Path;
+                pane.Format = model.Format;
+                pane.Text = model.Text;
+                pane.ModelName = model.Name;
+                pane.ModelPath = model.Path;
             }
 
             //ensure we start with at least one model to avoid confusing the user
@@ -319,10 +324,10 @@ namespace TextrudeInteractive
                 _modelManager.AddPane();
 
             _modelManager.FocusFirst();
-            TemplateTextBox.Text = gi.Template;
-            templateFileBar.PathName = gi.TemplatePath;
+            TemplateTextBox.Text = inputSet.Template;
+            templateFileBar.PathName = inputSet.TemplatePath;
 
-            IncludesTextBox.Text = string.Join(Environment.NewLine, gi.IncludePaths);
+            IncludesTextBox.Text = string.Join(Environment.NewLine, inputSet.IncludePaths);
         }
 
 
