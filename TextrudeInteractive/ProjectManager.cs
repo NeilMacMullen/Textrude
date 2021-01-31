@@ -108,8 +108,11 @@ namespace TextrudeInteractive
 
         private void UpdateUi(TextrudeProject project)
         {
-            _owner.SetUi(project.EngineInput);
+            //Set up the OUTPUT first, otherwise they will not
+            //be available when the input is set so the rendered output
+            //won't appear!
             _owner.SetOutputPanes(project.OutputControl);
+            _owner.SetUi(project.EngineInput);
             _owner.SetTitle(CurrentProjectPath);
         }
 

@@ -48,7 +48,8 @@ namespace TextrudeInteractive
         {
             InitializeComponent();
 
-            if (!MonacoBinding.IsWebView2RuntimeAvailable()) {
+            if (!MonacoBinding.IsWebView2RuntimeAvailable())
+            {
                 MessageBox.Show(
                     "The WebView2 runtime or Edge (non-stable channel) must be installed for the editor to work!\n" +
                     "Please install one of the two.\n" +
@@ -131,7 +132,12 @@ namespace TextrudeInteractive
         }
 
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) => _mainEditWindow.Register();
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _mainEditWindow.Register();
+            //ensure that we get to render the first project loaded at startup
+            OnModelChanged(false);
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
@@ -237,6 +243,8 @@ namespace TextrudeInteractive
             //ensure there is always at least one output - otherwise things can get confusing for the user
             if (!_outputManager.Panes.Any())
                 _outputManager.AddPane();
+
+            _outputManager.FocusFirst();
         }
 
         public void SetTitle(string path)
@@ -309,6 +317,8 @@ namespace TextrudeInteractive
             //ensure we start with at least one model to avoid confusing the user
             if (!_modelManager.Panes.Any())
                 _modelManager.AddPane();
+
+            _modelManager.FocusFirst();
             TemplateTextBox.Text = gi.Template;
             templateFileBar.PathName = gi.TemplatePath;
 
@@ -324,11 +334,15 @@ namespace TextrudeInteractive
 
         private void Avalon1_OnTextChanged(object sender, EventArgs e) => OnModelChanged();
 
-        private void OnModelChanged()
+
+        private void OnModelChanged() => OnModelChanged(true);
+
+        private void OnModelChanged(bool markDirty)
         {
             if (!_uiIsReady)
                 return;
-            _projectManager.IsDirty = true;
+            if (markDirty)
+                _projectManager.IsDirty = true;
             try
             {
                 _inputStream.OnNext(CollectInput());

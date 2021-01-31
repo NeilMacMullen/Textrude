@@ -4,6 +4,10 @@ using System.Windows.Controls;
 
 namespace TextrudeInteractive
 {
+    /// <summary>
+    ///     Manages a TabControl
+    /// </summary>
+    /// <typeparam name="T"> type of Pane</typeparam>
     public class TabControlManager<T> where T : class, IPane, new()
     {
         private readonly PaneCache<T> _cache;
@@ -18,7 +22,9 @@ namespace TextrudeInteractive
             _cache = new PaneCache<T>(onNewPane);
         }
 
-
+        /// <summary>
+        ///     Adds a pane to the tab
+        /// </summary>
         public T AddPane()
         {
             var currentCount = Panes.Count;
@@ -35,6 +41,9 @@ namespace TextrudeInteractive
             return pane;
         }
 
+        /// <summary>
+        ///     Remove the right-most tab from the control
+        /// </summary>
         public void RemoveLast()
         {
             if (_tab.Items.Count == 0)
@@ -46,6 +55,9 @@ namespace TextrudeInteractive
             _cache.Release(pane);
         }
 
+        /// <summary>
+        ///     Remove all the tabs from the control
+        /// </summary>
         public void Clear()
         {
             while (Panes.Count > 0)
@@ -56,6 +68,15 @@ namespace TextrudeInteractive
         {
             foreach (var p in Panes)
                 func(p);
+        }
+
+        /// <summary>
+        ///     Ensure that the first tab is visible
+        /// </summary>
+        public void FocusFirst()
+        {
+            if (_tab.Items.Count != 0)
+                _tab.SelectedIndex = 0;
         }
     }
 }
