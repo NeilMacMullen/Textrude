@@ -128,6 +128,8 @@ namespace TextrudeInteractive
                         PostMessage(delayedMsg);
                     }
 
+                    _webView.Width = Double.NaN;
+                    _webView.Height = Double.NaN;
                     break;
                 case nameof(Messages.UpdatedText):
                     var msg = Messages.UpdatedText.FromJson(e.WebMessageAsJson);
