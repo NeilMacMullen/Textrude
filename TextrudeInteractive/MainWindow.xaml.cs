@@ -38,6 +38,7 @@ namespace TextrudeInteractive
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
 
         private bool _lineNumbersOn = true;
+        private int _responseTimeMs = 50;
 
         private double _textSize = 14;
 
@@ -62,17 +63,19 @@ namespace TextrudeInteractive
             SetUi(EngineInputSet.EmptyYaml);
             SetOutputPanes(EngineOutputSet.Empty);
 
+            //do this before setting up the input stream so we can change the responsiveness
+            LoadSettings();
+
             _inputStream
-                .Throttle(TimeSpan.FromMilliseconds(300))
+                .Throttle(TimeSpan.FromMilliseconds(_responseTimeMs))
                 .ObserveOn(NewThreadScheduler.Default)
                 .Select(Render)
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleRenderResults);
             _uiIsReady = true;
 
-            LoadSettings();
-            RunBackgroundUpgradeCheck();
 
+            RunBackgroundUpgradeCheck();
 
             DataContext = this;
         }
@@ -389,6 +392,7 @@ namespace TextrudeInteractive
             LineNumbersOn = settings.LineNumbersOn;
             TextSize = settings.FontSize;
             WordWrapOn = settings.WrapText;
+            _responseTimeMs = settings.ResponseTime;
         }
 
         /// <summary>
@@ -401,7 +405,8 @@ namespace TextrudeInteractive
             {
                 FontSize = TextSize,
                 LineNumbersOn = LineNumbersOn,
-                WrapText = WordWrapOn
+                WrapText = WordWrapOn,
+                ResponseTime = _responseTimeMs
             };
             SettingsManager.WriteSettings(settings);
         }

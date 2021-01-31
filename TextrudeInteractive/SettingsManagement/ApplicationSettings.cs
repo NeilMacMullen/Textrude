@@ -16,5 +16,10 @@ namespace TextrudeInteractive
         public double FontSize { get; set; } = 12;
         public bool LineNumbersOn { get; set; } = true;
         public bool WrapText { get; set; }
+
+        /// <summary>
+        ///     Time between last keystroke and render
+        /// </summary>
+        public int ResponseTime { get; set; } = 50;
     }
 }
