@@ -43,7 +43,6 @@ namespace TextrudeInteractive
 
         private bool _wordWrapOn;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -95,8 +94,12 @@ namespace TextrudeInteractive
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            _inputStream.OnCompleted();
-            PersistSettings();
+            if (ShouldChangesBeLost())
+            {
+                PersistSettings();
+                _inputStream.OnCompleted();
+            }
+            else e.Cancel = true;
         }
 
 
@@ -183,8 +186,11 @@ namespace TextrudeInteractive
 
         #endregion
 
-        #region project menu
+        #region project menu and support
 
+        /// <summary>
+        ///     Sets up the output side of the UI when a new project is loaded
+        /// </summary>
         public void SetOutputPanes(EngineOutputSet outputControl)
         {
             _outputManager.Clear();
@@ -219,7 +225,32 @@ namespace TextrudeInteractive
             );
         }
 
-        private void LoadProject(object sender, RoutedEventArgs e) => _projectManager.LoadProject();
+        private bool ShouldChangesBeLost()
+        {
+            if (_projectManager.IsDirty)
+            {
+                if (MessageBox.Show(this,
+                    "You have unsaved changes in the current project.\nDo you really want to lose them?", "Warning",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void NewProject(object sender, RoutedEventArgs e)
+        {
+            if (ShouldChangesBeLost())
+                _projectManager.NewProject();
+        }
+
+        private void LoadProject(object sender, RoutedEventArgs e)
+        {
+            if (ShouldChangesBeLost())
+                _projectManager.LoadProject();
+        }
 
 
         private void SaveProject(object sender, RoutedEventArgs e) => _projectManager.SaveProject();
@@ -227,6 +258,9 @@ namespace TextrudeInteractive
 
         private void SaveProjectAs(object sender, RoutedEventArgs e) => _projectManager.SaveProjectAs();
 
+        /// <summary>
+        ///     Sets up the input side of the UI when a new project is loaded
+        /// </summary>
         public void SetUi(EngineInputSet gi)
         {
             DefinitionsTextBox.Text = string.Join(Environment.NewLine, gi.Definitions);
@@ -262,6 +296,7 @@ namespace TextrudeInteractive
         {
             if (!_uiIsReady)
                 return;
+            _projectManager.IsDirty = true;
             try
             {
                 _inputStream.OnNext(CollectInput());
@@ -394,8 +429,6 @@ namespace TextrudeInteractive
         private void ShowAbout(object sender, RoutedEventArgs e) =>
             OpenHome(string.Empty);
 
-
-        private void NewProject(object sender, RoutedEventArgs e) => _projectManager.NewProject();
 
         private void NewIssue(object sender, RoutedEventArgs e) =>
             OpenHome("issues/new?assignees=&labels=bug&template=bug_report.md&title=Bug");
