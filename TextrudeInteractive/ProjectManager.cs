@@ -36,6 +36,9 @@ namespace TextrudeInteractive
 
         public void LoadProject(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+                return;
+
             try
             {
                 var text = File.ReadAllText(path);

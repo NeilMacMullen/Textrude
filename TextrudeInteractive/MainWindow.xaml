@@ -18,170 +18,170 @@
                          FontFamily="{DynamicResource MaterialDesignFont}"
                          Loaded="MainWindow_OnLoaded"
 
-                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
-                         >
-    <Window.Resources>
-        <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-        </Style>
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
+  <Window.Resources>
+    <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
 
-        <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
-            <Setter Property="Foreground" Value="Azure" />
-            <Setter Property="HorizontalContentAlignment" Value="Right" />
-        </Style>
-        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-            <Setter Property="FontFamily" Value="Consolas" />
+    <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+      <Setter Property="Foreground" Value="Azure" />
+      <Setter Property="HorizontalContentAlignment" Value="Right" />
+    </Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+      <Setter Property="FontFamily" Value="Consolas" />
 
-            <Setter Property="AcceptsReturn" Value="True" />
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="Margin" Value="2" />
-            <Setter Property="BorderBrush" Value="DarkSlateGray" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Padding" Value="2" />
+      <Setter Property="AcceptsReturn" Value="True" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+      <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+      <Setter Property="Margin" Value="2" />
+      <Setter Property="BorderBrush" Value="DarkSlateGray" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="Padding" Value="2" />
 
-        </Style>
-        <Style TargetType="avalonEdit:TextEditor">
-            <Setter Property="FontFamily" Value="Consolas" />
-            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
-            <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
-            <Setter Property="FontSize" Value="{Binding TextSize}" />
-            <Setter Property="WordWrap" Value="{Binding  WordWrapOn}" />
-            <Setter Property="Padding" Value="4" />
+    </Style>
+    <Style TargetType="avalonEdit:TextEditor">
+      <Setter Property="FontFamily" Value="Consolas" />
+      <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+      <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
+      <Setter Property="FontSize" Value="{Binding TextSize}" />
+      <Setter Property="WordWrap" Value="{Binding  WordWrapOn}" />
+      <Setter Property="Padding" Value="4" />
 
-        </Style>
-    </Window.Resources>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" IsMainMenu="True">
-            <MenuItem Header="_Project">
-                <MenuItem Click="NewProject" Header="New" />
-                <MenuItem Click="LoadProject" Header="Load" />
-                <MenuItem Click="SaveProject" Header="Save" />
-                <MenuItem Click="SaveProjectAs" Header="Save as..." />
-                 
-            </MenuItem>
-                <Separator />
-                <MenuItem Click="ExportInvocation" Header="Export as invocation" ToolTip="Builds a commmand line invocation"/>
-            <MenuItem Header="Inputs">
-                <MenuItem Click="AddModel" Header="Add model" ToolTip="Adds a new model" />
-                <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the last model"/>
-                <Separator />
-                <MenuItem Header="Reload linked" Click="ReloadAllInputs" ToolTip="Loads all inputs from linked files"/>
-                <MenuItem Header="Save linked" Click="SaveAllInputs" ToolTip="Saves all inputs back to linked files"/>
-            </MenuItem>
-            <MenuItem Header="Outputs">
-                <MenuItem Click="AddOutput" Header="Add" ToolTip="Adds a new output"/>
-                <MenuItem Click="RemoveOutput" Header="Remove" ToolTip="Removes the last output"/>
-                <Separator />
-                <MenuItem Header="Save linked" Click="SaveAllOutputs" ToolTip="Saves all outputs back to linked files"/>
-            </MenuItem>
+    </Style>
+  </Window.Resources>
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" IsMainMenu="True">
+      <MenuItem Header="_Project">
+        <MenuItem Click="NewProject" Header="New" />
+        <MenuItem Click="LoadProject" Header="Load" />
+        <MenuItem Click="SaveProject" Header="Save" />
+        <MenuItem Click="SaveProjectAs" Header="Save as..." />
 
-            <MenuItem Header="_View">
-                <MenuItem Header="Toggle Line _Numbers" Click="ToggleLineNumbers" />
-                <MenuItem Header="Toggle _Word Wrap" Click="ToggleWordWrap" />
-                <MenuItem Header="_Smaller font" Click="SmallerFont" />
-                <MenuItem Header="_Larger font" Click="LargerFont" />
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="Home page..." Click="ShowAbout" />
-                <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
-                <MenuItem Header="Send feedback">
-                    <MenuItem Header="Report a problem..." Click="NewIssue" />
-                    <MenuItem Header="Send a &#x1f642; !" Click="SendASmile" />
-                    <MenuItem Header="Suggest a feature..." Click="NewIdea" />
-                    <MenuItem Header="Ask a question..." Click="Questions" />
-                </MenuItem>
-            </MenuItem>
-        </Menu>
-        <DockPanel DockPanel.Dock="Bottom">
+        <Separator />
+        <MenuItem Click="ExportInvocation" Header="Export as invocation" ToolTip="Builds a commmand line invocation" />
+      </MenuItem>
 
-            <Grid DockPanel.Dock="Bottom" Margin="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="6*" />
-                    <RowDefinition Height="3" />
-                    <RowDefinition Height="3*" />
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+      <MenuItem Header="Inputs">
+        <MenuItem Click="AddModel" Header="Add model" ToolTip="Adds a new model" />
+        <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the last model" />
+        <Separator />
+        <MenuItem Header="Reload linked" Click="ReloadAllInputs" ToolTip="Loads all inputs from linked files" />
+        <MenuItem Header="Save linked" Click="SaveAllInputs" ToolTip="Saves all inputs back to linked files" />
+      </MenuItem>
+      <MenuItem Header="Outputs">
+        <MenuItem Click="AddOutput" Header="Add" ToolTip="Adds a new output" />
+        <MenuItem Click="RemoveOutput" Header="Remove" ToolTip="Removes the last output" />
+        <Separator />
+        <MenuItem Header="Save linked" Click="SaveAllOutputs" ToolTip="Saves all outputs back to linked files" />
+      </MenuItem>
 
+      <MenuItem Header="_View">
+        <MenuItem Header="Toggle Line _Numbers" Click="ToggleLineNumbers" />
+        <MenuItem Header="Toggle _Word Wrap" Click="ToggleWordWrap" />
+        <MenuItem Header="_Smaller font" Click="SmallerFont" />
+        <MenuItem Header="_Larger font" Click="LargerFont" />
+      </MenuItem>
+      <MenuItem Header="_Help">
+        <MenuItem Header="Home page..." Click="ShowAbout" />
+        <MenuItem Header="Scriban language reference..." Click="ShowLanguageRef" />
+        <MenuItem Header="Send feedback">
+          <MenuItem Header="Report a problem..." Click="NewIssue" />
+          <MenuItem Header="Send a &#x1f642; !" Click="SendASmile" />
+          <MenuItem Header="Suggest a feature..." Click="NewIdea" />
+          <MenuItem Header="Ask a question..." Click="Questions" />
+        </MenuItem>
+      </MenuItem>
+    </Menu>
+    <DockPanel DockPanel.Dock="Bottom">
 
-                    <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
-                        <TabItem Header="models">
-                            <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" />
-                        </TabItem>
-                        <TabItem Header="other">
-<TabItem.ToolTip>
-    definitions and include paths
-</TabItem.ToolTip>
-                            <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
-                                <TabItem Header="definitions">
-                                    <TabItem.ToolTip>
-                                        <TextBlock>
-                                            Add definitions 1-per-line <LineBreak/>
-                                            name1=value1
-                                        </TextBlock>
-                                    </TabItem.ToolTip>
-                                    <avalonEdit:TextEditor
-                                        Name="DefinitionsTextBox"
-                                        Foreground="Yellow"
-                                        TextChanged="Avalon1_OnTextChanged" />
-                                </TabItem>
-                                <TabItem Header="include folders">
-                                    <TabItem.ToolTip>
-                                        Add paths 1-per-line
-                                    </TabItem.ToolTip>
-                                    <avalonEdit:TextEditor
-                                        Name="IncludesTextBox"
-                                        Foreground="Pink"
-                                        TextChanged="Avalon1_OnTextChanged" />
-                                </TabItem>
-                            </TabControl>
-                        </TabItem>
-                    </TabControl>
+      <Grid DockPanel.Dock="Bottom" Margin="2">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="6*" />
+          <RowDefinition Height="3" />
+          <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
 
 
-                    <GridSplitter Grid.Column="1" />
+          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
+            <TabItem Header="models">
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" />
+            </TabItem>
+            <TabItem Header="other">
+              <TabItem.ToolTip>
+                definitions and include paths
+              </TabItem.ToolTip>
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
+                <TabItem Header="definitions">
+                  <TabItem.ToolTip>
+                    <TextBlock>
+                      Add definitions 1-per-line <LineBreak />
+                      name1=value1
+                    </TextBlock>
+                  </TabItem.ToolTip>
+                  <avalonEdit:TextEditor
+                    Name="DefinitionsTextBox"
+                    Foreground="Yellow"
+                    TextChanged="Avalon1_OnTextChanged" />
+                </TabItem>
+                <TabItem Header="include folders">
+                  <TabItem.ToolTip>
+                    Add paths 1-per-line
+                  </TabItem.ToolTip>
+                  <avalonEdit:TextEditor
+                    Name="IncludesTextBox"
+                    Foreground="Pink"
+                    TextChanged="Avalon1_OnTextChanged" />
+                </TabItem>
+              </TabControl>
+            </TabItem>
+          </TabControl>
 
-                    <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
-                        <TabItem Header="Template">
-                            <DockPanel>
-                                <local:FileBar x:Name="templateFileBar" IsSaveOnly="False" DockPanel.Dock="Bottom" />
-                                <avalonEdit:TextEditor DockPanel.Dock="Bottom"
-                                                       Name="TemplateTextBox"
-                                                       TextChanged="Avalon1_OnTextChanged"
-                                                       Foreground="White" />
 
-                            </DockPanel>
+          <GridSplitter Grid.Column="1" />
 
-                        </TabItem>
-                    </TabControl>
+          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
+            <TabItem Header="Template">
+              <DockPanel>
+                <local:FileBar x:Name="templateFileBar" IsSaveOnly="False" DockPanel.Dock="Bottom" />
+                <avalonEdit:TextEditor DockPanel.Dock="Bottom"
+                                       Name="TemplateTextBox"
+                                       TextChanged="Avalon1_OnTextChanged"
+                                       Foreground="White" />
 
+              </DockPanel>
 
-                    <GridSplitter Grid.Column="3" />
-
-
-                    <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4" Name="OutputTab" />
+            </TabItem>
+          </TabControl>
 
 
-                </Grid>
-                <GridSplitter Grid.Row="1" />
+          <GridSplitter Grid.Column="3" />
 
 
-                <TextBox Grid.Row="2" Name="Errors"
-                         FontWeight="Normal"
-                         IsReadOnly="True"
-                         Foreground="OrangeRed"
-                         FontSize="16" />
+          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4" Name="OutputTab" />
 
-            </Grid>
-        </DockPanel>
+
+        </Grid>
+        <GridSplitter Grid.Row="1" />
+
+
+        <TextBox Grid.Row="2" Name="Errors"
+                 FontWeight="Normal"
+                 IsReadOnly="True"
+                 Foreground="OrangeRed"
+                 FontSize="16" />
+
+      </Grid>
     </DockPanel>
+  </DockPanel>
 
 </controls:MaterialWindow>
