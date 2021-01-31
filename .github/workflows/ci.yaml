@@ -20,11 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Clean
-      run: dotnet clean -p:Configuration=${{ matrix.build_config }} && dotnet nuget locals all --clear
-    - name: Restore dependencies
-      run: dotnet restore -p:Configuration=${{ matrix.build_config }}
-    - name: Build
-      run: dotnet build -p:Configuration=${{ matrix.build_config }} --no-restore
+    - name: Restore tools
+      run: dotnet tool restore
     - name: Test
-      run: dotnet test -p:Configuration=${{ matrix.build_config }} --no-build
+      run: dotnet cake --target Test --config ${{ matrix.build_config }} --clean
