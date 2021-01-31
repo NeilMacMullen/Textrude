@@ -17,7 +17,7 @@ namespace TextrudeInteractive
         private string _currentProjectPath = string.Empty;
 
         public ProjectManager(MainWindow owner) => _owner = owner;
-
+        public bool IsDirty { get; set; }
 
         private TextrudeProject CreateProject()
         {
@@ -42,6 +42,7 @@ namespace TextrudeInteractive
                     var proj = JsonSerializer.Deserialize<TextrudeProject>(text);
                     _currentProjectPath = dlg.FileName;
                     UpdateUI(proj);
+                    IsDirty = false;
                 }
                 catch
                 {
@@ -62,6 +63,7 @@ namespace TextrudeInteractive
                     var text = JsonSerializer.Serialize(CreateProject(), o);
 
                     File.WriteAllText(_currentProjectPath, text);
+                    IsDirty = false;
                 }
                 catch
                 {
@@ -86,13 +88,14 @@ namespace TextrudeInteractive
             _currentProjectPath = string.Empty;
             var proj = new TextrudeProject();
             UpdateUI(proj);
+            IsDirty = false;
         }
 
         private void UpdateUI(TextrudeProject project)
         {
             _owner.SetUi(project.EngineInput);
-            _owner.SetTitle(_currentProjectPath);
             _owner.SetOutputPanes(project.OutputControl);
+            _owner.SetTitle(_currentProjectPath);
         }
 
         public void ExportProject()
