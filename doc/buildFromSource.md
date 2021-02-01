@@ -26,6 +26,11 @@ dotnet publish Textrude\Textrude.csproj /p:PublishProfile=Textrude\Properties\Pu
 #build the TextrudeInteractive tool (windows only)
 dotnet publish TextrudeInteractive\TextrudeInteractive.csproj /p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml
 ```
+Or just use the powershell script in the Textrude folder
+```
+make_release.ps1
+```
+
 
 ## Example projects
 
