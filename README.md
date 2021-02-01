@@ -26,11 +26,11 @@ Let's face it, there are any number of code-generation technologies you might co
 
 ## Download/build
 
-The current release is **v1.2.0**.
+The current release is **v1.3.0**.
 
-**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will need to install it.**
+**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will be prompted to install it.**
 
-**To run TextrudeInteractive you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**
+**To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
 
@@ -41,7 +41,7 @@ The current release is **v1.2.0**.
 
 ## What's new
 
-### vNext (for source builds)
+### v1.3.0 (current release)
 - Models and outputs can be added/removed on a per-project basis
 - Syntax highlighting for output panes
 - Input/ouput panes can be "linked" to files and load/save are supported
@@ -51,19 +51,9 @@ The current release is **v1.2.0**.
 - Taskbar icon now shows jumplist, TextrudeInteractive can be started with name of project as parameter
 - TextrudeInteractive now opens last used project when reopened
 - TextrudeInteractive now uses the Monaco editor (from VS Code) hugely improving the syntax highlighting abilities.   Massive thanks to [Martin Hochstrasser](https://github.com/highstreeto) for this! 
+- upgrade to latest Scriban which supports [captured variables in anonymous functions](https://github.com/scriban/scriban/issues/322) 
 
-
-### v1.2.0
-- Turn StrictVariables back on
-- AvalonEdit used for edit boxes in TextrudeInteractive allowing:
-  - line numberss
-  - text size can be changed
-  - CTRL-Z etc
-  - basic auto-complete when '.' is typed
-- Docker image support - thanks to [Martin Hochstrasser](https://github.com/highstreeto)
-
-### v1.1.0
-- first public release
+[Full change history](doc/changeHistory.md)
 
 ## Documentation
 
