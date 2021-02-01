@@ -10,7 +10,7 @@ Textrude is a cross-platform general-purpose code-generation tool.  It can easil
 
 Templates and models can quickly be developed using the bundled TextrudeInteractive tool. A command-line executable is provided for easy integration with automated build-systems.
 
-![Screenshot of TextrudeInteractive](img/ex1.png)
+![Screenshot of TextrudeInteractive](img/textrudedemo.gif)
 
 ## Why use it?
 
