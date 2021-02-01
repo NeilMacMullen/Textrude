@@ -38,7 +38,6 @@ The current release is **v1.3.0**.
   
  - Or you can create a [Docker image](Docker.md)
 
-
 ## What's new
 
 ### v1.3.0 (current release)

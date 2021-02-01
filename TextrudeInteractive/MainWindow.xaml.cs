@@ -52,7 +52,7 @@ namespace TextrudeInteractive
             {
                 MessageBox.Show(
                     "The WebView2 runtime or Edge (non-stable channel) must be installed for the editor to work!\n" +
-                    "Please install one of the two.\n" +
+                    @"See the Textrude main site for further information https://github.com/NeilMacMullen/Textrude \n" +
                     "Textrude will now exit.",
                     "Textrude: WebView2 runtime must be installed!",
                     MessageBoxButton.OK,
