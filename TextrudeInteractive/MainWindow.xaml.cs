@@ -48,7 +48,7 @@ namespace TextrudeInteractive
         {
             InitializeComponent();
 
-            if (!MonacoBinding.IsWebView2RuntimeAvailable())
+            if (!MonacoResourceFetcher.IsWebView2RuntimeAvailable())
             {
                 MessageBox.Show(
                     "The WebView2 runtime or Edge (non-stable channel) must be installed for the editor to work!\n" +

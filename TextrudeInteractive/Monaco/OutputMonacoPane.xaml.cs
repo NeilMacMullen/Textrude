@@ -20,7 +20,7 @@ namespace TextrudeInteractive
             _monacoBinding = new MonacoBinding(WebView, true);
             _monacoBinding.Initialize().ConfigureAwait(false);
 
-            var formats = MonacoBinding.GetSupportedFormats();
+            var formats = _monacoBinding.GetSupportedFormats();
             FormatSelection.ItemsSource = formats;
             FormatSelection.SelectedIndex = formats.IndexOf(DefaultFormat);
 
