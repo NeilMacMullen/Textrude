@@ -1,3 +1,4 @@
+#addin nuget:?package=Wcwidth&version=0.2.0
 #addin nuget:?package=Spectre.Console&version=0.37.0
 
 using System.Text.RegularExpressions;
