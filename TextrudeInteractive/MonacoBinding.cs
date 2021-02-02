@@ -1,25 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
-using TextrudeInteractive.Properties;
 
 namespace TextrudeInteractive
 {
+    //Supress messages about unused accessors in records 
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     public class MonacoBinding
     {
         // TODO Use Uri instead of string
         private const string MonacoBaseUri = "http://monaco-editor/";
+
+
+        private static readonly Dictionary<string, string> KnownFileTypes = new()
+        {
+            [".js"] = "text/javascript",
+            [".css"] = "text/css",
+            [".ttf"] = "font/ttf",
+        };
+
         private readonly bool _isReadOnly;
         private readonly Queue<Messages> _messagesToBeDelivered;
+        private readonly MonacoResourceFetcher _resources = new();
         private readonly WebView2 _webView;
         private string _format = string.Empty;
         private bool _isReady;
@@ -90,21 +100,7 @@ namespace TextrudeInteractive
             }
         }
 
-        public static List<string> GetSupportedFormats()
-        {
-            var monacoLangRegex = new Regex(@"vs/(basic-languages|language)/(?<name>.+)/$");
-            using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
-            using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-            var languages = zip.Entries
-                .Select(e => monacoLangRegex.Match(e.FullName))
-                .Where(m => m.Success)
-                .Select(m => m.Groups["name"].Value)
-                .Concat(new[] {"text"})
-                .OrderBy(l => l)
-                .Distinct()
-                .ToList();
-            return languages;
-        }
+        public ImmutableArray<string> GetSupportedFormats() => _resources.GetSupportedFormats();
 
         private void PostMessage(Messages msg)
         {
@@ -128,8 +124,9 @@ namespace TextrudeInteractive
                         PostMessage(delayedMsg);
                     }
 
-                    _webView.Width = Double.NaN;
-                    _webView.Height = Double.NaN;
+                    //reset control size to fill window to try and avoid white flash
+                    _webView.Width = double.NaN;
+                    _webView.Height = double.NaN;
                     break;
                 case nameof(Messages.UpdatedText):
                     var msg = Messages.UpdatedText.FromJson(e.WebMessageAsJson);
@@ -139,52 +136,35 @@ namespace TextrudeInteractive
             }
         }
 
+        private CoreWebView2WebResourceResponse OkResponse(Stream stream, string type) =>
+            _webEnv.CreateWebResourceResponse(
+                stream,
+                200,
+                "OK",
+                type
+            );
+
         private void OnWebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
             if (e.Request.Uri == MonacoBaseUri)
             {
-                e.Response = _webEnv.CreateWebResourceResponse(
-                    new MemoryStream(Encoding.UTF8.GetBytes(Resources.monaco)),
-                    200,
-                    "OK",
-                    ""
-                );
+                e.Response = OkResponse(_resources.Monaco(), string.Empty);
             }
             else if (e.Request.Uri.StartsWith($"{MonacoBaseUri}vs"))
             {
                 var path = e.Request.Uri.Replace(MonacoBaseUri, "");
-                using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
-                using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-                var file = zip.GetEntry(path);
-                var response = new MemoryStream(); // cache into local stream so is not disposed
-                file.Open().CopyTo(response);
-                response.Position = 0;
 
-                string mimeType;
-                switch (Path.GetExtension(path))
-                {
-                    case ".js":
-                        mimeType = "text/javascript";
-                        break;
-                    case ".css":
-                        mimeType = "text/css";
-                        break;
-                    case ".ttf":
-                        mimeType = "font/ttf";
-                        break;
-                    default:
-                        mimeType = "application/octet-stream";
-                        break;
-                }
-
-                e.Response = _webEnv.CreateWebResourceResponse(
-                    response,
-                    200,
-                    "OK",
-                    $"Content-Type: {mimeType}\nContent-Length: {response.Length}"
-                );
+                var response = _resources.FetchPath(path);
+                var mimeType = MimeTypeForExtension(Path.GetExtension(path));
+                e.Response = OkResponse(response, ContentResponse(response, mimeType));
             }
         }
+
+        private static string MimeTypeForExtension(string extension)
+            => KnownFileTypes.TryGetValue(extension, out var known) ? known : "application/octet-stream";
+
+        private static string ContentResponse(Stream content, string mimeType)
+            => $"Content-Type: {mimeType}\nContent-Length: {content.Length}";
 
         private abstract record Messages
         {
@@ -194,6 +174,7 @@ namespace TextrudeInteractive
 
             public string ToJson() => JsonSerializer.Serialize(this, GetType());
 
+            // ReSharper disable once ClassNeverInstantiated.Local - message generated by webView
             public record Ready : Messages
             {
                 public static Ready FromJson(string json)
@@ -213,6 +194,7 @@ namespace TextrudeInteractive
                 [JsonPropertyName("language")] public string Language { get; }
             }
 
+            // ReSharper disable once ClassNeverInstantiated.Local - message generated by webView
             public record UpdatedText : Messages
             {
                 public UpdatedText(string text) => Text = text;
