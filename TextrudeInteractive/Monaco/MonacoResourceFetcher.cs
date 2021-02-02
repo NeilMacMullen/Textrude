@@ -20,12 +20,14 @@ namespace TextrudeInteractive
     {
         private ImmutableArray<string> _supportedLanguages = ImmutableArray<string>.Empty;
 
+        private byte[] GetMonacoResource() => Resources.monaco_editor_0_22_3;
+
         public ImmutableArray<string> GetSupportedFormats()
         {
             if (!_supportedLanguages.Any())
             {
                 var monacoLangRegex = new Regex(@"vs/(basic-languages|language)/(?<name>.+)/$");
-                using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
+                using var zipStream = new MemoryStream(GetMonacoResource());
                 using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
                 _supportedLanguages = zip.Entries
                     .Select(e => monacoLangRegex.Match(e.FullName))
@@ -42,7 +44,7 @@ namespace TextrudeInteractive
 
         public MemoryStream FetchPath(string path)
         {
-            using var zipStream = new MemoryStream(Resources.monaco_editor_0_21_2);
+            using var zipStream = new MemoryStream(GetMonacoResource());
             using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
             var file = zip.GetEntry(path);
             var response = new MemoryStream(); // cache into local stream so is not disposed

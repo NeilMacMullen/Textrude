@@ -40,7 +40,10 @@ The current release is **v1.3.0**.
 
 ## What's new
 
-### v1.3.0 (current release)
+### vNext (source only)
+- Update to Monaco 22.3 which supports an extra couple of languages
+
+### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis
 - Syntax highlighting for output panes
 - Input/ouput panes can be "linked" to files and load/save are supported

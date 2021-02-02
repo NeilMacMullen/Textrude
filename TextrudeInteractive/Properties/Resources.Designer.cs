@@ -96,9 +96,9 @@ namespace TextrudeInteractive.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] monaco_editor_0_21_2 {
+        internal static byte[] monaco_editor_0_22_3 {
             get {
-                object obj = ResourceManager.GetObject("monaco_editor_0_21_2", resourceCulture);
+                object obj = ResourceManager.GetObject("monaco_editor_0_22_3", resourceCulture);
                 return ((byte[])(obj));
             }
         }
