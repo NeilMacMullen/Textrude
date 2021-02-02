@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Web.WebView2.Core;
 using TextrudeInteractive.Properties;
 
 namespace TextrudeInteractive
@@ -51,5 +52,19 @@ namespace TextrudeInteractive
         }
 
         public MemoryStream Monaco() => new MemoryStream(Encoding.UTF8.GetBytes(Resources.monaco));
+
+
+        public static bool IsWebView2RuntimeAvailable()
+        {
+            try
+            {
+                var version = CoreWebView2Environment.GetAvailableBrowserVersionString();
+                return !string.IsNullOrWhiteSpace(version);
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

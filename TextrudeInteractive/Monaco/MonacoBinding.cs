@@ -83,18 +83,6 @@ namespace TextrudeInteractive
         public void OpenDevTools()
             => _webView.CoreWebView2.OpenDevToolsWindow();
 
-        public static bool IsWebView2RuntimeAvailable()
-        {
-            try
-            {
-                var version = CoreWebView2Environment.GetAvailableBrowserVersionString();
-                return !string.IsNullOrWhiteSpace(version);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
 
         public ImmutableArray<string> GetSupportedFormats() => _resources.GetSupportedFormats();
 
