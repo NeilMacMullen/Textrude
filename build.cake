@@ -61,12 +61,12 @@ Task("Build")
             new RemainingTimeColumn(),
             new SpinnerColumn(Spinner.Known.CircleQuarters),
         })
-        .Start(pctx => {
-            var buildTask = pctx.AddTask("Build", new ProgressTaskSettings() {
+        .Start(ctx => {
+            var buildTask = ctx.AddTask("Build", new ProgressTaskSettings() {
                 MaxValue = toBuildProjects.Count(),
                 AutoStart = false
             });
-            var buildDocTask = pctx.AddTask("Build Doc.", new ProgressTaskSettings() {
+            var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings() {
                 MaxValue = 1,
                 AutoStart = false
             });
@@ -78,6 +78,7 @@ Task("Build")
                 Arguments = new ProcessArgumentBuilder()
                     .Append("build")
                     .Append("--no-restore")
+                    .Append($"-c {configuration}")
                     .Append($"-v {dotnetVerbosity}"),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -85,10 +86,10 @@ Task("Build")
                     if (o == null) return null;
 
                     if (projFinished.TryMatch(o, out var pfm)) {
+                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]", pfm.Groups["project"].Value, pfm.Groups["output"].Value);
                         buildTask.Increment(1);
-                        AnsiConsole.MarkupLine("[grey]dotnet build:[/] [green]{0}[/] -> [grey]{1}[/]", pfm.Groups["project"].Value, pfm.Groups["output"].Value);
                     } else if (!string.IsNullOrWhiteSpace(o))  {
-                        AnsiConsole.MarkupLine("[grey]dotnet build:[/] {0}", o.EscapeMarkup());
+                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}", o.EscapeMarkup());
                     }
                     return null;
                 },
