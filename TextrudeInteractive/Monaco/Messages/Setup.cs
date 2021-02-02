@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿
 
 // ReSharper disable UnusedMember.Global
 
@@ -15,8 +15,8 @@ namespace TextrudeInteractive.Monaco.Messages
             Language = format;
         }
 
-        [JsonPropertyName("isReadOnly")] public bool IsReadOnly { get; }
+        public bool IsReadOnly { get; }
 
-        [JsonPropertyName("language")] public string Language { get; }
+        public string Language { get; }
     }
 }

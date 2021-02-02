@@ -112,7 +112,7 @@ namespace TextrudeInteractive
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             var json = JsonDocument.Parse(e.WebMessageAsJson);
-            var type = json.RootElement.GetProperty("type").GetString();
+            var type = json.RootElement.GetProperty(nameof(MonacoMessages.Type)).GetString();
             switch (type)
             {
                 case nameof(Ready):
@@ -159,5 +159,27 @@ namespace TextrudeInteractive
 
         private static string ContentResponse(Stream content, string mimeType)
             => $"Content-Type: {mimeType}\nContent-Length: {content.Length}";
+
+        public void SetFont(double textSize)
+        {
+            PostMessage(new FontSize(textSize));
+        }
+
+        public void SetLineNumbers(bool onOff)
+        {
+            PostMessage(new LineNumbers(onOff));
+        }
+
+        public void SetWord(bool onOff)
+        {
+            PostMessage(new WordWrap(onOff));
+        }
+
+        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
+        {
+            SetFont(textSize);
+            SetLineNumbers(lineNumbersOn);
+            SetWord(wordWrapOn);
+        }
     }
 }

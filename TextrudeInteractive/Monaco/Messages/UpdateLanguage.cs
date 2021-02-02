@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿
 
 // ReSharper disable UnusedMember.Global
 namespace TextrudeInteractive.Monaco.Messages
@@ -10,6 +10,6 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         public UpdateLanguage(string language) => Language = language;
 
-        [JsonPropertyName("language")] public string Language { get; }
+        public string Language { get; }
     }
 }

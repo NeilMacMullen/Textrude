@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿
 
 // ReSharper disable UnusedMember.Global
 
@@ -11,6 +11,6 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         public UpdateText(string text) => Text = text;
 
-        [JsonPropertyName("text")] public string Text { get; }
+        public string Text { get; }
     }
 }
