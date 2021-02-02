@@ -8,6 +8,13 @@ using TextrudeInteractive.Properties;
 
 namespace TextrudeInteractive
 {
+    /// <summary>
+    ///     Implements fetching of resources from within the embedded Monaco zipped image
+    /// </summary>
+    /// <remarks>
+    ///     This is broken out here in case we decide to add caching and in order to simplify the
+    ///     binding code.
+    /// </remarks>
     public class MonacoResourceFetcher
     {
         private ImmutableArray<string> _supportedLanguages = ImmutableArray<string>.Empty;

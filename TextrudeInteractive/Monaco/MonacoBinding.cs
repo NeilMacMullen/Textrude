@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using TextrudeInteractive.Monaco.Messages;
 
 namespace TextrudeInteractive
 {
-    //Supress messages about unused accessors in records 
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     public class MonacoBinding
     {
         // TODO Use Uri instead of string
@@ -28,7 +24,7 @@ namespace TextrudeInteractive
         };
 
         private readonly bool _isReadOnly;
-        private readonly Queue<Messages> _messagesToBeDelivered;
+        private readonly Queue<MonacoMessages> _messagesToBeDelivered;
         private readonly MonacoResourceFetcher _resources = new();
         private readonly WebView2 _webView;
         private string _format = string.Empty;
@@ -44,7 +40,7 @@ namespace TextrudeInteractive
             _webView = webView;
             _isReadOnly = isReadOnly;
             _isReady = false;
-            _messagesToBeDelivered = new Queue<Messages>();
+            _messagesToBeDelivered = new Queue<MonacoMessages>();
         }
 
         public string Text
@@ -55,7 +51,7 @@ namespace TextrudeInteractive
                 if (_text != value)
                 {
                     _text = value;
-                    PostMessage(new Messages.UpdateText(Text));
+                    PostMessage(new UpdateText(Text));
                 }
             }
         }
@@ -67,7 +63,7 @@ namespace TextrudeInteractive
             {
                 if (_format == value) return;
                 _format = value;
-                PostMessage(new Messages.UpdateLanguage(Format));
+                PostMessage(new UpdateLanguage(Format));
             }
         }
 
@@ -102,12 +98,27 @@ namespace TextrudeInteractive
 
         public ImmutableArray<string> GetSupportedFormats() => _resources.GetSupportedFormats();
 
-        private void PostMessage(Messages msg)
+        private void PostMessage(MonacoMessages msg)
         {
             if (_isReady)
                 _webView.CoreWebView2.PostWebMessageAsJson(msg.ToJson());
             else
                 _messagesToBeDelivered.Enqueue(msg);
+        }
+
+
+        private void OnReady()
+        {
+            _isReady = true;
+            PostMessage(new Setup(_isReadOnly, Format));
+            while (_messagesToBeDelivered.TryDequeue(out var delayedMsg))
+            {
+                PostMessage(delayedMsg);
+            }
+
+            //reset control size to fill window to try and avoid white flash
+            _webView.Width = double.NaN;
+            _webView.Height = double.NaN;
         }
 
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
@@ -116,20 +127,12 @@ namespace TextrudeInteractive
             var type = json.RootElement.GetProperty("type").GetString();
             switch (type)
             {
-                case nameof(Messages.Ready):
-                    _isReady = true;
-                    PostMessage(new Messages.Setup(_isReadOnly, Format));
-                    while (_messagesToBeDelivered.TryDequeue(out var delayedMsg))
-                    {
-                        PostMessage(delayedMsg);
-                    }
-
-                    //reset control size to fill window to try and avoid white flash
-                    _webView.Width = double.NaN;
-                    _webView.Height = double.NaN;
+                case nameof(Ready):
+                    OnReady();
                     break;
-                case nameof(Messages.UpdatedText):
-                    var msg = Messages.UpdatedText.FromJson(e.WebMessageAsJson);
+
+                case nameof(UpdatedText):
+                    var msg = MonacoMessages.FromJson<UpdateText>(e.WebMessageAsJson);
                     _text = msg.Text;
                     OnUserInput(this);
                     break;
@@ -149,8 +152,11 @@ namespace TextrudeInteractive
             if (e.Request.Uri == MonacoBaseUri)
             {
                 e.Response = OkResponse(_resources.Monaco(), string.Empty);
+                return;
             }
-            else if (e.Request.Uri.StartsWith($"{MonacoBaseUri}vs"))
+
+
+            if (e.Request.Uri.StartsWith($"{MonacoBaseUri}vs"))
             {
                 var path = e.Request.Uri.Replace(MonacoBaseUri, "");
 
@@ -165,59 +171,5 @@ namespace TextrudeInteractive
 
         private static string ContentResponse(Stream content, string mimeType)
             => $"Content-Type: {mimeType}\nContent-Length: {content.Length}";
-
-        private abstract record Messages
-        {
-            protected Messages() => Type = GetType().Name;
-
-            [JsonPropertyName("type")] public string Type { get; }
-
-            public string ToJson() => JsonSerializer.Serialize(this, GetType());
-
-            // ReSharper disable once ClassNeverInstantiated.Local - message generated by webView
-            public record Ready : Messages
-            {
-                public static Ready FromJson(string json)
-                    => JsonSerializer.Deserialize<Ready>(json);
-            }
-
-            public record Setup : Messages
-            {
-                public Setup(bool isReadOnly, string format)
-                {
-                    IsReadOnly = isReadOnly;
-                    Language = format;
-                }
-
-                [JsonPropertyName("isReadOnly")] public bool IsReadOnly { get; }
-
-                [JsonPropertyName("language")] public string Language { get; }
-            }
-
-            // ReSharper disable once ClassNeverInstantiated.Local - message generated by webView
-            public record UpdatedText : Messages
-            {
-                public UpdatedText(string text) => Text = text;
-
-                [JsonPropertyName("text")] public string Text { get; }
-
-                public static UpdatedText FromJson(string json)
-                    => JsonSerializer.Deserialize<UpdatedText>(json);
-            }
-
-            public record UpdateText : Messages
-            {
-                public UpdateText(string text) => Text = text;
-
-                [JsonPropertyName("text")] public string Text { get; }
-            }
-
-            public record UpdateLanguage : Messages
-            {
-                public UpdateLanguage(string language) => Language = language;
-
-                [JsonPropertyName("language")] public string Language { get; }
-            }
-        }
     }
 }
