@@ -102,7 +102,7 @@ namespace TextrudeInteractive
             _uiIsReady = true;
 
             RunBackgroundUpgradeCheck();
-
+            UpdateMonacoPanes();
             DataContext = this;
         }
 
@@ -149,7 +149,11 @@ namespace TextrudeInteractive
 
         #region outputs menu
 
-        private void AddOutput(object sender, RoutedEventArgs e) => _outputManager.AddPane();
+        private void AddOutput(object sender, RoutedEventArgs e)
+        {
+            _outputManager.AddPane();
+            UpdateMonacoPanes();
+        }
 
         private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
 
@@ -163,8 +167,11 @@ namespace TextrudeInteractive
 
         #region inputs menu
 
-        private void AddModel(object sender, RoutedEventArgs e) =>
+        private void AddModel(object sender, RoutedEventArgs e)
+        {
             _modelManager.AddPane();
+            UpdateMonacoPanes();
+        }
 
         private void RemoveModel(object sender, RoutedEventArgs e) => _modelManager.RemoveLast();
 
@@ -184,12 +191,21 @@ namespace TextrudeInteractive
 
         #region view menu
 
+        private void UpdateMonacoPanes()
+        {
+            if (!_uiIsReady)
+                return;
+            _modelManager.ForAll(p => p.SetViewOptions(TextSize, LineNumbersOn, WordWrapOn));
+            _outputManager.ForAll(p => p.SetViewOptions(TextSize, LineNumbersOn, WordWrapOn));
+        }
+
         public bool LineNumbersOn
         {
             get => _lineNumbersOn;
             set
             {
                 _lineNumbersOn = value;
+                UpdateMonacoPanes();
                 OnPropertyChanged();
             }
         }
@@ -200,6 +216,7 @@ namespace TextrudeInteractive
             set
             {
                 _textSize = value;
+                UpdateMonacoPanes();
                 OnPropertyChanged();
             }
         }
@@ -210,6 +227,7 @@ namespace TextrudeInteractive
             set
             {
                 _wordWrapOn = value;
+                UpdateMonacoPanes();
                 OnPropertyChanged();
             }
         }

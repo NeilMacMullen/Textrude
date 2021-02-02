@@ -97,5 +97,10 @@ namespace TextrudeInteractive
                 }
             }
         }
+
+        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
+        {
+            _monacoBinding.SetViewOptions(textSize, lineNumbersOn, wordWrapOn);
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace TextrudeInteractive
     ///     Interaction logic for InputMonacoPane.xaml
     /// </summary>
     // TODO InputMonacoPane is extended-copy of InputPane -> maybe use inheritance?
-    public partial class InputMonacoPane : UserControl, IPane
+    public partial class InputMonacoPane : IPane
     {
         private readonly MonacoBinding _monacoBinding;
         private ModelFormat _format = ModelFormat.Line;
@@ -84,6 +84,17 @@ namespace TextrudeInteractive
         {
             Format = (ModelFormat) FormatSelection.SelectedItem;
             OnUserInput();
+        }
+
+        public void SetFont(double textSize)
+        {
+            _monacoBinding.SetFont(textSize);
+        }
+
+
+        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
+        {
+            _monacoBinding.SetViewOptions(textSize, lineNumbersOn, wordWrapOn);
         }
     }
 }

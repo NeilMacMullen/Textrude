@@ -51,16 +51,30 @@
             window.chrome.webview.addEventListener('message', (event) => {
                 if (event.data.type === "Setup") {
                     editor.updateOptions({
-                        readOnly: event.data.isReadOnly,
+                        readOnly: event.data.isReadOnly
                     });
                     monaco.editor.setModelLanguage(model, event.data.language);
                 } else if (event.data.type === "UpdateText") {
                     settingText = true;
                     model.setValue(event.data.text);
-                    //monaco.editor.setModelLanguage(model, event.data.language);
+                   
+                   
                 } else if (event.data.type === "UpdateLanguage") {
                     monaco.editor.setModelLanguage(model, event.data.language);
+                } else if (event.data.type === "FontSize") {
+                    editor.updateOptions({
+                        fontSize: event.data.size
+                    });
+                } else if (event.data.type === "LineNumbers") {
+                    editor.updateOptions({
+                        lineNumbers: event.data.enabled
+                    });
+                } else if (event.data.type === "WordWrap") {
+                    editor.updateOptions({
+                        wordWrap: event.data.enabled
+                    });
                 }
+
             })
 
             window.chrome.webview.postMessage({
