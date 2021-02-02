@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace TextrudeInteractive.Monaco.Messages
+﻿namespace TextrudeInteractive.Monaco.Messages
 {
     /// <summary>
     ///     Sent TO Monaco tell it to change fontsize
@@ -9,7 +7,7 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         public LineNumbers(bool onOff) => Enabled = MonacoOptions.OnOff(onOff);
 
-        [JsonPropertyName("enabled")] public string Enabled { get; }
+        public string Enabled { get; }
     }
 
     /// <summary>
@@ -19,6 +17,6 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         public WordWrap(bool onOff) => Enabled = MonacoOptions.OnOff(onOff);
 
-        [JsonPropertyName("enabled")] public string Enabled { get; }
+        public string Enabled { get; }
     }
 }

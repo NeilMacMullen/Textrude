@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace TextrudeInteractive.Monaco.Messages
 {
@@ -10,7 +9,7 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         protected MonacoMessages() => Type = GetType().Name;
 
-        [JsonPropertyName("type")] public string Type { get; }
+        public string Type { get; }
 
         public string ToJson() => JsonSerializer.Serialize(this, GetType());
 

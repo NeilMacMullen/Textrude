@@ -29,6 +29,9 @@
                 lineNumbers: "on",
                 readOnly: true,
                 theme: "vs-dark",
+                minimap: {
+                    enabled: false
+                }
             });
             const model = editor.getModel();
             var settingText = false;
@@ -40,8 +43,8 @@
             model.onDidChangeContent((event) => {
                 if (settingText === false) {
                     window.chrome.webview.postMessage({
-                        type: "UpdatedText",
-                        text: editor.getModel().getValue()
+                        Type: "UpdatedText",
+                        Text: editor.getModel().getValue()
                     });
                 } else {
                     settingText = false;
@@ -49,36 +52,36 @@
             });
 
             window.chrome.webview.addEventListener('message', (event) => {
-                if (event.data.type === "Setup") {
+                if (event.data.Type === "Setup") {
                     editor.updateOptions({
-                        readOnly: event.data.isReadOnly
+                        readOnly: event.data.IsReadOnly
                     });
-                    monaco.editor.setModelLanguage(model, event.data.language);
-                } else if (event.data.type === "UpdateText") {
+                    monaco.editor.setModelLanguage(model, event.data.Language);
+                } else if (event.data.Type === "UpdateText") {
                     settingText = true;
-                    model.setValue(event.data.text);
+                    model.setValue(event.data.Text);
                    
                    
-                } else if (event.data.type === "UpdateLanguage") {
-                    monaco.editor.setModelLanguage(model, event.data.language);
-                } else if (event.data.type === "FontSize") {
+                } else if (event.data.Type === "UpdateLanguage") {
+                    monaco.editor.setModelLanguage(model, event.data.Language);
+                } else if (event.data.Type === "FontSize") {
                     editor.updateOptions({
-                        fontSize: event.data.size
+                        fontSize: event.data.Size
                     });
-                } else if (event.data.type === "LineNumbers") {
+                } else if (event.data.Type === "LineNumbers") {
                     editor.updateOptions({
-                        lineNumbers: event.data.enabled
+                        lineNumbers: event.data.Enabled
                     });
-                } else if (event.data.type === "WordWrap") {
+                } else if (event.data.Type === "WordWrap") {
                     editor.updateOptions({
-                        wordWrap: event.data.enabled
+                        wordWrap: event.data.Enabled
                     });
                 }
 
             })
 
             window.chrome.webview.postMessage({
-                type: "Ready"
+                Type: "Ready"
             });
         });
     </script>

@@ -112,7 +112,7 @@ namespace TextrudeInteractive
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             var json = JsonDocument.Parse(e.WebMessageAsJson);
-            var type = json.RootElement.GetProperty("type").GetString();
+            var type = json.RootElement.GetProperty(nameof(MonacoMessages.Type)).GetString();
             switch (type)
             {
                 case nameof(Ready):

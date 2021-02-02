@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace TextrudeInteractive.Monaco.Messages
+﻿namespace TextrudeInteractive.Monaco.Messages
 {
     /// <summary>
     ///     Sent TO Monaco tell it to change fontsize
@@ -9,6 +7,6 @@ namespace TextrudeInteractive.Monaco.Messages
     {
         public FontSize(double size) => Size = (int) size;
 
-        [JsonPropertyName("size")] public int Size { get; }
+        public int Size { get; }
     }
 }
