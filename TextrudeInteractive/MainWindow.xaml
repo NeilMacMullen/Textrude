@@ -18,7 +18,8 @@
                          FontFamily="{DynamicResource MaterialDesignFont}"
                          Loaded="MainWindow_OnLoaded"
 
-                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions">
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+                         xmlns:monaco="clr-namespace:TextrudeInteractive.Monaco">
   <Window.Resources>
     <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -44,11 +45,16 @@
     <Style TargetType="avalonEdit:TextEditor">
       <Setter Property="FontFamily" Value="Consolas" />
       <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
-      <Setter Property="ShowLineNumbers" Value="{Binding LineNumbersOn}" />
+      <Setter Property="ShowLineNumbers" Value="{Binding LineNumbers}" />
       <Setter Property="FontSize" Value="{Binding TextSize}" />
-      <Setter Property="WordWrap" Value="{Binding  WordWrapOn}" />
+      <Setter Property="WordWrap" Value="{Binding  WordWrap}" />
       <Setter Property="Padding" Value="4" />
 
+    </Style>
+    <Style TargetType="monaco:MonacoEditPane">
+      <Setter Property="TextSize" Value="{Binding TextSize}"/>
+      <Setter Property="LineNumbers" Value="{Binding LineNumbers}"/>
+      <Setter Property="WordWrap" Value="{Binding WordWrap}"/>
     </Style>
   </Window.Resources>
   <DockPanel>
@@ -156,8 +162,8 @@
                 <avalonEdit:TextEditor DockPanel.Dock="Bottom"
                                        Name="TemplateTextBox"
                                        TextChanged="Avalon1_OnTextChanged"
-                                       Foreground="White" />
-
+                                       Foreground="White"
+                                       />
               </DockPanel>
 
             </TabItem>

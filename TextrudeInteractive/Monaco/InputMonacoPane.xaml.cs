@@ -11,7 +11,6 @@ namespace TextrudeInteractive
     // TODO InputMonacoPane is extended-copy of InputPane -> maybe use inheritance?
     public partial class InputMonacoPane : IPane
     {
-        private readonly MonacoBinding _monacoBinding;
         private ModelFormat _format = ModelFormat.Line;
 
         public Action OnUserInput = () => { };
@@ -19,8 +18,6 @@ namespace TextrudeInteractive
         public InputMonacoPane()
         {
             InitializeComponent();
-            _monacoBinding = new MonacoBinding(WebView, false) {OnUserInput = _ => OnUserInput()};
-            _monacoBinding.Initialize().ConfigureAwait(false);
 
             FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
             FormatSelection.SelectedItem = ModelFormat.Yaml;
@@ -30,8 +27,8 @@ namespace TextrudeInteractive
 
         public string Text
         {
-            get => _monacoBinding.Text;
-            set => _monacoBinding.Text = value;
+            get => MonacoPane.Text;
+            set => MonacoPane.Text = value;
         }
 
         /// <summary>
@@ -45,7 +42,7 @@ namespace TextrudeInteractive
                 if (_format != value)
                 {
                     _format = value;
-                    _monacoBinding.Format = Format.ToString().ToLower();
+                    //    _monacoBinding.Format = Format.ToString().ToLower();
                     FormatSelection.SelectedItem = _format;
                 }
             }
@@ -84,17 +81,6 @@ namespace TextrudeInteractive
         {
             Format = (ModelFormat) FormatSelection.SelectedItem;
             OnUserInput();
-        }
-
-        public void SetFont(double textSize)
-        {
-            _monacoBinding.SetFont(textSize);
-        }
-
-
-        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
-        {
-            _monacoBinding.SetViewOptions(textSize, lineNumbersOn, wordWrapOn);
         }
     }
 }

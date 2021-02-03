@@ -10,17 +10,16 @@ namespace TextrudeInteractive
     public partial class OutputMonacoPane : UserControl, IPane
     {
         private const string DefaultFormat = "text";
-        private readonly MonacoBinding _monacoBinding;
+
         private string _format = string.Empty;
-        private string _text = string.Empty;
+
 
         public OutputMonacoPane()
         {
             InitializeComponent();
-            _monacoBinding = new MonacoBinding(WebView, true);
-            _monacoBinding.Initialize().ConfigureAwait(false);
 
-            var formats = _monacoBinding.GetSupportedFormats();
+
+            var formats = new MonacoResourceFetcher().GetSupportedFormats();
             FormatSelection.ItemsSource = formats;
             FormatSelection.SelectedIndex = formats.IndexOf(DefaultFormat);
 
@@ -29,12 +28,8 @@ namespace TextrudeInteractive
 
         public string Text
         {
-            get => _text;
-            set
-            {
-                _text = value;
-                _monacoBinding.Text = value;
-            }
+            get => MonacoPane.Text;
+            set => MonacoPane.Text = value;
         }
 
         /// <summary>
@@ -48,7 +43,7 @@ namespace TextrudeInteractive
                 if (_format != value)
                 {
                     _format = value;
-                    _monacoBinding.Format = Format;
+                    //_monacoBinding.Format = Format;
                     FormatSelection.SelectedItem = _format;
                 }
             }
@@ -96,11 +91,6 @@ namespace TextrudeInteractive
                 {
                 }
             }
-        }
-
-        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
-        {
-            _monacoBinding.SetViewOptions(textSize, lineNumbersOn, wordWrapOn);
         }
     }
 }

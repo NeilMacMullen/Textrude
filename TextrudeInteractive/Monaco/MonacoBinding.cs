@@ -160,7 +160,7 @@ namespace TextrudeInteractive
         private static string ContentResponse(Stream content, string mimeType)
             => $"Content-Type: {mimeType}\nContent-Length: {content.Length}";
 
-        public void SetFont(double textSize)
+        public void SetTextSize(double textSize)
         {
             PostMessage(new FontSize(textSize));
         }
@@ -170,16 +170,16 @@ namespace TextrudeInteractive
             PostMessage(new LineNumbers(onOff));
         }
 
-        public void SetWord(bool onOff)
+        public void SetWordWrap(bool onOff)
         {
             PostMessage(new WordWrap(onOff));
         }
 
         public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
         {
-            SetFont(textSize);
+            SetTextSize(textSize);
             SetLineNumbers(lineNumbersOn);
-            SetWord(wordWrapOn);
+            SetWordWrap(wordWrapOn);
         }
     }
 }
