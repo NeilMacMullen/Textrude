@@ -114,5 +114,28 @@ namespace TextrudeInteractive.Monaco
         }
 
         #endregion
+
+        #region Format
+
+        public static readonly DependencyProperty FormatProperty =
+            DependencyProperty.Register("Format", typeof(string), typeof(MonacoEditPane), new
+                PropertyMetadata("", OnFormatChanged));
+
+        public string Format
+        {
+            get => (string) GetValue(FormatProperty);
+            set => SetValue(FormatProperty, value);
+        }
+
+        private static void OnFormatChanged(DependencyObject dp,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var pane = dp as MonacoEditPane;
+            if (e.NewValue == null)
+                return;
+            pane._monacoBinding.Format = e.NewValue.ToString();
+        }
+
+        #endregion
     }
 }

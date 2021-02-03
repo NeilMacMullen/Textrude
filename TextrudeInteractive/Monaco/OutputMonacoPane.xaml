@@ -23,7 +23,7 @@
           Name="FormatSelection"
           HorizontalAlignment="Right"
           HorizontalContentAlignment="Right"
-          SelectionChanged="FormatSelection_OnSelectionChanged" />
+          />
       </StackPanel>
 
       <local:FileBar
@@ -32,6 +32,6 @@
         IsSaveOnly="True" />
     </DockPanel>
 
-   <monaco:MonacoEditPane x:Name="MonacoPane"/>
+   <monaco:MonacoEditPane x:Name="MonacoPane" Format="{Binding ElementName=FormatSelection,Path=SelectedValue}"/>
   </DockPanel>
 </UserControl>
