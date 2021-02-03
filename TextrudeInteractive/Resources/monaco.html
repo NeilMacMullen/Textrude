@@ -51,38 +51,42 @@
                 }
             });
 
-            window.chrome.webview.addEventListener('message', (event) => {
-                if (event.data.Type === "Setup") {
-                    editor.updateOptions({
-                        readOnly: event.data.IsReadOnly
-                    });
-                    monaco.editor.setModelLanguage(model, event.data.Language);
-                } else if (event.data.Type === "UpdateText") {
-                    settingText = true;
-                    model.setValue(event.data.Text);
-                   
-                   
-                } else if (event.data.Type === "UpdateLanguage") {
-                    monaco.editor.setModelLanguage(model, event.data.Language);
-                } else if (event.data.Type === "FontSize") {
-                    editor.updateOptions({
-                        fontSize: event.data.Size
-                    });
-                } else if (event.data.Type === "LineNumbers") {
-                    editor.updateOptions({
-                        lineNumbers: event.data.Enabled
-                    });
-                } else if (event.data.Type === "WordWrap") {
-                    editor.updateOptions({
-                        wordWrap: event.data.Enabled
-                    });
-                }
+            window.chrome.webview.addEventListener('message',
+                (event) => {
+                    if (event.data.Type === "Setup") {
+                        editor.updateOptions({
+                            readOnly: event.data.IsReadOnly
+                        });
+                        monaco.editor.setModelLanguage(model, event.data.Language);
+                    } else if (event.data.Type === "UpdateText") {
+                        settingText = true;
+                        model.setValue(event.data.Text);
 
-            })
 
+                    } else if (event.data.Type === "UpdateLanguage") {
+                        monaco.editor.setModelLanguage(model, event.data.Language);
+                    } else if (event.data.Type === "FontSize") {
+                        editor.updateOptions({
+                            fontSize: event.data.Size
+                        });
+                    } else if (event.data.Type === "LineNumbers") {
+                        editor.updateOptions({
+                            lineNumbers: event.data.Enabled
+                        });
+                    } else if (event.data.Type === "WordWrap") {
+                        editor.updateOptions({
+                            wordWrap: event.data.Enabled
+                        });
+                    }
+
+                });
+            //forcing a layout here seems to help with the white flash slightly
+            monaco.editor.setModelLanguage(model, "csharp");
+            editor.layout();
             window.chrome.webview.postMessage({
                 Type: "Ready"
             });
+           
         });
     </script>
 </body>

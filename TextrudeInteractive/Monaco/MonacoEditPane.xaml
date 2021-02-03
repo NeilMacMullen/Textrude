@@ -6,10 +6,13 @@
              xmlns:local="clr-namespace:TextrudeInteractive.Monaco"
              xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             >
     <Grid>
-    <wpf:WebView2
-      Name="WebView"
+      <ProgressBar IsIndeterminate="True" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
+      <wpf:WebView2
+      Name="WebView" Width="0" Height="0"
       />
   </Grid>
 </UserControl>
