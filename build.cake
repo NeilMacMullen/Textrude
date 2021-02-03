@@ -90,10 +90,16 @@ Task("Build")
                     if (o == null) return null;
 
                     if (projFinished.TryMatch(o, out var pfm)) {
-                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]", pfm.Groups["project"].Value, pfm.Groups["output"].Value);
+                        AnsiConsole.MarkupLine(
+                            "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
+                            pfm.Groups["project"].Value,
+                            Truncate(pfm.Groups["output"].Value, AnsiConsole.Width - pfm.Groups["project"].Value.Length - 20)
+                        );
                         buildTask.Increment(1);
                     } else if (!string.IsNullOrWhiteSpace(o))  {
-                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}", o.EscapeMarkup());
+                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
+                            Truncate(o.EscapeMarkup(), AnsiConsole.Width - 15)
+                        );
                     }
                     return null;
                 },
@@ -171,4 +177,13 @@ public class BuildData
 public static bool TryMatch(this Regex regex, string input, out Match firstMatch) {
     firstMatch = regex.Match(input);
     return firstMatch.Success;
+}
+
+public static string Truncate(this string value, int maxChars, string elipsis = "...")
+{
+    if (maxChars <= elipsis.Length)
+        throw new ArgumentException("maxChars must be longer than elipsis!", nameof(maxChars));
+    return value.Length <= maxChars - elipsis.Length
+        ? value
+        : value.Substring(0, maxChars - elipsis.Length) + elipsis;
 }
