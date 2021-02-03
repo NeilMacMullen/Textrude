@@ -7,7 +7,7 @@ using Spectre.Console;
 var target = Argument("target", "Build");
 
 Setup<BuildData>(ctx => {
-    var build = new Build(
+    var build = new BuildData(
         ctx,
         target,
         configuration: Argument("configuration", "Debug"),
