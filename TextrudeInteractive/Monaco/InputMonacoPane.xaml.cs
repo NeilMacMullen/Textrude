@@ -8,7 +8,6 @@ namespace TextrudeInteractive
     /// <summary>
     ///     Interaction logic for InputMonacoPane.xaml
     /// </summary>
-    // TODO InputMonacoPane is extended-copy of InputPane -> maybe use inheritance?
     public partial class InputMonacoPane : IPane
     {
         private ModelFormat _format = ModelFormat.Line;
@@ -42,7 +41,7 @@ namespace TextrudeInteractive
                 if (_format != value)
                 {
                     _format = value;
-                    //    _monacoBinding.Format = Format.ToString().ToLower();
+                    MonacoPane.Format = ToMonacoFormat(Format);
                     FormatSelection.SelectedItem = _format;
                 }
             }
@@ -66,6 +65,9 @@ namespace TextrudeInteractive
             Text = string.Empty;
             Format = ModelFormat.Line;
         }
+
+        private string ToMonacoFormat(ModelFormat format) =>
+            format == ModelFormat.Line ? "text" : format.ToString().ToLowerInvariant();
 
         public void SaveIfLinked() => FileBar.SaveIfLinked();
         public void LoadIfLinked() => FileBar.LoadIfLinked();
