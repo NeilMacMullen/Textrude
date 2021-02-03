@@ -35,14 +35,10 @@ namespace TextrudeInteractive
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
+        private readonly MainWindowViewModel _vm = new MainWindowViewModel();
+
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
-
-        private bool _lineNumbersOn = true;
         private int _responseTimeMs = 50;
-
-        private double _textSize = 14;
-
-        private bool _wordWrapOn;
 
         public MainWindow()
         {
@@ -102,8 +98,7 @@ namespace TextrudeInteractive
             _uiIsReady = true;
 
             RunBackgroundUpgradeCheck();
-            UpdateMonacoPanes();
-            DataContext = this;
+            DataContext = _vm;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -152,7 +147,6 @@ namespace TextrudeInteractive
         private void AddOutput(object sender, RoutedEventArgs e)
         {
             _outputManager.AddPane();
-            UpdateMonacoPanes();
         }
 
         private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
@@ -170,7 +164,6 @@ namespace TextrudeInteractive
         private void AddModel(object sender, RoutedEventArgs e)
         {
             _modelManager.AddPane();
-            UpdateMonacoPanes();
         }
 
         private void RemoveModel(object sender, RoutedEventArgs e) => _modelManager.RemoveLast();
@@ -191,54 +184,13 @@ namespace TextrudeInteractive
 
         #region view menu
 
-        private void UpdateMonacoPanes()
-        {
-            if (!_uiIsReady)
-                return;
-            _modelManager.ForAll(p => p.SetViewOptions(TextSize, LineNumbersOn, WordWrapOn));
-            _outputManager.ForAll(p => p.SetViewOptions(TextSize, LineNumbersOn, WordWrapOn));
-        }
+        private void SmallerFont(object sender, RoutedEventArgs e) => _vm.TextSize = Math.Max(_vm.TextSize - 2, 10);
 
-        public bool LineNumbersOn
-        {
-            get => _lineNumbersOn;
-            set
-            {
-                _lineNumbersOn = value;
-                UpdateMonacoPanes();
-                OnPropertyChanged();
-            }
-        }
+        private void LargerFont(object sender, RoutedEventArgs e) => _vm.TextSize = Math.Min(_vm.TextSize + 2, 36);
 
-        public double TextSize
-        {
-            get => _textSize;
-            set
-            {
-                _textSize = value;
-                UpdateMonacoPanes();
-                OnPropertyChanged();
-            }
-        }
+        private void ToggleLineNumbers(object sender, RoutedEventArgs e) => _vm.LineNumbers = !_vm.LineNumbers;
 
-        public bool WordWrapOn
-        {
-            get => _wordWrapOn;
-            set
-            {
-                _wordWrapOn = value;
-                UpdateMonacoPanes();
-                OnPropertyChanged();
-            }
-        }
-
-        private void SmallerFont(object sender, RoutedEventArgs e) => TextSize = Math.Max(TextSize - 2, 10);
-
-        private void LargerFont(object sender, RoutedEventArgs e) => TextSize = Math.Min(TextSize + 2, 36);
-
-        private void ToggleLineNumbers(object sender, RoutedEventArgs e) => LineNumbersOn = !LineNumbersOn;
-
-        private void ToggleWordWrap(object sender, RoutedEventArgs e) => WordWrapOn = !WordWrapOn;
+        private void ToggleWordWrap(object sender, RoutedEventArgs e) => _vm.WordWrap = !_vm.WordWrap;
 
         #endregion
 
@@ -437,7 +389,6 @@ namespace TextrudeInteractive
             var models = _modelManager.Panes
                 .Select(m => new ModelText(m.Text, m.Format, m.ModelName, m.ModelPath))
                 .ToArray();
-
             return new EngineInputSet(TemplateTextBox.Text,
                 templateFileBar.PathName,
                 models,
@@ -455,9 +406,9 @@ namespace TextrudeInteractive
         private ApplicationSettings LoadSettings()
         {
             var settings = SettingsManager.ReadSettings();
-            LineNumbersOn = settings.LineNumbersOn;
-            TextSize = settings.FontSize;
-            WordWrapOn = settings.WrapText;
+            _vm.LineNumbers = settings.LineNumbersOn;
+            _vm.TextSize = settings.FontSize;
+            _vm.WordWrap = settings.WrapText;
             _responseTimeMs = settings.ResponseTime;
             return settings;
         }
@@ -470,9 +421,9 @@ namespace TextrudeInteractive
             //persist settings
             var settings = new ApplicationSettings
             {
-                FontSize = TextSize,
-                LineNumbersOn = LineNumbersOn,
-                WrapText = WordWrapOn,
+                FontSize = _vm.TextSize,
+                LineNumbersOn = _vm.LineNumbers,
+                WrapText = _vm.WordWrap,
                 ResponseTime = _responseTimeMs,
                 //TODO - this is a temporary hack. ProjectManager should actually track the projects that have been used
                 //and save them all so we can display them in the menu

@@ -6,35 +6,26 @@ namespace TextrudeInteractive
     /// <summary>
     ///     Interaction logic for OutputMonacoPane.xaml
     /// </summary>
-    // TODO OutputMonacoPane is extended-copy of OutputPane -> maybe use inheritance?
     public partial class OutputMonacoPane : UserControl, IPane
     {
         private const string DefaultFormat = "text";
-        private readonly MonacoBinding _monacoBinding;
-        private string _format = string.Empty;
-        private string _text = string.Empty;
 
         public OutputMonacoPane()
         {
             InitializeComponent();
-            _monacoBinding = new MonacoBinding(WebView, true);
-            _monacoBinding.Initialize().ConfigureAwait(false);
 
-            var formats = _monacoBinding.GetSupportedFormats();
+
+            var formats = new MonacoResourceFetcher().GetSupportedFormats();
             FormatSelection.ItemsSource = formats;
             FormatSelection.SelectedIndex = formats.IndexOf(DefaultFormat);
-
             FileBar.OnSave = () => Text;
+            MonacoPane.SetReadOnly(true);
         }
 
         public string Text
         {
-            get => _text;
-            set
-            {
-                _text = value;
-                _monacoBinding.Text = value;
-            }
+            get => MonacoPane.Text;
+            set => MonacoPane.Text = value;
         }
 
         /// <summary>
@@ -42,14 +33,12 @@ namespace TextrudeInteractive
         /// </summary>
         public string Format
         {
-            get => _format;
+            get => MonacoPane.Format;
             set
             {
-                if (_format != value)
+                if (MonacoPane.Format != value)
                 {
-                    _format = value;
-                    _monacoBinding.Format = Format;
-                    FormatSelection.SelectedItem = _format;
+                    FormatSelection.SelectedItem = value;
                 }
             }
         }
@@ -77,11 +66,6 @@ namespace TextrudeInteractive
 
         public void SaveIfLinked() => FileBar.SaveIfLinked();
 
-        private void FormatSelection_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Format = FormatSelection.SelectedItem as string;
-        }
-
         private void CopyToClipboard(object sender, RoutedEventArgs e)
         {
             var maxAttempts = 3;
@@ -96,11 +80,6 @@ namespace TextrudeInteractive
                 {
                 }
             }
-        }
-
-        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
-        {
-            _monacoBinding.SetViewOptions(textSize, lineNumbersOn, wordWrapOn);
         }
     }
 }
