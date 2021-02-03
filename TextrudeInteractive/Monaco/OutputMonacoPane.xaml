@@ -32,6 +32,8 @@
         IsSaveOnly="True" />
     </DockPanel>
 
-   <monaco:MonacoEditPane x:Name="MonacoPane" Format="{Binding ElementName=FormatSelection,Path=SelectedValue}"/>
+   <monaco:MonacoEditPane x:Name="MonacoPane"
+                          Format="{Binding ElementName=FormatSelection,Path=SelectedValue}"
+   />
   </DockPanel>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TextrudeInteractive.Monaco
@@ -17,9 +18,14 @@ namespace TextrudeInteractive.Monaco
             _monacoBinding.Initialize().ConfigureAwait(false);
         }
 
+        public void SetReadOnly(bool onOff)
+        {
+            _monacoBinding.Setup(Format, onOff);
+        }
 
         private void OnUserInput()
         {
+            Text = _monacoBinding.Text;
         }
 
         #region Text
@@ -41,7 +47,14 @@ namespace TextrudeInteractive.Monaco
             if (e.NewValue == null)
                 return;
             pane._monacoBinding.Text = e.NewValue.ToString();
+
+            pane.TextChangedEvent();
         }
+
+        /// <summary>
+        ///     action registered by client - should be turned into property
+        /// </summary>
+        public Action TextChangedEvent = () => { };
 
         #endregion
 

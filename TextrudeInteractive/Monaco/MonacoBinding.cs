@@ -181,5 +181,10 @@ namespace TextrudeInteractive
             SetLineNumbers(lineNumbersOn);
             SetWordWrap(wordWrapOn);
         }
+
+        public void Setup(string format, bool onOff)
+        {
+            PostMessage(new Setup(onOff, format));
+        }
     }
 }

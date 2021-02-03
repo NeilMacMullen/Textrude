@@ -18,8 +18,8 @@ namespace TextrudeInteractive
             var formats = new MonacoResourceFetcher().GetSupportedFormats();
             FormatSelection.ItemsSource = formats;
             FormatSelection.SelectedIndex = formats.IndexOf(DefaultFormat);
-
             FileBar.OnSave = () => Text;
+            MonacoPane.SetReadOnly(true);
         }
 
         public string Text

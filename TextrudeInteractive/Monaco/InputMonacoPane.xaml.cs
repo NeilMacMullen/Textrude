@@ -22,6 +22,7 @@ namespace TextrudeInteractive
             FormatSelection.SelectedItem = ModelFormat.Yaml;
             FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
+            MonacoPane.TextChangedEvent = HandleUserInput;
         }
 
         public string Text
@@ -64,6 +65,11 @@ namespace TextrudeInteractive
             ModelPath = string.Empty;
             Text = string.Empty;
             Format = ModelFormat.Line;
+        }
+
+        private void HandleUserInput()
+        {
+            OnUserInput();
         }
 
         private string ToMonacoFormat(ModelFormat format) =>
