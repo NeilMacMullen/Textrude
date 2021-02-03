@@ -5,31 +5,33 @@ using System.Text.RegularExpressions;
 using Spectre.Console;
 
 var target = Argument("target", "Build");
-var configuration = Argument("configuration", "Debug");
-var clean = HasArgument("clean");
-var dotnetVerbosity = Argument("dotnet_verbosity", DotNetCoreVerbosity.Minimal);
 
-var solutionPath = File("Textrude.sln");
-var solution = ParseSolution(solutionPath);
-var toBuildProjects = solution.Projects
-    .Where(p => p.Type != solutionFolderType);
-
-const string solutionFolderType = "{2150E333-8FDC-42A3-9474-1A3956D46DE8}";
-
-Setup(c => {
-    Information("Running {0} with {1} clean: {2}", target, configuration, clean);
+Setup<BuildData>(ctx => {
+    var build = new Build(
+        ctx,
+        target,
+        configuration: Argument("configuration", "Debug"),
+        doClean: HasArgument("clean"),
+        dotnetVerbosity: Argument("dotnet_verbosity", DotNetCoreVerbosity.Minimal),
+        solutionPath: File("Textrude.sln")
+    );
+    build.Describe();
+    return build;
 });
 
 Task("Clean")
-    .WithCriteria(clean)
-    .Does(() =>
+    .Description("Runs dotnet clean and cleans the NuGet cache (when in GitHub Actions)")
+    .WithCriteria<BuildData>((ctx, build) => build.DoClean)
+    .Does<BuildData>(build =>
 {
-    DotNetCoreClean(solutionPath, new DotNetCoreCleanSettings() {
-        Configuration = configuration,
-        Verbosity = dotnetVerbosity
+    DotNetCoreClean(build.SolutionPath.FullPath, new DotNetCoreCleanSettings() {
+        Configuration = build.Configuration,
+        Verbosity = build.DotnetVerbosity
     });
 
     if (GitHubActions.IsRunningOnGitHubActions) {
+        // NuGet cache has to cleaned so that windows-latest picks up the NuGet packages
+        // see https://github.com/dotnet/core/issues/5881
         int nugetLocalsClearResult = StartProcess("dotnet", "nuget locals all --clear");
         if (nugetLocalsClearResult != 0)
             Error("Could not clear local NuGet cache!");
@@ -37,18 +39,20 @@ Task("Clean")
 });
 
 Task("Restore")
+    .Description("Runs dotnet restore")
     .IsDependentOn("Clean")
-    .Does(() =>
+    .Does<BuildData>(build =>
 {
-    DotNetCoreRestore(solutionPath, new DotNetCoreRestoreSettings() {
-        ArgumentCustomization = args => args.Append($"-p:Configuration={configuration}"),
-        Verbosity = dotnetVerbosity
+    DotNetCoreRestore(build.SolutionPath.FullPath, new DotNetCoreRestoreSettings() {
+        ArgumentCustomization = args => args.Append($"-p:Configuration={build.Configuration}"),
+        Verbosity = build.DotnetVerbosity
     });
 });
 
 Task("Build")
+    .Description("Build all the projects for the current configuration and outputs current doc. for ScriptLibrary")
     .IsDependentOn("Restore")
-    .Does(() =>
+    .Does<BuildData>(build =>
 {
     AnsiConsole.Progress()
         .AutoClear(false)
@@ -63,7 +67,7 @@ Task("Build")
         })
         .Start(ctx => {
             var buildTask = ctx.AddTask("Build", new ProgressTaskSettings() {
-                MaxValue = toBuildProjects.Count(),
+                MaxValue = build.ProjectsToBuild.Count(),
                 AutoStart = false
             });
             var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings() {
@@ -78,8 +82,8 @@ Task("Build")
                 Arguments = new ProcessArgumentBuilder()
                     .Append("build")
                     .Append("--no-restore")
-                    .Append($"-c {configuration}")
-                    .Append($"-v {dotnetVerbosity}"),
+                    .Append($"-c {build.Configuration}")
+                    .Append($"-v {build.DotnetVerbosity}"),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectedStandardOutputHandler = o => {
@@ -111,18 +115,58 @@ Task("Build")
 });
 
 Task("Test")
+    .Description("Runs dotnet test")
     .IsDependentOn("Build")
-    .Does(() =>
+    .Does<BuildData>(build =>
 {
-    DotNetCoreTest(solutionPath, new DotNetCoreTestSettings() {
+    DotNetCoreTest(build.SolutionPath.FullPath, new DotNetCoreTestSettings() {
         NoRestore = true,
         NoBuild = true,
-        Configuration = configuration,
-        Verbosity = dotnetVerbosity
+        Configuration = build.Configuration,
+        Verbosity = build.DotnetVerbosity
     });
 });
 
 RunTarget(target);
+
+public class BuildData
+{
+    private const string solutionFolderType = "{2150E333-8FDC-42A3-9474-1A3956D46DE8}";
+
+    private readonly ICakeContext ctx;
+
+    public BuildData(
+        ICakeContext ctx,
+        string target,
+        string configuration,
+        bool doClean,
+        DotNetCoreVerbosity dotnetVerbosity,
+        FilePath solutionPath)
+    {
+        this.ctx = ctx;
+        Target = target;
+        Configuration = configuration;
+        DoClean = doClean;
+        DotnetVerbosity = dotnetVerbosity;
+        SolutionPath = solutionPath;
+        Solution = ctx.ParseSolution(solutionPath);
+    }
+
+    public string Target { get; }
+    public string Configuration { get; }
+    public bool DoClean { get; }
+    public DotNetCoreVerbosity DotnetVerbosity { get; }
+    public FilePath SolutionPath { get; }
+    public SolutionParserResult Solution { get; }
+
+    public IEnumerable<SolutionProject> ProjectsToBuild 
+        => Solution.Projects
+        .Where(p => p.Type != solutionFolderType);
+
+    public void Describe() {
+        ctx.Information("Running {0} with {1} clean: {2}", Target, Configuration, DoClean);
+    }
+}
 
 public static bool TryMatch(this Regex regex, string input, out Match firstMatch) {
     firstMatch = regex.Match(input);
