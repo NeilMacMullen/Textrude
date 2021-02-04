@@ -21,5 +21,7 @@ namespace TextrudeInteractive
         ///     Time between last keystroke and render
         /// </summary>
         public int ResponseTime { get; set; } = 50;
+
+        public bool ShowWhitespace { get; set; }
     }
 }

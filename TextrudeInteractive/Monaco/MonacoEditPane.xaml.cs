@@ -128,6 +128,30 @@ namespace TextrudeInteractive.Monaco
 
         #endregion
 
+        #region WordWrap
+
+        public static readonly DependencyProperty VisibleWhitespaceProperty =
+            DependencyProperty.Register("VisibleWhitespace", typeof(bool), typeof(MonacoEditPane), new
+                PropertyMetadata(true, OnVisibleWhitespaceChanged));
+
+        public bool VisibleWhitespace
+        {
+            get => (bool) GetValue(VisibleWhitespaceProperty);
+            set => SetValue(VisibleWhitespaceProperty, value);
+        }
+
+        private static void OnVisibleWhitespaceChanged(DependencyObject dp,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var pane = dp as MonacoEditPane;
+            if (e.NewValue == null)
+                return;
+            pane._monacoBinding.SetWhitespace((bool) e.NewValue);
+        }
+
+        #endregion
+
+
         #region Format
 
         public static readonly DependencyProperty FormatProperty =

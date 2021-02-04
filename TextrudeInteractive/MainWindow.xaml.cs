@@ -138,6 +138,11 @@ namespace TextrudeInteractive
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        private void ToggleWhiteSpace(object sender, RoutedEventArgs e)
+        {
+            _vm.ShowWhitespace = !_vm.ShowWhitespace;
+        }
+
         #region jumplist
 
         #endregion
@@ -409,6 +414,7 @@ namespace TextrudeInteractive
             _vm.LineNumbers = settings.LineNumbersOn;
             _vm.TextSize = settings.FontSize;
             _vm.WordWrap = settings.WrapText;
+            _vm.ShowWhitespace = settings.ShowWhitespace;
             _responseTimeMs = settings.ResponseTime;
             return settings;
         }
@@ -424,6 +430,7 @@ namespace TextrudeInteractive
                 FontSize = _vm.TextSize,
                 LineNumbersOn = _vm.LineNumbers,
                 WrapText = _vm.WordWrap,
+                ShowWhitespace = _vm.ShowWhitespace,
                 ResponseTime = _responseTimeMs,
                 //TODO - this is a temporary hack. ProjectManager should actually track the projects that have been used
                 //and save them all so we can display them in the menu
