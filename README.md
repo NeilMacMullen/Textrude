@@ -44,6 +44,7 @@ The current release is **v1.3.0**.
 - Update to Monaco 22.3 which supports an extra couple of languages
 - Rewire font-size control, line numbers, wordwarp to model/output panes
 - remove minimap from model/output panes
+- added spinner to monaco panes and made white flash a bit briefer
 - whitespace can be made visible in input/output panes
 
 ### v1.3.0 (source/binary)
