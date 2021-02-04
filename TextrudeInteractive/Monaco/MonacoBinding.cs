@@ -186,5 +186,12 @@ namespace TextrudeInteractive
         {
             PostMessage(new Setup(onOff, format));
         }
+
+        public void SetWhitespace(bool onOff)
+        {
+            PostMessage(new RenderWhitespace(onOff
+                ? RenderWhitespace.MonacoWhitespaceType.Boundary
+                : RenderWhitespace.MonacoWhitespaceType.None));
+        }
     }
 }

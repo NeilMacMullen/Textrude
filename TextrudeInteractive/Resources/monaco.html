@@ -77,6 +77,10 @@
                         editor.updateOptions({
                             wordWrap: event.data.Enabled
                         });
+                    } else if (event.data.Type === "RenderWhitespace") {
+                        editor.updateOptions({
+                            renderWhitespace: event.data.WhitespaceType
+                        });
                     }
 
                 });

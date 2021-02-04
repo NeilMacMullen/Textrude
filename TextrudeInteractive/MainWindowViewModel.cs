@@ -7,6 +7,7 @@ namespace TextrudeInteractive
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private bool _lineNumbers = true;
+        private bool _showWhitespace;
         private string _templateText;
         private double _textSize = 14;
 
@@ -39,6 +40,17 @@ namespace TextrudeInteractive
             set
             {
                 _wordWrap = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowWhitespace
+        {
+            get => _showWhitespace;
+            set
+            {
+                if (value == _showWhitespace) return;
+                _showWhitespace = value;
                 OnPropertyChanged();
             }
         }

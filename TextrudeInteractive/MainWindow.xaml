@@ -55,6 +55,7 @@
       <Setter Property="TextSize" Value="{Binding TextSize}"/>
       <Setter Property="LineNumbers" Value="{Binding LineNumbers}"/>
       <Setter Property="WordWrap" Value="{Binding WordWrap}"/>
+      <Setter Property="VisibleWhitespace" Value="{Binding ShowWhitespace}"/>
     </Style>
   </Window.Resources>
   <DockPanel>
@@ -86,6 +87,8 @@
       <MenuItem Header="_View">
         <MenuItem Header="Toggle Line _Numbers" Click="ToggleLineNumbers" />
         <MenuItem Header="Toggle _Word Wrap" Click="ToggleWordWrap" />
+        <MenuItem Header="Toggle Visible _Whitespace" Click="ToggleWhiteSpace" />
+        <Separator/>
         <MenuItem Header="_Smaller font" Click="SmallerFont" />
         <MenuItem Header="_Larger font" Click="LargerFont" />
       </MenuItem>
