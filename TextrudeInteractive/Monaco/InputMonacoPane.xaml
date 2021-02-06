@@ -12,18 +12,28 @@
   mc:Ignorable="d">
   <DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
-      <ComboBox
-        Name="FormatSelection"
-        HorizontalAlignment="Right"
-        HorizontalContentAlignment="Right"
-        DockPanel.Dock="Right"
-        SelectionChanged="FormatSelectionChanged" />
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <Button
+          Name="ChooseButton"
+          Click="CopyToClipboard"
+          Content="&#x1F4CB;"
+          Style="{StaticResource MaterialDesignFlatButton}"
+          ToolTip="Copy to clipboard" />
+        <ComboBox
+          Name="FormatSelection"
+          HorizontalAlignment="Right"
+          HorizontalContentAlignment="Right"
+          />
+      </StackPanel>
+
       <local:FileBar
         x:Name="FileBar"
         DockPanel.Dock="Left"
         IsSaveOnly="False" />
     </DockPanel>
 
-    <monaco:MonacoEditPane x:Name="MonacoPane"/>
+   <monaco:MonacoEditPane x:Name="MonacoPane"
+                          Format="{Binding ElementName=FormatSelection,Path=SelectedValue}"
+   />
   </DockPanel>
 </UserControl>
