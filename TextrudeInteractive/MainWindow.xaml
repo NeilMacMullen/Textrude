@@ -175,9 +175,11 @@
 
           <GridSplitter Grid.Column="3" />
 
-
-          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4" Name="OutputTab" />
-
+          <DockPanel Grid.Column="4">
+          <TabControl Style="{StaticResource MaterialDesignTabControl}"  Name="OutputTab"
+                      DockPanel.Dock ="Top"/>
+            <local:InputMonacoPane x:Name ="SharedOutput"/>
+          </DockPanel>
 
         </Grid>
         <GridSplitter Grid.Row="1" />

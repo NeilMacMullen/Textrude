@@ -11,15 +11,26 @@ namespace TextrudeInteractive
     public class TabControlManager<T> where T : class, IPane, new()
     {
         private readonly PaneCache<T> _cache;
+        private readonly Action<T> _onSelectionChanged = _ => { };
+
         private readonly string _prefix;
         private readonly TabControl _tab;
         public List<T> Panes = new();
 
-        public TabControlManager(string prefix, TabControl tab, Action<T> onNewPane)
+        public TabControlManager(string prefix, TabControl tab, Action<T> onNewPane,
+            Action<T> selectionChanged)
         {
             _prefix = prefix;
             _tab = tab;
+            _onSelectionChanged = selectionChanged;
             _cache = new PaneCache<T>(onNewPane);
+            _tab.SelectionChanged += TabOnSelectionChanged;
+        }
+
+        private void TabOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_tab.SelectedIndex >= 0 && _tab.SelectedIndex < Panes.Count)
+                _onSelectionChanged(Panes[_tab.SelectedIndex]);
         }
 
         /// <summary>

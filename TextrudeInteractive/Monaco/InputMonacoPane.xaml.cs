@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,6 +13,8 @@ namespace TextrudeInteractive
     public partial class InputMonacoPane : IPane
     {
         private bool _isReadOnly;
+
+        private EditPaneViewModel _vm = new EditPaneViewModel();
         public ObservableCollection<string> AvailableFormats = new();
 
         public Action OnUserInput = () => { };
@@ -23,6 +26,9 @@ namespace TextrudeInteractive
             FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
             MonacoPane.TextChangedEvent = HandleUserInput;
+            DataContext = new EditPaneViewModel();
+            DataContextChanged += OnDataContextChanged;
+            FormatSelection.SelectionChanged += FormatSelectionChanged;
         }
 
         public string Text
@@ -81,8 +87,11 @@ namespace TextrudeInteractive
 
         private void HandleUserInput()
         {
+            ReadToContext();
             if (!_isReadOnly)
+            {
                 OnUserInput();
+            }
         }
 
         // private string ToMonacoFormat(ModelFormat format) =>
@@ -129,6 +138,49 @@ namespace TextrudeInteractive
             MonacoPane.SetReadOnly(_isReadOnly);
             CopyToClipboardButton.Visibility
                 = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        #endregion
+
+        #region vm
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //slightly hacky way of just getting a kick whenever any property of any of the
+            //DataContext properties change
+            _vm.PropertyChanged -= VmOnPropertyChanged;
+            if (DataContext is EditPaneViewModel vm)
+                _vm = vm;
+            else _vm = new EditPaneViewModel();
+            SetFromContext();
+            _vm.PropertyChanged += VmOnPropertyChanged;
+        }
+
+        private void VmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            SetFromContext();
+        }
+
+        private bool _busy;
+
+        private void SetFromContext()
+        {
+            _busy = true;
+            Text = _vm.Text;
+            Format = _vm.Format;
+            LinkedPath = _vm.LinkedPath;
+            ScribanName = _vm.ScribanName;
+            _busy = false;
+        }
+
+        private void ReadToContext()
+        {
+            if (_busy)
+                return;
+            _vm.Text = Text;
+            _vm.Format = Format;
+            _vm.LinkedPath = LinkedPath;
+            _vm.ScribanName = ScribanName;
         }
 
         #endregion

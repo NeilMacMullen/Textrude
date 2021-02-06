@@ -31,7 +31,7 @@ namespace TextrudeInteractive
         private readonly AvalonEditCompletionHelper _mainEditWindow;
 
         private readonly TabControlManager<InputMonacoPane> _modelManager;
-        private readonly TabControlManager<OutputMonacoPane> _outputManager;
+        private readonly TabControlManager<EditPaneViewModel> _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
@@ -62,20 +62,21 @@ namespace TextrudeInteractive
 
             SetTitle(string.Empty);
             _modelManager = new TabControlManager<InputMonacoPane>("model", InputModels, p =>
-            {
-                var formats = Enum.GetNames(typeof(ModelFormat));
-                p.SetAvailableFormats(formats);
-                p.SetDirection(MonacoPaneType.PaneModel);
-                p.OnUserInput = OnModelChanged;
-            });
-            _outputManager = new TabControlManager<OutputMonacoPane>("output", OutputTab, p =>
-            {
-                var formats = new MonacoResourceFetcher().GetSupportedFormats();
-                p.SetAvailableFormats(
-                    formats
-                );
-                p.SetDirection(MonacoPaneType.PaneOutput);
-            });
+                {
+                    var formats = Enum.GetNames(typeof(ModelFormat));
+                    p.SetAvailableFormats(formats);
+                    p.SetDirection(MonacoPaneType.PaneModel);
+                    p.OnUserInput = OnModelChanged;
+                },
+                p => { }
+            );
+            SharedOutput.SetDirection(MonacoPaneType.PaneOutput);
+            var formats = new MonacoResourceFetcher().GetSupportedFormats();
+            SharedOutput.SetAvailableFormats(
+                formats
+            );
+            _outputManager = new TabControlManager<EditPaneViewModel>("output", OutputTab, p => { },
+                p => SharedOutput.DataContext = p);
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
 
@@ -172,7 +173,7 @@ namespace TextrudeInteractive
 
         private void SaveAllOutputs(object sender, RoutedEventArgs e)
         {
-            _outputManager.ForAll(p => p.SaveIfLinked());
+            //  _outputManager.ForAll(p => p.SaveIfLinked());
         }
 
         #endregion
@@ -252,7 +253,7 @@ namespace TextrudeInteractive
         public EngineOutputSet CollectOutput()
         {
             return new(
-                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.Name, b.LinkedPath))
+                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.ScribanName, b.LinkedPath))
             );
         }
 
