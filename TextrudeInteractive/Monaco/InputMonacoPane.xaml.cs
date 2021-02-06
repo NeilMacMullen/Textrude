@@ -150,9 +150,11 @@ namespace TextrudeInteractive
             if (DataContext is EditPaneViewModel vm)
                 _vm = vm;
             else _vm = new EditPaneViewModel();
+            _busy++;
             SetAvailableFormats(_vm.AvailableFormats);
             SetFromContext();
             _vm.PropertyChanged += VmOnPropertyChanged;
+            _busy--;
         }
 
         private void VmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -160,21 +162,21 @@ namespace TextrudeInteractive
             SetFromContext();
         }
 
-        private bool _busy;
+        private int _busy;
 
         private void SetFromContext()
         {
-            _busy = true;
+            _busy++;
             Text = _vm.Text;
             Format = _vm.Format;
             LinkedPath = _vm.LinkedPath;
             ScribanName = _vm.ScribanName;
-            _busy = false;
+            _busy--;
         }
 
         private void ReadToContext()
         {
-            if (_busy)
+            if (_busy != 0)
                 return;
             _vm.Text = Text;
             _vm.Format = Format;

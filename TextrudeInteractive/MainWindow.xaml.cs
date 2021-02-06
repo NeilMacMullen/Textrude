@@ -61,6 +61,7 @@ namespace TextrudeInteractive
             SetTitle(string.Empty);
 
             SharedInput.SetDirection(MonacoPaneType.PaneModel);
+            SharedInput.OnUserInput = OnModelChanged;
             _modelManager = new TabControlManager(InputModels, SharedInput);
             SharedOutput.SetDirection(MonacoPaneType.PaneOutput);
             _outputManager = new TabControlManager(OutputTab, SharedOutput);
