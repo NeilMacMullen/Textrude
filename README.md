@@ -46,6 +46,7 @@ The current release is **v1.3.0**.
 - remove minimap from model/output panes
 - added spinner to monaco panes and made white flash a bit briefer
 - whitespace can be made visible in input/output panes
+- reuse single Monaco edit pane for multiple models/outputs for cleaner switching & lower resource use
 
 ### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis
