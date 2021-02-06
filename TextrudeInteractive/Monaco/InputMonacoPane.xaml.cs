@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using Engine.Application;
 
 namespace TextrudeInteractive
 {
@@ -11,16 +11,15 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class InputMonacoPane : IPane
     {
-        private ModelFormat _format = ModelFormat.Line;
+
+        public ObservableCollection<string> AvailableFormats = new ObservableCollection<string>();
 
         public Action OnUserInput = () => { };
 
         public InputMonacoPane()
         {
             InitializeComponent();
-
-            FormatSelection.ItemsSource = Enum.GetValues(typeof(ModelFormat));
-            FormatSelection.SelectedItem = ModelFormat.Yaml;
+            FormatSelection.ItemsSource = AvailableFormats;
             FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
             MonacoPane.TextChangedEvent = HandleUserInput;
@@ -35,16 +34,14 @@ namespace TextrudeInteractive
         /// <summary>
         ///     Serialisable Format to be persisted in project
         /// </summary>
-        public ModelFormat Format
+        public string Format
         {
-            get => _format;
+            get => MonacoPane.Format;
             set
             {
-                if (_format != value)
+                if (MonacoPane.Format != value)
                 {
-                    _format = value;
-                    MonacoPane.Format = ToMonacoFormat(Format);
-                    FormatSelection.SelectedItem = _format;
+                    FormatSelection.SelectedItem = value;
                 }
             }
         }
@@ -68,7 +65,18 @@ namespace TextrudeInteractive
             ScribanName = string.Empty;
             LinkedPath = string.Empty;
             Text = string.Empty;
-            Format = ModelFormat.Line;
+            Format = string.Empty;
+        }
+
+        public void SetAvailableFormats(IEnumerable<string> formats)
+        {
+            AvailableFormats.Clear();
+            foreach (var format in formats)
+            {
+                AvailableFormats.Add(format);
+            }
+
+            FormatSelection.SelectedIndex = 0;
         }
 
         private void HandleUserInput()
@@ -76,16 +84,16 @@ namespace TextrudeInteractive
             OnUserInput();
         }
 
-        private string ToMonacoFormat(ModelFormat format) =>
-            format == ModelFormat.Line ? "text" : format.ToString().ToLowerInvariant();
+        // private string ToMonacoFormat(ModelFormat format) =>
+        //    format == ModelFormat.Line ? "text" : format.ToString().ToLowerInvariant();
 
         public void SaveIfLinked() => FileBar.SaveIfLinked();
         public void LoadIfLinked() => FileBar.LoadIfLinked();
 
         private void NewFileLoaded(string text, bool wasNewFile)
         {
-            if (wasNewFile)
-                Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
+            //  if (wasNewFile)
+            //          Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
             Text = text;
         }
 
@@ -107,7 +115,8 @@ namespace TextrudeInteractive
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Format = (ModelFormat) FormatSelection.SelectedItem;
+            Format = //(ModelFormat)
+                (string) FormatSelection.SelectedItem ?? string.Empty;
             OnUserInput();
         }
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,7 +11,7 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class OutputMonacoPane : UserControl, IPane
     {
-        private const string DefaultFormat = "text";
+        public ObservableCollection<string> AvailableFormats = new ObservableCollection<string>();
 
         public Action OnUserInput = () => { };
 
@@ -18,9 +20,8 @@ namespace TextrudeInteractive
             InitializeComponent();
 
 
-            var formats = new MonacoResourceFetcher().GetSupportedFormats();
-            FormatSelection.ItemsSource = formats;
-            FormatSelection.SelectedIndex = formats.IndexOf(DefaultFormat);
+            FormatSelection.ItemsSource = AvailableFormats;
+            FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
             MonacoPane.SetReadOnly(true);
         }
@@ -47,7 +48,7 @@ namespace TextrudeInteractive
         }
 
         /// <summary>
-        ///     Currently unused - the name of the output
+        ///     Currently unused - the name of the model/output
         /// </summary>
         public string ScribanName { get; set; } = string.Empty;
 
@@ -65,7 +66,18 @@ namespace TextrudeInteractive
             ScribanName = string.Empty;
             LinkedPath = string.Empty;
             Text = string.Empty;
-            Format = DefaultFormat;
+            Format = string.Empty;
+        }
+
+        public void SetAvailableFormats(IEnumerable<string> formats)
+        {
+            AvailableFormats.Clear();
+            foreach (var format in formats)
+            {
+                AvailableFormats.Add(format);
+            }
+
+            FormatSelection.SelectedIndex = 0;
         }
 
         private void HandleUserInput()
@@ -97,6 +109,13 @@ namespace TextrudeInteractive
                 {
                 }
             }
+        }
+
+        private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Format = //(ModelFormat)
+                (string) FormatSelection.SelectedItem ?? string.Empty;
+            OnUserInput();
         }
     }
 }

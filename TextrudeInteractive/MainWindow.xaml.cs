@@ -59,10 +59,21 @@ namespace TextrudeInteractive
 
             templateFileBar.OnSave = () => TemplateTextBox.Text;
             templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
-            ;
+
             SetTitle(string.Empty);
-            _modelManager = new("model", InputModels, p => p.OnUserInput = OnModelChanged);
-            _outputManager = new("output", OutputTab, _ => { });
+            _modelManager = new("model", InputModels, p =>
+            {
+                var formats = Enum.GetNames(typeof(ModelFormat));
+                p.SetAvailableFormats(formats);
+                p.OnUserInput = OnModelChanged;
+            });
+            _outputManager = new("output", OutputTab, p =>
+            {
+                var formats = new MonacoResourceFetcher().GetSupportedFormats();
+                p.SetAvailableFormats(
+                    formats
+                );
+            });
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
 
@@ -288,7 +299,7 @@ namespace TextrudeInteractive
                 if (trim && string.IsNullOrWhiteSpace(model.Text))
                     continue;
                 var pane = _modelManager.AddPane();
-                pane.Format = model.Format;
+                pane.Format = model.Format.ToString();
                 pane.Text = model.Text;
                 pane.ScribanName = model.Name;
                 pane.LinkedPath = model.Path;
@@ -391,8 +402,11 @@ namespace TextrudeInteractive
 
         public EngineInputSet CollectInput()
         {
+            ModelFormat TryFormat(string s)
+                => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
+
             var models = _modelManager.Panes
-                .Select(m => new ModelText(m.Text, m.Format, m.ScribanName, m.LinkedPath))
+                .Select(m => new ModelText(m.Text, TryFormat(m.Format), m.ScribanName, m.LinkedPath))
                 .ToArray();
             return new EngineInputSet(TemplateTextBox.Text,
                 templateFileBar.PathName,
