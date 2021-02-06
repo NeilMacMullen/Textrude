@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TextrudeInteractive.Annotations;
 
@@ -55,6 +56,9 @@ namespace TextrudeInteractive
                 OnPropertyChanged();
             }
         }
+
+        //this doesn't have to be notifiable because it is constant 
+        public string[] AvailableFormats { get; set; } = Array.Empty<string>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

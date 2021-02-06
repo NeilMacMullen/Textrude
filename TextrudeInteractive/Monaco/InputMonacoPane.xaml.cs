@@ -74,15 +74,13 @@ namespace TextrudeInteractive
             Format = string.Empty;
         }
 
-        public void SetAvailableFormats(IEnumerable<string> formats)
+        private void SetAvailableFormats(IEnumerable<string> formats)
         {
             AvailableFormats.Clear();
             foreach (var format in formats)
             {
                 AvailableFormats.Add(format);
             }
-
-            FormatSelection.SelectedIndex = 0;
         }
 
         private void HandleUserInput()
@@ -152,6 +150,7 @@ namespace TextrudeInteractive
             if (DataContext is EditPaneViewModel vm)
                 _vm = vm;
             else _vm = new EditPaneViewModel();
+            SetAvailableFormats(_vm.AvailableFormats);
             SetFromContext();
             _vm.PropertyChanged += VmOnPropertyChanged;
         }
