@@ -10,7 +10,7 @@ namespace TextrudeInteractive
     /// <summary>
     ///     Interaction logic for InputMonacoPane.xaml
     /// </summary>
-    public partial class InputMonacoPane : IPane
+    public partial class InputMonacoPane
     {
         private bool _isReadOnly;
 
@@ -24,55 +24,13 @@ namespace TextrudeInteractive
             InitializeComponent();
             FormatSelection.ItemsSource = AvailableFormats;
             FileBar.OnLoad = NewFileLoaded;
-            FileBar.OnSave = () => Text;
+            FileBar.OnSave = () => _vm.Text;
             MonacoPane.TextChangedEvent = HandleUserInput;
             DataContext = new EditPaneViewModel();
             DataContextChanged += OnDataContextChanged;
             FormatSelection.SelectionChanged += FormatSelectionChanged;
         }
 
-        public string Text
-        {
-            get => MonacoPane.Text;
-            set => MonacoPane.Text = value;
-        }
-
-        /// <summary>
-        ///     Serialisable Format to be persisted in project
-        /// </summary>
-        public string Format
-        {
-            get => MonacoPane.Format;
-            set
-            {
-                if (MonacoPane.Format != value)
-                {
-                    FormatSelection.SelectedItem = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Currently unused - the name of the model/output
-        /// </summary>
-        public string ScribanName { get; set; } = string.Empty;
-
-        /// <summary>
-        ///     Path to file that the content is connected to
-        /// </summary>
-        public string LinkedPath
-        {
-            get => FileBar.PathName;
-            set => FileBar.PathName = value;
-        }
-
-        public void Clear()
-        {
-            ScribanName = string.Empty;
-            LinkedPath = string.Empty;
-            Text = string.Empty;
-            Format = string.Empty;
-        }
 
         private void SetAvailableFormats(IEnumerable<string> formats)
         {
@@ -92,17 +50,15 @@ namespace TextrudeInteractive
             }
         }
 
-        // private string ToMonacoFormat(ModelFormat format) =>
-        //    format == ModelFormat.Line ? "text" : format.ToString().ToLowerInvariant();
 
-        public void SaveIfLinked() => FileBar.SaveIfLinked();
-        public void LoadIfLinked() => FileBar.LoadIfLinked();
-
-        private void NewFileLoaded(string text, bool wasNewFile)
+        private void NewFileLoaded(string path, string text)
         {
             //  if (wasNewFile)
             //          Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
-            Text = text;
+
+            _vm.LinkedPath = path;
+            _vm.Text = text;
+            HandleUserInput();
         }
 
         private void CopyToClipboard(object sender, RoutedEventArgs e)
@@ -112,7 +68,7 @@ namespace TextrudeInteractive
             {
                 try
                 {
-                    Clipboard.SetText(Text);
+                    Clipboard.SetText(_vm.Text);
                     return;
                 }
                 catch
@@ -123,7 +79,7 @@ namespace TextrudeInteractive
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Format = (string) FormatSelection.SelectedItem ?? string.Empty;
+            _vm.Format = (string) FormatSelection.SelectedItem ?? _vm.Format;
             HandleUserInput();
         }
 
@@ -167,10 +123,10 @@ namespace TextrudeInteractive
         private void SetFromContext()
         {
             _busy++;
-            Text = _vm.Text;
-            Format = _vm.Format;
-            LinkedPath = _vm.LinkedPath;
-            ScribanName = _vm.ScribanName;
+            FormatSelection.SelectedItem = _vm.Format;
+            MonacoPane.Format = _vm.Format;
+            MonacoPane.Text = _vm.Text;
+            FileBar.PathName = _vm.LinkedPath;
             _busy--;
         }
 
@@ -178,10 +134,10 @@ namespace TextrudeInteractive
         {
             if (_busy != 0)
                 return;
-            _vm.Text = Text;
-            _vm.Format = Format;
-            _vm.LinkedPath = LinkedPath;
-            _vm.ScribanName = ScribanName;
+            _vm.Text = MonacoPane.Text;
+            _vm.Format = MonacoPane.Format;
+            _vm.LinkedPath = FileBar.PathName;
+            //_vm.ScribanName = ScribanName;
         }
 
         #endregion

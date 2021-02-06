@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -13,7 +12,7 @@ namespace TextrudeInteractive
     {
         private string _pathName = string.Empty;
 
-        public Action<string, bool> OnLoad = (_, _) => { };
+        public Action<string, string> OnLoad = (_, _) => { };
 
         public Func<string> OnSave = () => string.Empty;
 
@@ -42,7 +41,7 @@ namespace TextrudeInteractive
 
         private void UnlinkFile(object sender, RoutedEventArgs e)
         {
-            PathName = string.Empty;
+            OnLoad(string.Empty, OnSave());
         }
 
 
@@ -59,44 +58,18 @@ namespace TextrudeInteractive
             if (dlg.ShowDialog() != true) return;
             //only change the format if loading from file the first time since
             //the user might override subsequently
-            TryLoadFile(dlg.FileName, true);
+            if (FileManager.TryLoadFile(dlg.FileName, out var text))
+
+                OnLoad(dlg.FileName, text);
         }
 
-        private void TryLoadFile(string path, bool isNewFile)
-        {
-            try
-            {
-                var text = File.ReadAllText(path);
-                PathName = path;
-                OnLoad(text, isNewFile);
-            }
-            catch
-            {
-            }
-        }
-
-
-        private bool TrySave(string path)
-        {
-            try
-            {
-                var text = OnSave();
-                File.WriteAllText(path, text);
-                PathName = path;
-                return true;
-            }
-            catch
-            {
-            }
-
-            return false;
-        }
 
         private void SaveToFile()
         {
             var dlg = new SaveFileDialog {FileName = PathName};
             if (dlg.ShowDialog() != true) return;
-            TrySave(dlg.FileName);
+            if (FileManager.TrySave(dlg.FileName, OnSave()))
+                OnLoad(dlg.FileName, OnSave());
         }
 
         private void FileBar_OnLoaded(object sender, RoutedEventArgs e)
@@ -107,7 +80,10 @@ namespace TextrudeInteractive
         {
             if (string.IsNullOrWhiteSpace(PathName))
                 LoadFromFile();
-            else TryLoadFile(PathName, false);
+            else if (FileManager.TryLoadFile(PathName, out var text))
+            {
+                OnLoad(PathName, text);
+            }
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -115,11 +91,12 @@ namespace TextrudeInteractive
             if (string.IsNullOrWhiteSpace(PathName))
                 SaveToFile();
             else
-                TrySave(PathName);
+
+                FileManager.TrySave(PathName, OnSave());
         }
 
-        public void SaveIfLinked() => TrySave(PathName);
+        public void SaveIfLinked() => FileManager.TrySave(PathName, OnSave());
 
-        public void LoadIfLinked() => TryLoadFile(PathName, false);
+        public void LoadIfLinked() => FileManager.TryLoadFile(PathName, out var t);
     }
 }

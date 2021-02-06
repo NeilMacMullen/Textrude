@@ -56,7 +56,11 @@ namespace TextrudeInteractive
             }
 
             templateFileBar.OnSave = () => TemplateTextBox.Text;
-            templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
+            templateFileBar.OnLoad = (path, text) =>
+            {
+                templateFileBar.PathName = path;
+                TemplateTextBox.Text = text;
+            };
 
             SetTitle(string.Empty);
 
@@ -148,7 +152,7 @@ namespace TextrudeInteractive
 
         private void AddOutput(object sender, RoutedEventArgs e)
         {
-            _outputManager.AddPane(ViewModelFactory.CreateOutput(OutputPaneModel.Empty));
+            _outputManager.AddPane(ViewModelFactory.CreateOutput(OutputPaneModel.Empty, _outputManager.Count));
         }
 
         private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
@@ -156,7 +160,7 @@ namespace TextrudeInteractive
 
         private void SaveAllOutputs(object sender, RoutedEventArgs e)
         {
-            //  _outputManager.ForAll(p => p.SaveIfLinked());
+            _outputManager.ForAll(p => p.SaveIfLinked());
         }
 
         #endregion
@@ -165,14 +169,14 @@ namespace TextrudeInteractive
 
         private void AddModel(object sender, RoutedEventArgs e)
         {
-            _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml));
+            _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml, _modelManager.Count));
         }
 
         private void RemoveModel(object sender, RoutedEventArgs e) => _modelManager.RemoveLast();
 
         private void ReloadAllInputs(object sender, RoutedEventArgs e)
         {
-            //_modelManager.ForAll(p => p.LoadIfLinked());
+            _modelManager.ForAll(p => p.LoadIfLinked());
             templateFileBar.LoadIfLinked();
         }
 
@@ -209,7 +213,7 @@ namespace TextrudeInteractive
                 outputs = outputs.Take(1).ToArray();
             foreach (var f in outputs)
             {
-                _outputManager.AddPane(ViewModelFactory.CreateOutput(f));
+                _outputManager.AddPane(ViewModelFactory.CreateOutput(f, _outputManager.Count));
             }
 
             //ensure there is always at least one output - otherwise things can get confusing for the user
@@ -281,12 +285,12 @@ namespace TextrudeInteractive
             {
                 if (trim && string.IsNullOrWhiteSpace(model.Text))
                     continue;
-                _modelManager.AddPane(ViewModelFactory.CreateModel(model));
+                _modelManager.AddPane(ViewModelFactory.CreateModel(model, _modelManager.Count));
             }
 
             //ensure we start with at least one model to avoid confusing the user
             if (!_modelManager.Panes.Any())
-                _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml));
+                _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml, _modelManager.Count));
 
             _modelManager.FocusFirst();
             TemplateTextBox.Text = inputSet.Template;
@@ -481,23 +485,23 @@ namespace TextrudeInteractive
 
     public static class ViewModelFactory
     {
-        public static EditPaneViewModel CreateOutput(OutputPaneModel f) =>
+        public static EditPaneViewModel CreateOutput(OutputPaneModel f, int n) =>
             new EditPaneViewModel
             {
                 Format = f.Format,
                 LinkedPath = f.Path,
-                ScribanName = f.Name,
+                ScribanName = $"output{n}",
                 AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray()
             };
 
-        public static EditPaneViewModel CreateModel(ModelText model)
+        public static EditPaneViewModel CreateModel(ModelText model, int n)
         {
             var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
             return new EditPaneViewModel
             {
                 Format = model.Format.ToString(),
                 Text = model.Text,
-                ScribanName = model.Name,
+                ScribanName = $"model{n}",
                 LinkedPath = model.Path,
                 AvailableFormats = Enum.GetNames(typeof(ModelFormat))
             };

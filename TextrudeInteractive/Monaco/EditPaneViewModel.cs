@@ -6,7 +6,7 @@ using TextrudeInteractive.Annotations;
 namespace TextrudeInteractive
 {
     public class EditPaneViewModel : INotifyPropertyChanged
-        , IPane //temporary
+
     {
         private string _format = string.Empty;
         private string _linkedPath = string.Empty;
@@ -71,6 +71,17 @@ namespace TextrudeInteractive
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void SaveIfLinked()
+        {
+            FileManager.TrySave(LinkedPath, Text);
+        }
+
+        public void LoadIfLinked()
+        {
+            if (FileManager.TryLoadFile(LinkedPath, out var text))
+                Text = text;
         }
     }
 }

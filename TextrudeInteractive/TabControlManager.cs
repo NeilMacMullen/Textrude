@@ -23,6 +23,8 @@ namespace TextrudeInteractive
             _tab.SelectionChanged += TabOnSelectionChanged;
         }
 
+        public int Count => Panes.Count;
+
         private void TabOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_tab.SelectedIndex >= 0 && _tab.SelectedIndex < Panes.Count)
