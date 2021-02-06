@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using Engine.Application;
 
@@ -49,11 +50,14 @@ namespace TextrudeInteractive
         }
 
         /// <summary>
-        ///     Currently unused - the name of the model
+        ///     Currently unused - the name of the model/output
         /// </summary>
-        public string ModelName { get; set; } = string.Empty;
+        public string ScribanName { get; set; } = string.Empty;
 
-        public string ModelPath
+        /// <summary>
+        ///     Path to file that the content is connected to
+        /// </summary>
+        public string LinkedPath
         {
             get => FileBar.PathName;
             set => FileBar.PathName = value;
@@ -61,8 +65,8 @@ namespace TextrudeInteractive
 
         public void Clear()
         {
-            ModelName = string.Empty;
-            ModelPath = string.Empty;
+            ScribanName = string.Empty;
+            LinkedPath = string.Empty;
             Text = string.Empty;
             Format = ModelFormat.Line;
         }
@@ -81,8 +85,24 @@ namespace TextrudeInteractive
         private void NewFileLoaded(string text, bool wasNewFile)
         {
             if (wasNewFile)
-                Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(ModelPath));
+                Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
             Text = text;
+        }
+
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        {
+            var maxAttempts = 3;
+            for (var i = 0; i < maxAttempts; i++)
+            {
+                try
+                {
+                    Clipboard.SetText(Text);
+                    return;
+                }
+                catch
+                {
+                }
+            }
         }
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -214,8 +214,8 @@ namespace TextrudeInteractive
             {
                 var pane = _outputManager.AddPane();
                 pane.Format = f.Format;
-                pane.OutputPath = f.Path;
-                pane.OutputName = f.Name;
+                pane.LinkedPath = f.Path;
+                pane.ScribanName = f.Name;
             }
 
             //ensure there is always at least one output - otherwise things can get confusing for the user
@@ -239,7 +239,7 @@ namespace TextrudeInteractive
         public EngineOutputSet CollectOutput()
         {
             return new(
-                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.Name, b.OutputPath))
+                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.Name, b.LinkedPath))
             );
         }
 
@@ -290,8 +290,8 @@ namespace TextrudeInteractive
                 var pane = _modelManager.AddPane();
                 pane.Format = model.Format;
                 pane.Text = model.Text;
-                pane.ModelName = model.Name;
-                pane.ModelPath = model.Path;
+                pane.ScribanName = model.Name;
+                pane.LinkedPath = model.Path;
             }
 
             //ensure we start with at least one model to avoid confusing the user
@@ -392,7 +392,7 @@ namespace TextrudeInteractive
         public EngineInputSet CollectInput()
         {
             var models = _modelManager.Panes
-                .Select(m => new ModelText(m.Text, m.Format, m.ModelName, m.ModelPath))
+                .Select(m => new ModelText(m.Text, m.Format, m.ScribanName, m.LinkedPath))
                 .ToArray();
             return new EngineInputSet(TemplateTextBox.Text,
                 templateFileBar.PathName,

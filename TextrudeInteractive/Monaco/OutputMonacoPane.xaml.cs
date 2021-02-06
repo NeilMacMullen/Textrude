@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TextrudeInteractive
@@ -9,6 +10,8 @@ namespace TextrudeInteractive
     public partial class OutputMonacoPane : UserControl, IPane
     {
         private const string DefaultFormat = "text";
+
+        public Action OnUserInput = () => { };
 
         public OutputMonacoPane()
         {
@@ -46,12 +49,12 @@ namespace TextrudeInteractive
         /// <summary>
         ///     Currently unused - the name of the output
         /// </summary>
-        public string OutputName { get; set; } = string.Empty;
+        public string ScribanName { get; set; } = string.Empty;
 
         /// <summary>
-        ///     Path to file that the output is connected to
+        ///     Path to file that the content is connected to
         /// </summary>
-        public string OutputPath
+        public string LinkedPath
         {
             get => FileBar.PathName;
             set => FileBar.PathName = value;
@@ -59,12 +62,26 @@ namespace TextrudeInteractive
 
         public void Clear()
         {
+            ScribanName = string.Empty;
+            LinkedPath = string.Empty;
             Text = string.Empty;
-            OutputPath = string.Empty;
             Format = DefaultFormat;
         }
 
+        private void HandleUserInput()
+        {
+            OnUserInput();
+        }
+
         public void SaveIfLinked() => FileBar.SaveIfLinked();
+        public void LoadIfLinked() => FileBar.LoadIfLinked();
+
+        private void NewFileLoaded(string text, bool wasNewFile)
+        {
+            //  if (wasNewFile)
+            //     Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
+            Text = text;
+        }
 
         private void CopyToClipboard(object sender, RoutedEventArgs e)
         {
