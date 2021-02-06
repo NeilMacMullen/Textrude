@@ -13,7 +13,7 @@
          
             <ComboBox Name="FormatSelection" DockPanel.Dock="Right" SelectionChanged="FormatSelectionChanged"
                       HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
-            <local:FileBar x:Name="fileBar" DockPanel.Dock="Left" IsSaveOnly="False"/>
+            <local:FileBar x:Name="fileBar" DockPanel.Dock="Left"/>
 
         </DockPanel>
 

@@ -35,7 +35,7 @@ namespace TextrudeInteractive
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
-        private readonly MainWindowViewModel _vm = new MainWindowViewModel();
+        private readonly MainWindowViewModel _vm = new();
 
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
         private int _responseTimeMs = 50;
@@ -61,18 +61,20 @@ namespace TextrudeInteractive
             templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
 
             SetTitle(string.Empty);
-            _modelManager = new("model", InputModels, p =>
+            _modelManager = new TabControlManager<InputMonacoPane>("model", InputModels, p =>
             {
                 var formats = Enum.GetNames(typeof(ModelFormat));
                 p.SetAvailableFormats(formats);
+                p.SetDirection(MonacoPaneType.PaneModel);
                 p.OnUserInput = OnModelChanged;
             });
-            _outputManager = new("output", OutputTab, p =>
+            _outputManager = new TabControlManager<OutputMonacoPane>("output", OutputTab, p =>
             {
                 var formats = new MonacoResourceFetcher().GetSupportedFormats();
                 p.SetAvailableFormats(
                     formats
                 );
+                p.SetDirection(MonacoPaneType.PaneOutput);
             });
 
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);

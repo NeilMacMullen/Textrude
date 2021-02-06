@@ -161,7 +161,7 @@
           <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
             <TabItem Header="Template">
               <DockPanel>
-                <local:FileBar x:Name="templateFileBar" IsSaveOnly="False" DockPanel.Dock="Bottom" />
+                <local:FileBar x:Name="templateFileBar" DockPanel.Dock="Bottom" />
                 <avalonEdit:TextEditor DockPanel.Dock="Bottom"
                                        Name="TemplateTextBox"
                                        TextChanged="Avalon1_OnTextChanged"

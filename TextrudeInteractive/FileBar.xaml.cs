@@ -22,8 +22,6 @@ namespace TextrudeInteractive
             InitializeComponent();
         }
 
-        public bool IsSaveOnly { get; set; }
-
         /// <summary>
         ///     Path to file that the model is connected to
         /// </summary>
@@ -35,6 +33,11 @@ namespace TextrudeInteractive
                 _pathName = value;
                 FilePath.Content = _pathName;
             }
+        }
+
+        public void SetSaveOnly(bool onoff)
+        {
+            LoadButton.Visibility = onoff ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void UnlinkFile(object sender, RoutedEventArgs e)
@@ -98,8 +101,6 @@ namespace TextrudeInteractive
 
         private void FileBar_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (IsSaveOnly)
-                LoadButton.Visibility = Visibility.Collapsed;
         }
 
         private void Load(object sender, RoutedEventArgs e)

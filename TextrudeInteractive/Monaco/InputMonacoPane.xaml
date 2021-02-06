@@ -14,7 +14,7 @@
     <DockPanel DockPanel.Dock="Bottom">
       <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
         <Button
-          Name="ChooseButton"
+          Name="CopyToClipboardButton"
           Click="CopyToClipboard"
           Content="&#x1F4CB;"
           Style="{StaticResource MaterialDesignFlatButton}"
@@ -29,7 +29,7 @@
       <local:FileBar
         x:Name="FileBar"
         DockPanel.Dock="Left"
-        IsSaveOnly="False" />
+       />
     </DockPanel>
 
    <monaco:MonacoEditPane x:Name="MonacoPane"

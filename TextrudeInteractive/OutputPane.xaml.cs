@@ -16,7 +16,7 @@ namespace TextrudeInteractive
 
         private string _text = string.Empty;
 
-        public ObservableCollection<string> Highglighting = new ObservableCollection<string>();
+        public ObservableCollection<string> Highglighting = new();
 
         public OutputPane()
         {

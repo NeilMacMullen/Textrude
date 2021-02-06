@@ -11,8 +11,8 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class InputMonacoPane : IPane
     {
-
-        public ObservableCollection<string> AvailableFormats = new ObservableCollection<string>();
+        private bool _isReadOnly;
+        public ObservableCollection<string> AvailableFormats = new();
 
         public Action OnUserInput = () => { };
 
@@ -81,7 +81,8 @@ namespace TextrudeInteractive
 
         private void HandleUserInput()
         {
-            OnUserInput();
+            if (!_isReadOnly)
+                OnUserInput();
         }
 
         // private string ToMonacoFormat(ModelFormat format) =>
@@ -115,9 +116,21 @@ namespace TextrudeInteractive
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Format = //(ModelFormat)
-                (string) FormatSelection.SelectedItem ?? string.Empty;
-            OnUserInput();
+            Format = (string) FormatSelection.SelectedItem ?? string.Empty;
+            HandleUserInput();
         }
+
+        #region configuration
+
+        public void SetDirection(MonacoPaneType type)
+        {
+            _isReadOnly = type == MonacoPaneType.PaneOutput;
+            FileBar.SetSaveOnly(_isReadOnly);
+            MonacoPane.SetReadOnly(_isReadOnly);
+            CopyToClipboardButton.Visibility
+                = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        #endregion
     }
 }

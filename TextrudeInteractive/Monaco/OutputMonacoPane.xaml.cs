@@ -11,19 +11,18 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class OutputMonacoPane : UserControl, IPane
     {
-        public ObservableCollection<string> AvailableFormats = new ObservableCollection<string>();
+        private bool _isReadOnly;
+        public ObservableCollection<string> AvailableFormats = new();
 
         public Action OnUserInput = () => { };
 
         public OutputMonacoPane()
         {
             InitializeComponent();
-
-
             FormatSelection.ItemsSource = AvailableFormats;
             FileBar.OnLoad = NewFileLoaded;
             FileBar.OnSave = () => Text;
-            MonacoPane.SetReadOnly(true);
+            MonacoPane.TextChangedEvent = HandleUserInput;
         }
 
         public string Text
@@ -82,8 +81,12 @@ namespace TextrudeInteractive
 
         private void HandleUserInput()
         {
-            OnUserInput();
+            if (!_isReadOnly)
+                OnUserInput();
         }
+
+        // private string ToMonacoFormat(ModelFormat format) =>
+        //    format == ModelFormat.Line ? "text" : format.ToString().ToLowerInvariant();
 
         public void SaveIfLinked() => FileBar.SaveIfLinked();
         public void LoadIfLinked() => FileBar.LoadIfLinked();
@@ -91,7 +94,7 @@ namespace TextrudeInteractive
         private void NewFileLoaded(string text, bool wasNewFile)
         {
             //  if (wasNewFile)
-            //     Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
+            //          Format = ModelDeserializerFactory.FormatFromExtension(Path.GetExtension(LinkedPath));
             Text = text;
         }
 
@@ -113,9 +116,21 @@ namespace TextrudeInteractive
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Format = //(ModelFormat)
-                (string) FormatSelection.SelectedItem ?? string.Empty;
-            OnUserInput();
+            Format = (string) FormatSelection.SelectedItem ?? string.Empty;
+            HandleUserInput();
         }
+
+        #region configuration
+
+        public void SetDirection(MonacoPaneType type)
+        {
+            _isReadOnly = type == MonacoPaneType.PaneOutput;
+            FileBar.SetSaveOnly(_isReadOnly);
+            MonacoPane.SetReadOnly(_isReadOnly);
+            CopyToClipboardButton.Visibility
+                = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        #endregion
     }
 }

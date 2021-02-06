@@ -7,7 +7,7 @@ namespace SharedApplication
 {
     public class CommandLineBuilder
     {
-        private readonly StringBuilder builder = new StringBuilder();
+        private readonly StringBuilder builder = new();
         private readonly RenderOptions options;
         private string _exe = string.Empty;
 
