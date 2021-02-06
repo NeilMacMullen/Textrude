@@ -53,7 +53,7 @@ namespace TextrudeInteractive
             return response;
         }
 
-        public MemoryStream Monaco() => new MemoryStream(Encoding.UTF8.GetBytes(Resources.monaco));
+        public MemoryStream Monaco() => new(Encoding.UTF8.GetBytes(Resources.monaco));
 
 
         public static bool IsWebView2RuntimeAvailable()

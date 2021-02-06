@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -50,7 +51,7 @@ namespace TextrudeInteractive
                 IsDirty = false;
                 AddCurrentToJumpList();
             }
-            catch
+            catch (Exception e)
             {
                 MessageBox.Show(_owner, $"Error - unable to open project '{path}'");
             }

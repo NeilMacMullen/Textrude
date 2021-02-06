@@ -6,14 +6,12 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
-using TextrudeInteractive.Annotations;
 using TextrudeInteractive.AutoCompletion;
 
 namespace TextrudeInteractive
@@ -30,12 +28,12 @@ namespace TextrudeInteractive
 
         private readonly AvalonEditCompletionHelper _mainEditWindow;
 
-        private readonly TabControlManager<InputMonacoPane> _modelManager;
-        private readonly TabControlManager<OutputMonacoPane> _outputManager;
+        private readonly TabControlManager _modelManager;
+        private readonly TabControlManager _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
 
-        private readonly MainWindowViewModel _vm = new MainWindowViewModel();
+        private readonly MainWindowViewModel _vm = new();
 
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
         private int _responseTimeMs = 50;
@@ -58,14 +56,20 @@ namespace TextrudeInteractive
             }
 
             templateFileBar.OnSave = () => TemplateTextBox.Text;
-            templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
-            ;
+            templateFileBar.OnLoad = (path, text) =>
+            {
+                templateFileBar.PathName = path;
+                TemplateTextBox.Text = text;
+            };
+
             SetTitle(string.Empty);
-            _modelManager = new("model", InputModels, p => p.OnUserInput = OnModelChanged);
-            _outputManager = new("output", OutputTab, _ => { });
 
+            SharedInput.SetDirection(MonacoPaneType.PaneModel);
+            SharedInput.OnUserInput = OnModelChanged;
+            _modelManager = new TabControlManager(InputModels, SharedInput);
+            SharedOutput.SetDirection(MonacoPaneType.PaneOutput);
+            _outputManager = new TabControlManager(OutputTab, SharedOutput);
             _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
-
             _projectManager = new ProjectManager(this);
 
 
@@ -134,9 +138,6 @@ namespace TextrudeInteractive
             OnModelChanged(false);
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ToggleWhiteSpace(object sender, RoutedEventArgs e)
         {
@@ -151,7 +152,7 @@ namespace TextrudeInteractive
 
         private void AddOutput(object sender, RoutedEventArgs e)
         {
-            _outputManager.AddPane();
+            _outputManager.AddPane(ViewModelFactory.CreateOutput(OutputPaneModel.Empty, _outputManager.Count));
         }
 
         private void RemoveOutput(object sender, RoutedEventArgs e) => _outputManager.RemoveLast();
@@ -168,7 +169,7 @@ namespace TextrudeInteractive
 
         private void AddModel(object sender, RoutedEventArgs e)
         {
-            _modelManager.AddPane();
+            _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml, _modelManager.Count));
         }
 
         private void RemoveModel(object sender, RoutedEventArgs e) => _modelManager.RemoveLast();
@@ -181,7 +182,7 @@ namespace TextrudeInteractive
 
         private void SaveAllInputs(object sender, RoutedEventArgs e)
         {
-            _modelManager.ForAll(p => p.SaveIfLinked());
+            //  _modelManager.ForAll(p => p.SaveIfLinked());
             templateFileBar.SaveIfLinked();
         }
 
@@ -212,15 +213,12 @@ namespace TextrudeInteractive
                 outputs = outputs.Take(1).ToArray();
             foreach (var f in outputs)
             {
-                var pane = _outputManager.AddPane();
-                pane.Format = f.Format;
-                pane.OutputPath = f.Path;
-                pane.OutputName = f.Name;
+                _outputManager.AddPane(ViewModelFactory.CreateOutput(f, _outputManager.Count));
             }
 
             //ensure there is always at least one output - otherwise things can get confusing for the user
             if (!_outputManager.Panes.Any())
-                _outputManager.AddPane();
+                _outputManager.AddPane(new EditPaneViewModel());
 
             _outputManager.FocusFirst();
         }
@@ -239,7 +237,7 @@ namespace TextrudeInteractive
         public EngineOutputSet CollectOutput()
         {
             return new(
-                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.Name, b.OutputPath))
+                _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.ScribanName, b.LinkedPath))
             );
         }
 
@@ -287,16 +285,12 @@ namespace TextrudeInteractive
             {
                 if (trim && string.IsNullOrWhiteSpace(model.Text))
                     continue;
-                var pane = _modelManager.AddPane();
-                pane.Format = model.Format;
-                pane.Text = model.Text;
-                pane.ModelName = model.Name;
-                pane.ModelPath = model.Path;
+                _modelManager.AddPane(ViewModelFactory.CreateModel(model, _modelManager.Count));
             }
 
             //ensure we start with at least one model to avoid confusing the user
             if (!_modelManager.Panes.Any())
-                _modelManager.AddPane();
+                _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml, _modelManager.Count));
 
             _modelManager.FocusFirst();
             TemplateTextBox.Text = inputSet.Template;
@@ -391,8 +385,11 @@ namespace TextrudeInteractive
 
         public EngineInputSet CollectInput()
         {
+            ModelFormat TryFormat(string s)
+                => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
+
             var models = _modelManager.Panes
-                .Select(m => new ModelText(m.Text, m.Format, m.ModelName, m.ModelPath))
+                .Select(m => new ModelText(m.Text, TryFormat(m.Format), m.ScribanName, m.LinkedPath))
                 .ToArray();
             return new EngineInputSet(TemplateTextBox.Text,
                 templateFileBar.PathName,
@@ -484,5 +481,30 @@ namespace TextrudeInteractive
             OpenHome("issues/new?assignees=&labels=question&template=ask-a-question.md&title=Help");
 
         #endregion
+    }
+
+    public static class ViewModelFactory
+    {
+        public static EditPaneViewModel CreateOutput(OutputPaneModel f, int n) =>
+            new EditPaneViewModel
+            {
+                Format = f.Format,
+                LinkedPath = f.Path,
+                ScribanName = $"output{n}",
+                AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray()
+            };
+
+        public static EditPaneViewModel CreateModel(ModelText model, int n)
+        {
+            var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
+            return new EditPaneViewModel
+            {
+                Format = model.Format.ToString(),
+                Text = model.Text,
+                ScribanName = $"model{n}",
+                LinkedPath = model.Path,
+                AvailableFormats = Enum.GetNames(typeof(ModelFormat))
+            };
+        }
     }
 }

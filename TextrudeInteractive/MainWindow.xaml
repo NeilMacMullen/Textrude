@@ -123,7 +123,12 @@
 
           <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
             <TabItem Header="models">
-              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" />
+              <DockPanel>
+
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" DockPanel.Dock="Top"/>
+              <local:InputMonacoPane x:Name="SharedInput"></local:InputMonacoPane>
+              </DockPanel>
+
             </TabItem>
             <TabItem Header="other">
               <TabItem.ToolTip>
@@ -161,7 +166,7 @@
           <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
             <TabItem Header="Template">
               <DockPanel>
-                <local:FileBar x:Name="templateFileBar" IsSaveOnly="False" DockPanel.Dock="Bottom" />
+                <local:FileBar x:Name="templateFileBar" DockPanel.Dock="Bottom" />
                 <avalonEdit:TextEditor DockPanel.Dock="Bottom"
                                        Name="TemplateTextBox"
                                        TextChanged="Avalon1_OnTextChanged"
@@ -175,9 +180,11 @@
 
           <GridSplitter Grid.Column="3" />
 
-
-          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="4" Name="OutputTab" />
-
+          <DockPanel Grid.Column="4">
+          <TabControl Style="{StaticResource MaterialDesignTabControl}"  Name="OutputTab"
+                      DockPanel.Dock ="Top"/>
+            <local:InputMonacoPane x:Name ="SharedOutput"/>
+          </DockPanel>
 
         </Grid>
         <GridSplitter Grid.Row="1" />
