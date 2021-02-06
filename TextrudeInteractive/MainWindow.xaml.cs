@@ -30,7 +30,7 @@ namespace TextrudeInteractive
 
         private readonly AvalonEditCompletionHelper _mainEditWindow;
 
-        private readonly TabControlManager<InputMonacoPane> _modelManager;
+        private readonly TabControlManager<EditPaneViewModel> _modelManager;
         private readonly TabControlManager<EditPaneViewModel> _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly bool _uiIsReady;
@@ -61,19 +61,19 @@ namespace TextrudeInteractive
             templateFileBar.OnLoad = (text, _) => TemplateTextBox.Text = text;
 
             SetTitle(string.Empty);
-            _modelManager = new TabControlManager<InputMonacoPane>("model", InputModels, p =>
-                {
-                    var formats = Enum.GetNames(typeof(ModelFormat));
-                    p.SetAvailableFormats(formats);
-                    p.SetDirection(MonacoPaneType.PaneModel);
-                    p.OnUserInput = OnModelChanged;
-                },
-                p => { }
+
+            SharedInput.SetDirection(MonacoPaneType.PaneModel);
+            var inputFormats = Enum.GetNames(typeof(ModelFormat));
+            SharedInput.SetAvailableFormats(
+                inputFormats
             );
+            _modelManager = new TabControlManager<EditPaneViewModel>("model", InputModels,
+                p => { },
+                p => SharedInput.DataContext = p);
             SharedOutput.SetDirection(MonacoPaneType.PaneOutput);
-            var formats = new MonacoResourceFetcher().GetSupportedFormats();
+            var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
             SharedOutput.SetAvailableFormats(
-                formats
+                outputFormats
             );
             _outputManager = new TabControlManager<EditPaneViewModel>("output", OutputTab, p => { },
                 p => SharedOutput.DataContext = p);
@@ -189,13 +189,13 @@ namespace TextrudeInteractive
 
         private void ReloadAllInputs(object sender, RoutedEventArgs e)
         {
-            _modelManager.ForAll(p => p.LoadIfLinked());
+            //_modelManager.ForAll(p => p.LoadIfLinked());
             templateFileBar.LoadIfLinked();
         }
 
         private void SaveAllInputs(object sender, RoutedEventArgs e)
         {
-            _modelManager.ForAll(p => p.SaveIfLinked());
+            //  _modelManager.ForAll(p => p.SaveIfLinked());
             templateFileBar.SaveIfLinked();
         }
 

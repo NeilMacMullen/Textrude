@@ -123,7 +123,12 @@
 
           <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
             <TabItem Header="models">
-              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" />
+              <DockPanel>
+
+              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" DockPanel.Dock="Top"/>
+              <local:InputMonacoPane x:Name="SharedInput"></local:InputMonacoPane>
+              </DockPanel>
+
             </TabItem>
             <TabItem Header="other">
               <TabItem.ToolTip>

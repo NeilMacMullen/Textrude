@@ -42,6 +42,7 @@ namespace TextrudeInteractive
             var pane = _cache.Obtain();
             Panes.Add(pane);
 
+            //TODO - temporary hack
             _tab.Items.Add(
                 new TabItem
                 {
