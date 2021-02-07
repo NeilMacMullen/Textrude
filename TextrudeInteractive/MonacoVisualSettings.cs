@@ -4,7 +4,7 @@ using TextrudeInteractive.Annotations;
 
 namespace TextrudeInteractive
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MonacoVisualSettings : INotifyPropertyChanged
     {
         private bool _lineNumbers = true;
         private bool _showWhitespace;

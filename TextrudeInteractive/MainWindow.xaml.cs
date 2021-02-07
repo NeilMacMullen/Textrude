@@ -22,6 +22,8 @@ namespace TextrudeInteractive
     {
         private const string HomePage = @"https://github.com/NeilMacMullen/Textrude";
 
+        private readonly MonacoVisualSettings _editorVisualSettings = new();
+
         private readonly ISubject<EngineInputSet> _inputStream =
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
@@ -31,8 +33,6 @@ namespace TextrudeInteractive
         private readonly TabControlManager _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly TabControlManager _templateManager;
-
-        private readonly MainWindowViewModel _vm = new();
 
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
         private int _responseTimeMs = 50;
@@ -100,11 +100,31 @@ namespace TextrudeInteractive
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleRenderResults);
             RunBackgroundUpgradeCheck();
-            DataContext = _vm;
+            DataContext = _editorVisualSettings;
+            ApplyVisualSettings(null, null);
+            _editorVisualSettings.PropertyChanged += ApplyVisualSettings;
             UnlockRender();
         }
 
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void ApplyVisualSettings(object sender, PropertyChangedEventArgs args)
+        {
+            var editors = new[]
+            {
+                SharedInput,
+                SharedOutput,
+                TempateEditPane
+            };
+            foreach (var e in editors)
+            {
+                e.MonacoPane.TextSize = _editorVisualSettings.TextSize;
+                e.MonacoPane.LineNumbers = _editorVisualSettings.LineNumbers;
+                e.MonacoPane.WordWrap = _editorVisualSettings.WordWrap;
+                e.MonacoPane.VisibleWhitespace = _editorVisualSettings.ShowWhitespace;
+            }
+        }
 
 
         private void LockRender()
@@ -145,7 +165,7 @@ namespace TextrudeInteractive
 
         private void ToggleWhiteSpace(object sender, RoutedEventArgs e)
         {
-            _vm.ShowWhitespace = !_vm.ShowWhitespace;
+            _editorVisualSettings.ShowWhitespace = !_editorVisualSettings.ShowWhitespace;
         }
 
         private void ToggleDefsAndIncludes(object sender, RoutedEventArgs e)
@@ -237,13 +257,17 @@ namespace TextrudeInteractive
 
         #region view menu
 
-        private void SmallerFont(object sender, RoutedEventArgs e) => _vm.TextSize = Math.Max(_vm.TextSize - 2, 10);
+        private void SmallerFont(object sender, RoutedEventArgs e) =>
+            _editorVisualSettings.TextSize = Math.Max(_editorVisualSettings.TextSize - 2, 10);
 
-        private void LargerFont(object sender, RoutedEventArgs e) => _vm.TextSize = Math.Min(_vm.TextSize + 2, 36);
+        private void LargerFont(object sender, RoutedEventArgs e) =>
+            _editorVisualSettings.TextSize = Math.Min(_editorVisualSettings.TextSize + 2, 36);
 
-        private void ToggleLineNumbers(object sender, RoutedEventArgs e) => _vm.LineNumbers = !_vm.LineNumbers;
+        private void ToggleLineNumbers(object sender, RoutedEventArgs e) =>
+            _editorVisualSettings.LineNumbers = !_editorVisualSettings.LineNumbers;
 
-        private void ToggleWordWrap(object sender, RoutedEventArgs e) => _vm.WordWrap = !_vm.WordWrap;
+        private void ToggleWordWrap(object sender, RoutedEventArgs e) =>
+            _editorVisualSettings.WordWrap = !_editorVisualSettings.WordWrap;
 
         #endregion
 
@@ -357,9 +381,6 @@ namespace TextrudeInteractive
 
         #region main loop
 
-        private void Avalon1_OnTextChanged(object sender, EventArgs e) => OnModelChanged();
-
-
         private void OnModelChanged() => OnModelChanged(true);
 
         private void OnModelChanged(bool markDirty)
@@ -450,11 +471,11 @@ namespace TextrudeInteractive
             var includeText = _modelManager.Panes.Single(p => p.PaneType == PaneType.IncludePaths)
                 .Text;
             var template = _templateManager.Panes.Single();
-            var defs = _modelManager.Panes.Single(p => p.PaneType == PaneType.Definitions).Text;
+            var definitions = _modelManager.Panes.Single(p => p.PaneType == PaneType.Definitions).Text;
             return new EngineInputSet(template.Text,
                 template.LinkedPath,
                 models,
-                defs,
+                definitions,
                 includeText);
         }
 
@@ -468,13 +489,14 @@ namespace TextrudeInteractive
         private ApplicationSettings LoadSettings()
         {
             var settings = SettingsManager.ReadSettings();
-            _vm.LineNumbers = settings.LineNumbersOn;
-            _vm.TextSize = settings.FontSize;
-            _vm.WordWrap = settings.WrapText;
-            _vm.ShowWhitespace = settings.ShowWhitespace;
+            _editorVisualSettings.LineNumbers = settings.LineNumbersOn;
+            _editorVisualSettings.TextSize = settings.FontSize;
+            _editorVisualSettings.WordWrap = settings.WrapText;
+            _editorVisualSettings.ShowWhitespace = settings.ShowWhitespace;
             _responseTimeMs = settings.ResponseTime;
             return settings;
         }
+
 
         /// <summary>
         ///     Persist settings
@@ -484,10 +506,10 @@ namespace TextrudeInteractive
             //persist settings
             var settings = new ApplicationSettings
             {
-                FontSize = _vm.TextSize,
-                LineNumbersOn = _vm.LineNumbers,
-                WrapText = _vm.WordWrap,
-                ShowWhitespace = _vm.ShowWhitespace,
+                FontSize = _editorVisualSettings.TextSize,
+                LineNumbersOn = _editorVisualSettings.LineNumbers,
+                WrapText = _editorVisualSettings.WordWrap,
+                ShowWhitespace = _editorVisualSettings.ShowWhitespace,
                 ResponseTime = _responseTimeMs,
                 //TODO - this is a temporary hack. ProjectManager should actually track the projects that have been used
                 //and save them all so we can display them in the menu
