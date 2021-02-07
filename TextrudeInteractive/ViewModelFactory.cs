@@ -13,7 +13,7 @@ namespace TextrudeInteractive
                 LinkedPath = f.Path,
                 ScribanName = $"output{(n == 0 ? "" : n)}",
                 AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray(),
-                PaneType = MonacoPaneType.PaneOutput,
+                PaneType = PaneType.Output,
                 FileLinkage = FileLinkageTypes.SaveAndClipboard
             };
 
@@ -28,7 +28,7 @@ namespace TextrudeInteractive
                 ScribanName = modelName,
                 LinkedPath = model.Path,
                 AvailableFormats = Enum.GetNames(typeof(ModelFormat)),
-                PaneType = MonacoPaneType.PaneModel,
+                PaneType = PaneType.Model,
                 FileLinkage = FileLinkageTypes.LoadSave
             };
         }
@@ -52,7 +52,7 @@ namespace TextrudeInteractive
                 ScribanName = ScribanNamespaces.DefinitionsNamespace,
                 LinkedPath = string.Empty,
                 AvailableFormats = new[] {format},
-                PaneType = MonacoPaneType.Definitions,
+                PaneType = PaneType.Definitions,
                 FileLinkage = FileLinkageTypes.None
             };
         }
@@ -76,7 +76,7 @@ namespace TextrudeInteractive
                 ScribanName = "inc",
                 LinkedPath = string.Empty,
                 AvailableFormats = new[] {format},
-                PaneType = MonacoPaneType.IncludePaths,
+                PaneType = PaneType.IncludePaths,
                 FileLinkage = FileLinkageTypes.None
             };
         }

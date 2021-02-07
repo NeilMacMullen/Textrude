@@ -60,7 +60,7 @@ namespace TextrudeInteractive
 
         //this doesn't have to be notifiable because it is constant 
         public string[] AvailableFormats { get; set; } = Array.Empty<string>();
-        public MonacoPaneType PaneType { get; set; }
+        public PaneType PaneType { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

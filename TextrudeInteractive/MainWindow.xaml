@@ -72,7 +72,7 @@
 
       <MenuItem Header="Inputs">
         <MenuItem Click="AddModel" Header="Add model" ToolTip="Adds a new model" />
-        <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the last model" />
+        <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the selected model" />
         <MenuItem Click="ToggleDefsAndIncludes" Header="Show/hide definitions and includes" />
 
         <Separator />

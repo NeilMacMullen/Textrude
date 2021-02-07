@@ -70,9 +70,9 @@ namespace TextrudeInteractive
 
         #region configuration
 
-        public void SetDirection(MonacoPaneType type)
+        public void SetDirection(PaneType type)
         {
-            _isReadOnly = type == MonacoPaneType.PaneOutput;
+            _isReadOnly = type == PaneType.Output;
 
             MonacoPane.SetReadOnly(_isReadOnly);
         }
