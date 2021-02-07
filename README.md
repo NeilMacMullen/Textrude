@@ -49,6 +49,7 @@ The current release is **v1.3.0**.
 - reuse single Monaco edit pane for multiple models/outputs for cleaner switching & lower resource use
 - definitions and includes are now move to main input section and used Monaco editor
 - the template is now edited using Monaco and (rudimentary) syntax hightlight is applied
+- models and outputs can now be renamed in TextrudeInteractive
 
 ### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis
