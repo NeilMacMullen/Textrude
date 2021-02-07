@@ -14,7 +14,7 @@ namespace TextrudeInteractive
                 ScribanName = $"output{(n == 0 ? "" : n)}",
                 AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray(),
                 PaneType = MonacoPaneType.PaneOutput,
-                FileLinkage = FileLinkageTypes.Save
+                FileLinkage = FileLinkageTypes.SaveAndClipboard
             };
 
         public static EditPaneViewModel CreateModel(ModelText model, int n)
@@ -80,14 +80,5 @@ namespace TextrudeInteractive
                 FileLinkage = FileLinkageTypes.None
             };
         }
-    }
-
-    [Flags]
-    public enum FileLinkageTypes
-    {
-        None = 0,
-        Load = (1 << 0),
-        Save = (1 << 1),
-        LoadSave = Load | Save
     }
 }

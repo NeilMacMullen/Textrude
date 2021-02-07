@@ -38,6 +38,10 @@ namespace TextrudeInteractive
         {
             LoadButton.Visibility = type.HasFlag(FileLinkageTypes.Load) ? Visibility.Visible : Visibility.Collapsed;
             SaveButton.Visibility = type.HasFlag(FileLinkageTypes.Save) ? Visibility.Visible : Visibility.Collapsed;
+            CopyToClipboardButton.Visibility =
+                type.HasFlag(FileLinkageTypes.Clipboard) ? Visibility.Visible : Visibility.Collapsed;
+
+
             FilePath.Visibility = type != FileLinkageTypes.None ? Visibility.Visible : Visibility.Collapsed;
             UnlinkButton.Visibility = type != FileLinkageTypes.None ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -101,5 +105,21 @@ namespace TextrudeInteractive
         public void SaveIfLinked() => FileManager.TrySave(PathName, ObtainText());
 
         public void LoadIfLinked() => FileManager.TryLoadFile(PathName, out var t);
+
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        {
+            var maxAttempts = 3;
+            for (var i = 0; i < maxAttempts; i++)
+            {
+                try
+                {
+                    Clipboard.SetText(ObtainText());
+                    return;
+                }
+                catch
+                {
+                }
+            }
+        }
     }
 }

@@ -61,21 +61,6 @@ namespace TextrudeInteractive
             HandleUserInput();
         }
 
-        private void CopyToClipboard(object sender, RoutedEventArgs e)
-        {
-            var maxAttempts = 3;
-            for (var i = 0; i < maxAttempts; i++)
-            {
-                try
-                {
-                    Clipboard.SetText(_vm.Text);
-                    return;
-                }
-                catch
-                {
-                }
-            }
-        }
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -90,8 +75,6 @@ namespace TextrudeInteractive
             _isReadOnly = type == MonacoPaneType.PaneOutput;
 
             MonacoPane.SetReadOnly(_isReadOnly);
-            CopyToClipboardButton.Visibility
-                = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #endregion

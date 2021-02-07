@@ -144,6 +144,14 @@ namespace TextrudeInteractive
             _vm.ShowWhitespace = !_vm.ShowWhitespace;
         }
 
+        private void ToggleDefsAndIncludes(object sender, RoutedEventArgs e)
+        {
+            static bool IsToggleable(EditPaneViewModel p) =>
+                new[] {MonacoPaneType.IncludePaths, MonacoPaneType.Definitions}.Contains(p.PaneType);
+
+            _modelManager.ToggleVisibility(IsToggleable);
+        }
+
         #region jumplist
 
         #endregion
@@ -386,8 +394,12 @@ namespace TextrudeInteractive
             ModelFormat TryFormat(string s)
                 => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
 
+            static bool IsInput(EditPaneViewModel p) =>
+                new[] {MonacoPaneType.PaneModel, MonacoPaneType.Definitions}.Contains(p.PaneType);
+
+
             var models = _modelManager.Panes
-                .Where(p => p.PaneType == MonacoPaneType.PaneModel || p.PaneType == MonacoPaneType.Definitions)
+                .Where(IsInput)
                 .Select(m => new ModelText(m.Text, TryFormat(m.Format), m.ScribanName, m.LinkedPath))
                 .ToArray();
             var includeText = _modelManager.Panes.Single(p => p.PaneType == MonacoPaneType.IncludePaths)

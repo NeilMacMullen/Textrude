@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TextrudeInteractive
@@ -86,6 +87,25 @@ namespace TextrudeInteractive
         {
             if (_tab.Items.Count != 0)
                 _tab.SelectedIndex = 0;
+        }
+
+        public void ToggleVisibility(Func<EditPaneViewModel, bool> shouldToggle)
+        {
+            for (var i = 0; i < Panes.Count; i++)
+            {
+                if (shouldToggle(Panes[i]))
+                {
+                    var tabItem = _tab.Items[i] as TabItem;
+                    ToggleVisibility(tabItem);
+                }
+            }
+        }
+
+        private static void ToggleVisibility(Control c)
+        {
+            c.Visibility = c.Visibility == Visibility.Visible
+                ? Visibility.Collapsed
+                : Visibility.Visible;
         }
     }
 }

@@ -13,8 +13,14 @@
             <Button  Name ="UnlinkButton"  Style="{StaticResource MaterialDesignFlatButton}" Click="UnlinkFile" ToolTip="Unlink file" Content="&#xa6;"/>
             <Button  Name="LoadButton" Style="{StaticResource MaterialDesignFlatButton}" Click="Load"  Content="&#x21e7;" ToolTip="Load" />
             <Button  Name="SaveButton" Style="{StaticResource MaterialDesignFlatButton}" Click="Save"  Content="&#x21e9;" ToolTip="Save" />
+            <Button
+              Name="CopyToClipboardButton"
+              Click="CopyToClipboard"
+              Content="&#x1F4CB;"
+              Style="{StaticResource MaterialDesignFlatButton}"
+              ToolTip="Copy to clipboard" />
 
-        </StackPanel>
+    </StackPanel>
         <Label Name="FilePath" DockPanel.Dock="Left" Style="{StaticResource MaterialDesignLabel}"/>
 
     </DockPanel>

@@ -13,12 +13,7 @@
   <DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
       <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-        <Button
-          Name="CopyToClipboardButton"
-          Click="CopyToClipboard"
-          Content="&#x1F4CB;"
-          Style="{StaticResource MaterialDesignFlatButton}"
-          ToolTip="Copy to clipboard" />
+        
         <ComboBox
           Name="FormatSelection"
           HorizontalAlignment="Right"
