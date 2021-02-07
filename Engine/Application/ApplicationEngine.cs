@@ -216,6 +216,13 @@ namespace Engine.Application
                 ).ToImmutableArray();
         }
 
+        public string GetOutputFromVariable(string name)
+        {
+            if (name == "output")
+                return Output;
+            return _templateManager.TryGetVariable(name);
+        }
+
         /// <summary>
         ///     Adds a set of include paths to the engine
         /// </summary>

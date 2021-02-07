@@ -423,10 +423,9 @@ namespace TextrudeInteractive
             var elapsedMs = (int) timedEngine.Timer.ElapsedMilliseconds;
             var engine = timedEngine.Value;
             var outputPanes = _outputManager.Panes.ToArray();
-            var outputs = engine.GetOutput(outputPanes.Length);
-            for (var i = 0; i < Math.Min(outputs.Length, outputPanes.Length); i++)
+            foreach (var o in outputPanes)
             {
-                outputPanes[i].Text = outputs[i];
+                o.Text = engine.GetOutputFromVariable(o.ScribanName);
             }
 
             Errors.Text = string.Empty;
