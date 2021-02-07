@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -38,6 +39,9 @@ namespace TextrudeInteractive
             foreach (var format in formats)
             {
                 AvailableFormats.Add(format);
+                FormatSelection.Visibility = AvailableFormats.Count() > 1
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             }
         }
 
