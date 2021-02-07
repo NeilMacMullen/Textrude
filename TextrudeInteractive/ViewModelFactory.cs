@@ -33,6 +33,23 @@ namespace TextrudeInteractive
             };
         }
 
+        public static EditPaneViewModel CreateTemplate(string text, string linkedPath)
+        {
+            var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
+            var format = "scriban";
+            return new EditPaneViewModel
+            {
+                Format = format,
+                Text = text,
+                ScribanName = "template",
+                LinkedPath = linkedPath,
+                AvailableFormats = new[] {format},
+                PaneType = PaneType.Template,
+                FileLinkage = FileLinkageTypes.LoadSave
+            };
+        }
+
+
         public static EditPaneViewModel CreateDefinitions(string[] defs)
         {
             var defsd = DefinitionParser.CreateDefinitions(defs);

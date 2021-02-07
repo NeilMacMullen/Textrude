@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
-using TextrudeInteractive.AutoCompletion;
 
 namespace TextrudeInteractive
 {
@@ -26,11 +25,12 @@ namespace TextrudeInteractive
         private readonly ISubject<EngineInputSet> _inputStream =
             new BehaviorSubject<EngineInputSet>(EngineInputSet.EmptyYaml);
 
-        private readonly AvalonEditCompletionHelper _mainEditWindow;
+        //private readonly AvalonEditCompletionHelper _mainEditWindow;
 
         private readonly TabControlManager _modelManager;
         private readonly TabControlManager _outputManager;
         private readonly ProjectManager _projectManager;
+        private readonly TabControlManager _templateManager;
 
         private readonly MainWindowViewModel _vm = new();
 
@@ -56,21 +56,20 @@ namespace TextrudeInteractive
             }
 
             LockRender();
-            templateFileBar.ObtainText = () => TemplateTextBox.Text;
-            templateFileBar.OnLoad = (path, text) =>
-            {
-                templateFileBar.PathName = path;
-                TemplateTextBox.Text = text;
-            };
+
 
             SetTitle(string.Empty);
+
+            TempateEditPane.SetDirection(PaneType.Model);
+            TempateEditPane.OnUserInput = OnModelChanged;
+            _templateManager = new TabControlManager(Templates, TempateEditPane);
 
             SharedInput.SetDirection(PaneType.Model);
             SharedInput.OnUserInput = OnModelChanged;
             _modelManager = new TabControlManager(InputModels, SharedInput);
+
             SharedOutput.SetDirection(PaneType.Output);
             _outputManager = new TabControlManager(OutputTab, SharedOutput);
-            _mainEditWindow = new AvalonEditCompletionHelper(TemplateTextBox);
             _projectManager = new ProjectManager(this);
 
 
@@ -146,9 +145,8 @@ namespace TextrudeInteractive
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _mainEditWindow.Register();
             //ensure that we get to render the first project loaded at startup
-            OnModelChanged(false);
+            //OnModelChanged(false);
         }
 
 
@@ -207,14 +205,15 @@ namespace TextrudeInteractive
         {
             LockRender();
             _modelManager.ForAll(p => p.LoadIfLinked());
-            templateFileBar.LoadIfLinked();
+            _templateManager.ForAll(p => p.LoadIfLinked());
+
             UnlockRender();
         }
 
         private void SaveAllInputs(object sender, RoutedEventArgs e)
         {
-            //  _modelManager.ForAll(p => p.SaveIfLinked());
-            templateFileBar.SaveIfLinked();
+            _modelManager.ForAll(p => p.SaveIfLinked());
+            _templateManager.ForAll(p => p.SaveIfLinked());
         }
 
         #endregion
@@ -329,8 +328,9 @@ namespace TextrudeInteractive
             _modelManager.AddPane(ViewModelFactory.CreateDefinitions(inputSet.Definitions));
             _modelManager.AddPane(ViewModelFactory.CreateIncludePaths(inputSet.IncludePaths));
             _modelManager.FocusFirst();
-            TemplateTextBox.Text = inputSet.Template;
-            templateFileBar.PathName = inputSet.TemplatePath;
+
+            _templateManager.Clear();
+            _templateManager.AddPane(ViewModelFactory.CreateTemplate(inputSet.Template, inputSet.TemplatePath));
         }
 
 
@@ -412,7 +412,7 @@ namespace TextrudeInteractive
                 Errors.Text += "No errors";
             }
 
-            _mainEditWindow.SetCompletion(engine.ModelPaths());
+            //_mainEditWindow.SetCompletion(engine.ModelPaths());
         }
 
 
@@ -431,8 +431,9 @@ namespace TextrudeInteractive
                 .ToArray();
             var includeText = _modelManager.Panes.Single(p => p.PaneType == PaneType.IncludePaths)
                 .Text;
-            return new EngineInputSet(TemplateTextBox.Text,
-                templateFileBar.PathName,
+            var template = _templateManager.Panes.Single();
+            return new EngineInputSet(template.Text,
+                template.LinkedPath,
                 models,
                 string.Empty,
                 includeText);

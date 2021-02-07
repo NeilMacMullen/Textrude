@@ -12,5 +12,6 @@
         Definitions,
         IncludePaths,
         Output,
+        Template
     }
 }
