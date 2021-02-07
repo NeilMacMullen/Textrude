@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -18,7 +19,12 @@ namespace TextrudeInteractive
     /// </remarks>
     public class MonacoResourceFetcher
     {
+        public static readonly MonacoResourceFetcher Instance = new MonacoResourceFetcher();
         private ImmutableArray<string> _supportedLanguages = ImmutableArray<string>.Empty;
+
+        private MonacoResourceFetcher()
+        {
+        }
 
         private byte[] GetMonacoResource() => Resources.monaco_editor_0_22_3;
 
@@ -33,7 +39,7 @@ namespace TextrudeInteractive
                     .Select(e => monacoLangRegex.Match(e.FullName))
                     .Where(m => m.Success)
                     .Select(m => m.Groups["name"].Value)
-                    .Concat(new[] {"text"})
+                    .Concat(new[] {"text", "scriban"})
                     .OrderBy(l => l)
                     .Distinct()
                     .ToImmutableArray();
@@ -44,6 +50,10 @@ namespace TextrudeInteractive
 
         public MemoryStream FetchPath(string path)
         {
+            if (path.EndsWith("scriban.js"))
+                return new MemoryStream(Encoding.UTF8.GetBytes(Resources.scriban));
+
+            var timer = Stopwatch.StartNew();
             using var zipStream = new MemoryStream(GetMonacoResource());
             using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
             var file = zip.GetEntry(path);

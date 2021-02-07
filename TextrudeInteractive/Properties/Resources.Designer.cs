@@ -102,5 +102,20 @@ namespace TextrudeInteractive.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*---------------------------------------------------------------------------------------------
+        /// *  Copyright (c) Microsoft Corporation. All rights reserved.
+        /// *  Licensed under the MIT License. See License.txt in the project root for license information.
+        /// *--------------------------------------------------------------------------------------------*/
+        ///define(&apos;vs/basic-languages/scriban/scriban&apos;,[&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+        ///    &quot;use strict&quot;;
+        ///    Object.defineProperty(exports, &quot;__ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string scriban {
+            get {
+                return ResourceManager.GetString("scriban", resourceCulture);
+            }
+        }
     }
 }
