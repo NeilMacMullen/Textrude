@@ -124,4 +124,7 @@
   <data name="monaco_editor_0_22_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\monaco-editor-0.22.3.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="scriban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scriban.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

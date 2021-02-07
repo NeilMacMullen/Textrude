@@ -25,7 +25,7 @@ namespace TextrudeInteractive
 
         private readonly bool _isReadOnly;
         private readonly Queue<MonacoMessages> _messagesToBeDelivered;
-        private readonly MonacoResourceFetcher _resources = new();
+        private readonly MonacoResourceFetcher _resources;
         private readonly WebView2 _webView;
         private string _format = string.Empty;
         private bool _isReady;
@@ -37,6 +37,7 @@ namespace TextrudeInteractive
 
         public MonacoBinding(WebView2 webView, bool isReadOnly)
         {
+            _resources = MonacoResourceFetcher.Instance;
             _webView = webView;
             _isReadOnly = isReadOnly;
             _isReady = false;

@@ -4,7 +4,6 @@
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:local="clr-namespace:TextrudeInteractive"
-                         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
                          mc:Ignorable="d"
                          Title="Textrude Interactive" Height="800" Width="1000"
                          Closing="MainWindow_OnClosing"
@@ -42,15 +41,7 @@
       <Setter Property="Padding" Value="2" />
 
     </Style>
-    <Style TargetType="avalonEdit:TextEditor">
-      <Setter Property="FontFamily" Value="Consolas" />
-      <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
-      <Setter Property="ShowLineNumbers" Value="{Binding LineNumbers}" />
-      <Setter Property="FontSize" Value="{Binding TextSize}" />
-      <Setter Property="WordWrap" Value="{Binding  WordWrap}" />
-      <Setter Property="Padding" Value="4" />
-
-    </Style>
+   
     <Style TargetType="monaco:MonacoEditPane">
       <Setter Property="TextSize" Value="{Binding TextSize}" />
       <Setter Property="LineNumbers" Value="{Binding LineNumbers}" />
@@ -129,18 +120,11 @@
 
           <GridSplitter Grid.Column="1" />
 
-          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="2">
-            <TabItem Header="Template">
-              <DockPanel>
-                <local:FileBar x:Name="templateFileBar" DockPanel.Dock="Bottom" />
-                <avalonEdit:TextEditor DockPanel.Dock="Bottom"
-                                       Name="TemplateTextBox"
-                                       TextChanged="Avalon1_OnTextChanged"
-                                       Foreground="White" />
-              </DockPanel>
+          <DockPanel Grid.Column="2">
+            <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="Templates" DockPanel.Dock="Top" />
+            <local:InputMonacoPane x:Name="TempateEditPane" />
+          </DockPanel>
 
-            </TabItem>
-          </TabControl>
 
 
           <GridSplitter Grid.Column="3" />

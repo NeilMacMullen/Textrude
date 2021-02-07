@@ -12,14 +12,13 @@ namespace TextrudeInteractive
                 Format = f.Format,
                 LinkedPath = f.Path,
                 ScribanName = $"output{(n == 0 ? "" : n)}",
-                AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray(),
+                AvailableFormats = MonacoResourceFetcher.Instance.GetSupportedFormats().ToArray(),
                 PaneType = PaneType.Output,
                 FileLinkage = FileLinkageTypes.SaveAndClipboard
             };
 
         public static EditPaneViewModel CreateModel(ModelText model, int n)
         {
-            var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
             var modelName = $"model{(n == 0 ? "" : n)}";
             return new EditPaneViewModel
             {
@@ -32,6 +31,22 @@ namespace TextrudeInteractive
                 FileLinkage = FileLinkageTypes.LoadSave
             };
         }
+
+        public static EditPaneViewModel CreateTemplate(string text, string linkedPath)
+        {
+            var format = "scriban";
+            return new EditPaneViewModel
+            {
+                Format = format,
+                Text = text,
+                ScribanName = "template",
+                LinkedPath = linkedPath,
+                AvailableFormats = new[] {format},
+                PaneType = PaneType.Template,
+                FileLinkage = FileLinkageTypes.LoadSave
+            };
+        }
+
 
         public static EditPaneViewModel CreateDefinitions(string[] defs)
         {
