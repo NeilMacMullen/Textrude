@@ -78,6 +78,15 @@ namespace Engine.Application
         /// </remarks>
         public ApplicationEngine WithModel(string modelText, ModelFormat format)
         {
+            var name = (_modelCount == 0)
+                ? ScribanNamespaces.ModelPrefix
+                : $"{ScribanNamespaces.ModelPrefix}{_modelCount}";
+
+            return WithModel(name, modelText, format);
+        }
+
+        public ApplicationEngine WithModel(string name, string modelText, ModelFormat format)
+        {
             try
             {
                 //parse the text and create a model
@@ -86,9 +95,7 @@ namespace Engine.Application
 
                 //Note that models are added as model0, model1 etc but for
                 //convenience, "model0" is also available as "model"
-                if (_modelCount == 0)
-                    _templateManager.AddVariable(ApplicationStrings.ModelPrefix, model.Untyped);
-                _templateManager.AddVariable($"{ApplicationStrings.ModelPrefix}{_modelCount}", model.Untyped);
+                _templateManager.AddVariable(name, model.Untyped);
                 _modelCount++;
             }
             catch (Exception e)
@@ -109,8 +116,8 @@ namespace Engine.Application
                     .Cast<DictionaryEntry>()
                     .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value);
             //Add run-time information
-            environmentVariables[ApplicationStrings.TextrudeExe] = _environment.ApplicationPath();
-            _templateManager.AddVariable(ApplicationStrings.EnvironmentNamespace, environmentVariables);
+            environmentVariables[ScribanNamespaces.TextrudeExe] = _environment.ApplicationPath();
+            _templateManager.AddVariable(ScribanNamespaces.EnvironmentNamespace, environmentVariables);
             return this;
         }
 
@@ -127,7 +134,7 @@ namespace Engine.Application
             {
                 var definitions = DefinitionParser.CreateDefinitions(definitionAssignments)
                     .ToDictionary(kv => kv.Key, kv => (object) kv.Value);
-                _templateManager.AddVariable(ApplicationStrings.DefinitionsNamespace, definitions);
+                _templateManager.AddVariable(ScribanNamespaces.DefinitionsNamespace, definitions);
             }
             catch (ArgumentException e)
             {
@@ -205,7 +212,7 @@ namespace Engine.Application
                 Enumerable.Range(0, count).Select(i =>
                     i == 0
                         ? Output
-                        : _templateManager.TryGetVariable($"{ApplicationStrings.OutputPrefix}{i}")
+                        : _templateManager.TryGetVariable($"{ScribanNamespaces.OutputPrefix}{i}")
                 ).ToImmutableArray();
         }
 
@@ -222,15 +229,14 @@ namespace Engine.Application
                 _templateManager.AddIncludePath(inc);
             return this;
         }
+    }
 
-
-        private static class ApplicationStrings
-        {
-            public const string ModelPrefix = "model";
-            public const string OutputPrefix = "output";
-            public const string EnvironmentNamespace = "env";
-            public const string DefinitionsNamespace = "def";
-            public const string TextrudeExe = "TEXTRUDE_EXE";
-        }
+    public static class ScribanNamespaces
+    {
+        public const string ModelPrefix = "model";
+        public const string OutputPrefix = "output";
+        public const string EnvironmentNamespace = "env";
+        public const string DefinitionsNamespace = "def";
+        public const string TextrudeExe = "TEXTRUDE_EXE";
     }
 }

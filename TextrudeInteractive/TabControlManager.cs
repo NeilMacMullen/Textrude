@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TextrudeInteractive
@@ -14,6 +16,7 @@ namespace TextrudeInteractive
 
         private readonly TabControl _tab;
         public List<EditPaneViewModel> Panes = new();
+        private TabItem victim;
 
         public TabControlManager(TabControl tab,
             InputMonacoPane editPane)
@@ -47,21 +50,39 @@ namespace TextrudeInteractive
                     Header = $"{pane.ScribanName}"
                 });
             _tab.SelectedIndex = Math.Max(0, _tab.Items.Count - 1);
+            EnsureOrdered();
         }
 
-        /// <summary>
-        ///     Remove the right-most tab from the control
-        /// </summary>
-        public void RemoveLast()
+        public void EnsureOrdered()
         {
-            if (_tab.Items.Count == 0)
-            {
+            if (!Panes.Any())
                 return;
+
+            var currentList = Panes
+                .Select((p, i) => new {Pane = p, CurrentPos = i})
+                .ToArray();
+
+            var orderedList = currentList
+                .OrderBy(p => p.Pane.PaneType)
+                .ThenBy(p => p.CurrentPos)
+                .ToArray();
+
+            if (currentList.SequenceEqual(orderedList))
+                return;
+
+            var selectedPane = Panes[_tab.SelectedIndex];
+
+            var c = 0;
+            foreach (var p in orderedList)
+            {
+                var tabItem = (_tab.Items[c] as TabItem);
+                tabItem.DataContext = p.Pane;
+                tabItem.Header = p.Pane.ScribanName;
+                c++;
             }
 
-            var last = _tab.Items[^1] as TabItem;
-            _tab.Items.Remove(last);
-            Panes.RemoveAt(Panes.Count - 1);
+            Panes = orderedList.Select(o => o.Pane).ToList();
+            _tab.SelectedIndex = Panes.IndexOf(selectedPane);
         }
 
         /// <summary>
@@ -69,8 +90,8 @@ namespace TextrudeInteractive
         /// </summary>
         public void Clear()
         {
-            while (Panes.Count > 0)
-                RemoveLast();
+            Panes.Clear();
+            _tab.Items.Clear();
         }
 
         public void ForAll(Action<EditPaneViewModel> func)
@@ -86,6 +107,39 @@ namespace TextrudeInteractive
         {
             if (_tab.Items.Count != 0)
                 _tab.SelectedIndex = 0;
+        }
+
+        public void ToggleVisibility(Func<EditPaneViewModel, bool> shouldToggle)
+        {
+            for (var i = 0; i < Panes.Count; i++)
+            {
+                if (shouldToggle(Panes[i]))
+                {
+                    var tabItem = _tab.Items[i] as TabItem;
+                    ToggleVisibility(tabItem);
+                }
+            }
+        }
+
+        private static void ToggleVisibility(Control c)
+        {
+            c.Visibility = c.Visibility == Visibility.Visible
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+
+        public void RemoveSelected(Func<EditPaneViewModel, bool> shouldRemove)
+        {
+            if (!Panes.Any())
+                return;
+            var index = _tab.SelectedIndex;
+            var currentPane = Panes[index];
+            if (shouldRemove(currentPane))
+            {
+                victim = _tab.Items[index] as TabItem;
+                _tab.Items.Remove(victim);
+                Panes.RemoveAt(index);
+            }
         }
     }
 }

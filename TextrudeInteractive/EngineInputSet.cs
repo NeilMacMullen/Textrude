@@ -26,7 +26,9 @@ namespace TextrudeInteractive
                 .ToArray();
 
             IncludePaths = includes.Split(Environment.NewLine,
-                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Where(p => !p.StartsWith("#"))
+                .ToArray();
         }
 
         //Required for deserialisation

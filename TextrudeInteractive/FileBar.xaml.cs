@@ -12,9 +12,9 @@ namespace TextrudeInteractive
     {
         private string _pathName = string.Empty;
 
-        public Action<string, string> OnLoad = (_, _) => { };
+        public Func<string> ObtainText = () => string.Empty;
 
-        public Func<string> OnSave = () => string.Empty;
+        public Action<string, string> OnLoad = (_, _) => { };
 
         public FileBar()
         {
@@ -34,14 +34,21 @@ namespace TextrudeInteractive
             }
         }
 
-        public void SetSaveOnly(bool onoff)
+        public void SetSaveOnly(FileLinkageTypes type)
         {
-            LoadButton.Visibility = onoff ? Visibility.Collapsed : Visibility.Visible;
+            LoadButton.Visibility = type.HasFlag(FileLinkageTypes.Load) ? Visibility.Visible : Visibility.Collapsed;
+            SaveButton.Visibility = type.HasFlag(FileLinkageTypes.Save) ? Visibility.Visible : Visibility.Collapsed;
+            CopyToClipboardButton.Visibility =
+                type.HasFlag(FileLinkageTypes.Clipboard) ? Visibility.Visible : Visibility.Collapsed;
+
+
+            FilePath.Visibility = type != FileLinkageTypes.None ? Visibility.Visible : Visibility.Collapsed;
+            UnlinkButton.Visibility = type != FileLinkageTypes.None ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void UnlinkFile(object sender, RoutedEventArgs e)
         {
-            OnLoad(string.Empty, OnSave());
+            OnLoad(string.Empty, ObtainText());
         }
 
 
@@ -68,8 +75,8 @@ namespace TextrudeInteractive
         {
             var dlg = new SaveFileDialog {FileName = PathName};
             if (dlg.ShowDialog() != true) return;
-            if (FileManager.TrySave(dlg.FileName, OnSave()))
-                OnLoad(dlg.FileName, OnSave());
+            if (FileManager.TrySave(dlg.FileName, ObtainText()))
+                OnLoad(dlg.FileName, ObtainText());
         }
 
         private void FileBar_OnLoaded(object sender, RoutedEventArgs e)
@@ -92,11 +99,27 @@ namespace TextrudeInteractive
                 SaveToFile();
             else
 
-                FileManager.TrySave(PathName, OnSave());
+                FileManager.TrySave(PathName, ObtainText());
         }
 
-        public void SaveIfLinked() => FileManager.TrySave(PathName, OnSave());
+        public void SaveIfLinked() => FileManager.TrySave(PathName, ObtainText());
 
         public void LoadIfLinked() => FileManager.TryLoadFile(PathName, out var t);
+
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        {
+            var maxAttempts = 3;
+            for (var i = 0; i < maxAttempts; i++)
+            {
+                try
+                {
+                    Clipboard.SetText(ObtainText());
+                    return;
+                }
+                catch
+                {
+                }
+            }
+        }
     }
 }

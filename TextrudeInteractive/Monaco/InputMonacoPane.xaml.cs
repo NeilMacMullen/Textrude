@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -24,7 +25,7 @@ namespace TextrudeInteractive
             InitializeComponent();
             FormatSelection.ItemsSource = AvailableFormats;
             FileBar.OnLoad = NewFileLoaded;
-            FileBar.OnSave = () => _vm.Text;
+            FileBar.ObtainText = () => _vm.Text;
             MonacoPane.TextChangedEvent = HandleUserInput;
             DataContext = new EditPaneViewModel();
             DataContextChanged += OnDataContextChanged;
@@ -38,6 +39,9 @@ namespace TextrudeInteractive
             foreach (var format in formats)
             {
                 AvailableFormats.Add(format);
+                FormatSelection.Visibility = AvailableFormats.Count() > 1
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             }
         }
 
@@ -61,21 +65,6 @@ namespace TextrudeInteractive
             HandleUserInput();
         }
 
-        private void CopyToClipboard(object sender, RoutedEventArgs e)
-        {
-            var maxAttempts = 3;
-            for (var i = 0; i < maxAttempts; i++)
-            {
-                try
-                {
-                    Clipboard.SetText(_vm.Text);
-                    return;
-                }
-                catch
-                {
-                }
-            }
-        }
 
         private void FormatSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -85,13 +74,11 @@ namespace TextrudeInteractive
 
         #region configuration
 
-        public void SetDirection(MonacoPaneType type)
+        public void SetDirection(PaneType type)
         {
-            _isReadOnly = type == MonacoPaneType.PaneOutput;
-            FileBar.SetSaveOnly(_isReadOnly);
+            _isReadOnly = type == PaneType.Output;
+
             MonacoPane.SetReadOnly(_isReadOnly);
-            CopyToClipboardButton.Visibility
-                = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #endregion
@@ -127,6 +114,7 @@ namespace TextrudeInteractive
             MonacoPane.Format = _vm.Format;
             MonacoPane.Text = _vm.Text;
             FileBar.PathName = _vm.LinkedPath;
+            FileBar.SetSaveOnly(_vm.FileLinkage);
             _busy--;
         }
 
