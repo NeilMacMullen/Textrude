@@ -15,7 +15,6 @@
                          TextOptions.TextRenderingMode="Auto"
                          Background="{DynamicResource MaterialDesignPaper}"
                          FontFamily="{DynamicResource MaterialDesignFont}"
-                         Loaded="MainWindow_OnLoaded"
 
                          xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
                          xmlns:monaco="clr-namespace:TextrudeInteractive.Monaco">
@@ -64,6 +63,9 @@
       <MenuItem Header="Inputs">
         <MenuItem Click="AddModel" Header="Add model" ToolTip="Adds a new model" />
         <MenuItem Click="RemoveModel" Header="Remove model" ToolTip="Removes the selected model" />
+        <MenuItem Click="RenameModel" Header="Change name of model" ToolTip="Changes the name of the selected model" />
+
+        <Separator />
         <MenuItem Click="ToggleDefsAndIncludes" Header="Show/hide definitions and includes" />
 
         <Separator />
@@ -73,6 +75,9 @@
       <MenuItem Header="Outputs">
         <MenuItem Click="AddOutput" Header="Add" ToolTip="Adds a new output" />
         <MenuItem Click="RemoveOutput" Header="Remove" ToolTip="Removes the last output" />
+        <!--Can't rename outputs until we have a better way of binding to them in the core engine -->
+        <MenuItem Click="RenameOutput" Header="Change name of output" ToolTip="Changes the name of the selected output"
+                  Visibility="Collapsed"/>
         <Separator />
         <MenuItem Header="Save linked" Click="SaveAllOutputs" ToolTip="Saves all outputs back to linked files" />
       </MenuItem>

@@ -6,20 +6,29 @@ namespace TextrudeInteractive
 {
     public static class ViewModelFactory
     {
-        public static EditPaneViewModel CreateOutput(OutputPaneModel f, int n) =>
-            new EditPaneViewModel
+        public static EditPaneViewModel CreateOutput(OutputPaneModel f, int n)
+        {
+            var outputName =
+                f.Name.Length != 0
+                    ? f.Name
+                    : $"output{(n == 0 ? "" : n)}";
+            return new EditPaneViewModel
             {
                 Format = f.Format,
                 LinkedPath = f.Path,
-                ScribanName = $"output{(n == 0 ? "" : n)}",
+                ScribanName = outputName,
                 AvailableFormats = MonacoResourceFetcher.Instance.GetSupportedFormats().ToArray(),
                 PaneType = PaneType.Output,
                 FileLinkage = FileLinkageTypes.SaveAndClipboard
             };
+        }
 
         public static EditPaneViewModel CreateModel(ModelText model, int n)
         {
-            var modelName = $"model{(n == 0 ? "" : n)}";
+            var modelName =
+                model.Name.Length != 0
+                    ? model.Name
+                    : $"model{(n == 0 ? "" : n)}";
             return new EditPaneViewModel
             {
                 Format = model.Format.ToString(),
@@ -51,13 +60,15 @@ namespace TextrudeInteractive
         public static EditPaneViewModel CreateDefinitions(string[] defs)
         {
             var defsd = DefinitionParser.CreateDefinitions(defs);
+
             var text =
                     @"
 # Definitions can be entered one-per-line
-# using yaml syntax.  E.g.
-# DEF1:   def1-value        
+# E.g.
+# DEF1=def1-value
+# NAME=value
 ".Trim() + (Environment.NewLine)
-         + string.Join(Environment.NewLine, defsd.Select(dd => $"{dd.Key}: {dd.Value}"))
+         + string.Join(Environment.NewLine, defsd.Select(dd => $"{dd.Key}={dd.Value}"))
                 ;
             var format = ModelFormat.Yaml.ToString();
             return new EditPaneViewModel

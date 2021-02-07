@@ -45,6 +45,7 @@ namespace Engine.Application
         {
             var definitions =
                 definitionAssignments
+                    .Where(d => d.Length > 0)
                     .Select(SplitToken)
                     .ToArray();
             var duplicates = definitions.Select(a => a[0]).GroupBy(n => n)
