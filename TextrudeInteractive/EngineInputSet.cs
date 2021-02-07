@@ -18,17 +18,8 @@ namespace TextrudeInteractive
             Template = template;
             TemplatePath = templatePath;
             Models = models;
-
-            Definitions = definitionsText
-                .Split('\r', '\n')
-                .Select(l => l.Trim())
-                .Where(l => l.Length > 0)
-                .ToArray();
-
-            IncludePaths = includes.Split(Environment.NewLine,
-                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .Where(p => !p.StartsWith("#"))
-                .ToArray();
+            Definitions = Lines(definitionsText);
+            IncludePaths = Lines(includes);
         }
 
         //Required for deserialisation
@@ -46,5 +37,13 @@ namespace TextrudeInteractive
 
         public string Template { get; init; } = string.Empty;
         public string TemplatePath { get; init; } = string.Empty;
+
+        private string[] Lines(string str)
+        {
+            return str
+                .Split(new[] {'\r', '\n'}, StringSplitOptions.TrimEntries | StringSplitOptions.TrimEntries)
+                .Where(p => !p.StartsWith("#"))
+                .ToArray();
+        }
     }
 }

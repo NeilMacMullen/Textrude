@@ -28,6 +28,13 @@ namespace TextrudeInteractive
 
         public int Count => Panes.Count;
 
+        public EditPaneViewModel CurrentPane()
+        {
+            if (!Panes.Any())
+                return new EditPaneViewModel();
+            return Panes[_tab.SelectedIndex];
+        }
+
         private void TabOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_tab.SelectedIndex >= 0 && _tab.SelectedIndex < Panes.Count)
@@ -139,6 +146,14 @@ namespace TextrudeInteractive
                 victim = _tab.Items[index] as TabItem;
                 _tab.Items.Remove(victim);
                 Panes.RemoveAt(index);
+            }
+        }
+
+        public void RepaintHeaders()
+        {
+            for (var i = 0; i < Panes.Count; i++)
+            {
+                (_tab.Items[i] as TabItem).Header = Panes[i].ScribanName;
             }
         }
     }

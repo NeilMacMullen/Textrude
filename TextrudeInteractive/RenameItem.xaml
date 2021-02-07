@@ -1,0 +1,29 @@
+﻿<controls:MaterialWindow x:Class="TextrudeInteractive.RenameItem"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:local="clr-namespace:TextrudeInteractive"
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+                         mc:Ignorable="d"
+                         Title="Change Name"  Width="300"
+                         SizeToContent="Height"
+
+                         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                         TextElement.FontWeight="Regular"
+                         TextElement.FontSize="13"
+                         TextOptions.TextFormattingMode="Ideal"
+                         TextOptions.TextRenderingMode="Auto"
+                         Background="{DynamicResource MaterialDesignPaper}"
+                         FontFamily="{DynamicResource MaterialDesignFont}"
+                         WindowStartupLocation="CenterOwner"
+                         >
+    <StackPanel Margin="10">
+      <Label>Change name to:</Label>
+      <TextBox Name="NewName" Style="{StaticResource MaterialDesignTextBox}" Margin="3"></TextBox>
+<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button Style="{StaticResource MaterialDesignFlatButton}" Click="OnOk">Ok</Button>
+  <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True">Cancel</Button>
+    </StackPanel>
+    </StackPanel>
+</controls:MaterialWindow>

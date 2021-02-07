@@ -143,13 +143,6 @@ namespace TextrudeInteractive
         }
 
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //ensure that we get to render the first project loaded at startup
-            //OnModelChanged(false);
-        }
-
-
         private void ToggleWhiteSpace(object sender, RoutedEventArgs e)
         {
             _vm.ShowWhitespace = !_vm.ShowWhitespace;
@@ -161,6 +154,11 @@ namespace TextrudeInteractive
                 new[] {PaneType.IncludePaths, PaneType.Definitions}.Contains(p.PaneType);
 
             _modelManager.ToggleVisibility(IsToggleable);
+        }
+
+        private void RenameModel(object sender, RoutedEventArgs e)
+        {
+            Rename(_modelManager, PaneType.Model);
         }
 
         #region jumplist
@@ -180,6 +178,25 @@ namespace TextrudeInteractive
         private void SaveAllOutputs(object sender, RoutedEventArgs e)
         {
             _outputManager.ForAll(p => p.SaveIfLinked());
+        }
+
+        private void Rename(TabControlManager mgr, PaneType type)
+        {
+            var currentModel = mgr.CurrentPane();
+            if (currentModel.PaneType != type)
+                return;
+            var dlg = new RenameItem(currentModel.ScribanName) {Owner = this};
+            if (dlg.ShowDialog() == true)
+            {
+                currentModel.ScribanName = dlg.Name;
+                mgr.RepaintHeaders();
+                OnModelChanged(true);
+            }
+        }
+
+        private void RenameOutput(object sender, RoutedEventArgs e)
+        {
+            Rename(_outputManager, PaneType.Output);
         }
 
         #endregion
@@ -372,6 +389,7 @@ namespace TextrudeInteractive
             engine = engine
                 .WithEnvironmentVariables()
                 .WithIncludePaths(gi.IncludePaths)
+                .WithDefinitions(gi.Definitions)
                 .WithHelpers()
                 .WithTemplate(gi.Template);
 
@@ -422,7 +440,7 @@ namespace TextrudeInteractive
                 => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
 
             static bool IsInput(EditPaneViewModel p) =>
-                new[] {PaneType.Model, PaneType.Definitions}.Contains(p.PaneType);
+                new[] {PaneType.Model}.Contains(p.PaneType);
 
 
             var models = _modelManager.Panes
@@ -432,10 +450,11 @@ namespace TextrudeInteractive
             var includeText = _modelManager.Panes.Single(p => p.PaneType == PaneType.IncludePaths)
                 .Text;
             var template = _templateManager.Panes.Single();
+            var defs = _modelManager.Panes.Single(p => p.PaneType == PaneType.Definitions).Text;
             return new EngineInputSet(template.Text,
                 template.LinkedPath,
                 models,
-                string.Empty,
+                defs,
                 includeText);
         }
 

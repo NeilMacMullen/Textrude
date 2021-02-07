@@ -9,10 +9,10 @@ namespace TextrudeInteractive
     {
         public ModelText(string text, ModelFormat format, string name, string path)
         {
-            Text = text;
+            Text = text ?? string.Empty;
             Format = format;
-            Name = name;
-            Path = path;
+            Name = name ?? string.Empty;
+            Path = path ?? string.Empty;
         }
 
         /// <summary>
