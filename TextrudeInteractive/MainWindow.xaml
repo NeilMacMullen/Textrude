@@ -52,10 +52,10 @@
 
     </Style>
     <Style TargetType="monaco:MonacoEditPane">
-      <Setter Property="TextSize" Value="{Binding TextSize}"/>
-      <Setter Property="LineNumbers" Value="{Binding LineNumbers}"/>
-      <Setter Property="WordWrap" Value="{Binding WordWrap}"/>
-      <Setter Property="VisibleWhitespace" Value="{Binding ShowWhitespace}"/>
+      <Setter Property="TextSize" Value="{Binding TextSize}" />
+      <Setter Property="LineNumbers" Value="{Binding LineNumbers}" />
+      <Setter Property="WordWrap" Value="{Binding WordWrap}" />
+      <Setter Property="VisibleWhitespace" Value="{Binding ShowWhitespace}" />
     </Style>
   </Window.Resources>
   <DockPanel>
@@ -88,7 +88,7 @@
         <MenuItem Header="Toggle Line _Numbers" Click="ToggleLineNumbers" />
         <MenuItem Header="Toggle _Word Wrap" Click="ToggleWordWrap" />
         <MenuItem Header="Toggle Visible _Whitespace" Click="ToggleWhiteSpace" />
-        <Separator/>
+        <Separator />
         <MenuItem Header="_Smaller font" Click="SmallerFont" />
         <MenuItem Header="_Larger font" Click="LargerFont" />
       </MenuItem>
@@ -119,46 +119,10 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-
-
-          <TabControl Style="{StaticResource MaterialDesignTabControl}" Grid.Column="0">
-            <TabItem Header="models">
-              <DockPanel>
-
-              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}" Name="InputModels" DockPanel.Dock="Top"/>
-              <local:InputMonacoPane x:Name="SharedInput"></local:InputMonacoPane>
-              </DockPanel>
-
-            </TabItem>
-            <TabItem Header="other">
-              <TabItem.ToolTip>
-                definitions and include paths
-              </TabItem.ToolTip>
-              <TabControl Style="{StaticResource MaterialDesignAppBarTabControl}">
-                <TabItem Header="definitions">
-                  <TabItem.ToolTip>
-                    <TextBlock>
-                      Add definitions 1-per-line <LineBreak />
-                      name1=value1
-                    </TextBlock>
-                  </TabItem.ToolTip>
-                  <avalonEdit:TextEditor
-                    Name="DefinitionsTextBox"
-                    Foreground="Yellow"
-                    TextChanged="Avalon1_OnTextChanged" />
-                </TabItem>
-                <TabItem Header="include folders">
-                  <TabItem.ToolTip>
-                    Add paths 1-per-line
-                  </TabItem.ToolTip>
-                  <avalonEdit:TextEditor
-                    Name="IncludesTextBox"
-                    Foreground="Pink"
-                    TextChanged="Avalon1_OnTextChanged" />
-                </TabItem>
-              </TabControl>
-            </TabItem>
-          </TabControl>
+          <DockPanel>
+            <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="InputModels" DockPanel.Dock="Top" />
+            <local:InputMonacoPane x:Name="SharedInput" />
+          </DockPanel>
 
 
           <GridSplitter Grid.Column="1" />
@@ -170,8 +134,7 @@
                 <avalonEdit:TextEditor DockPanel.Dock="Bottom"
                                        Name="TemplateTextBox"
                                        TextChanged="Avalon1_OnTextChanged"
-                                       Foreground="White"
-                                       />
+                                       Foreground="White" />
               </DockPanel>
 
             </TabItem>
@@ -181,9 +144,9 @@
           <GridSplitter Grid.Column="3" />
 
           <DockPanel Grid.Column="4">
-          <TabControl Style="{StaticResource MaterialDesignTabControl}"  Name="OutputTab"
-                      DockPanel.Dock ="Top"/>
-            <local:InputMonacoPane x:Name ="SharedOutput"/>
+            <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="OutputTab"
+                        DockPanel.Dock="Top" />
+            <local:InputMonacoPane x:Name="SharedOutput" />
           </DockPanel>
 
         </Grid>

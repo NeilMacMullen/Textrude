@@ -24,7 +24,7 @@ namespace TextrudeInteractive
             InitializeComponent();
             FormatSelection.ItemsSource = AvailableFormats;
             FileBar.OnLoad = NewFileLoaded;
-            FileBar.OnSave = () => _vm.Text;
+            FileBar.ObtainText = () => _vm.Text;
             MonacoPane.TextChangedEvent = HandleUserInput;
             DataContext = new EditPaneViewModel();
             DataContextChanged += OnDataContextChanged;
@@ -88,7 +88,7 @@ namespace TextrudeInteractive
         public void SetDirection(MonacoPaneType type)
         {
             _isReadOnly = type == MonacoPaneType.PaneOutput;
-            FileBar.SetSaveOnly(_isReadOnly);
+
             MonacoPane.SetReadOnly(_isReadOnly);
             CopyToClipboardButton.Visibility
                 = _isReadOnly ? Visibility.Visible : Visibility.Collapsed;
@@ -127,6 +127,7 @@ namespace TextrudeInteractive
             MonacoPane.Format = _vm.Format;
             MonacoPane.Text = _vm.Text;
             FileBar.PathName = _vm.LinkedPath;
+            FileBar.SetSaveOnly(_vm.FileLinkage);
             _busy--;
         }
 

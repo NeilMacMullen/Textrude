@@ -1,6 +1,5 @@
-﻿
+﻿// ReSharper disable UnusedMember.Global
 
-// ReSharper disable UnusedMember.Global
 namespace TextrudeInteractive.Monaco.Messages
 {
     /// <summary>
@@ -8,7 +7,7 @@ namespace TextrudeInteractive.Monaco.Messages
     /// </summary>
     public record UpdateLanguage : MonacoMessages
     {
-        public UpdateLanguage(string language) => Language = language;
+        public UpdateLanguage(string language) => Language = language.ToLowerInvariant();
 
         public string Language { get; }
     }

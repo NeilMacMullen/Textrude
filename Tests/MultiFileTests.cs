@@ -15,7 +15,7 @@ namespace Tests
             var csv = @"C
 1";
             var json = @"{""a"":2}";
-            var template = @"{{model0[0].C + model1.a}}";
+            var template = @"{{model[0].C + model1.a}}";
             var result = new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
                 .WithModel(csv, ModelFormat.Csv)

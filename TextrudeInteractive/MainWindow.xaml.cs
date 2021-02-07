@@ -55,7 +55,7 @@ namespace TextrudeInteractive
                 Application.Current.Shutdown();
             }
 
-            templateFileBar.OnSave = () => TemplateTextBox.Text;
+            templateFileBar.ObtainText = () => TemplateTextBox.Text;
             templateFileBar.OnLoad = (path, text) =>
             {
                 templateFileBar.PathName = path;
@@ -279,7 +279,6 @@ namespace TextrudeInteractive
         /// </summary>
         public void SetUi(EngineInputSet inputSet, bool trim)
         {
-            DefinitionsTextBox.Text = string.Join(Environment.NewLine, inputSet.Definitions);
             _modelManager.Clear();
             foreach (var model in inputSet.Models)
             {
@@ -292,11 +291,11 @@ namespace TextrudeInteractive
             if (!_modelManager.Panes.Any())
                 _modelManager.AddPane(ViewModelFactory.CreateModel(ModelText.EmptyYaml, _modelManager.Count));
 
+            _modelManager.AddPane(ViewModelFactory.CreateDefinitions(inputSet.Definitions));
+            _modelManager.AddPane(ViewModelFactory.CreateIncludePaths(inputSet.IncludePaths));
             _modelManager.FocusFirst();
             TemplateTextBox.Text = inputSet.Template;
             templateFileBar.PathName = inputSet.TemplatePath;
-
-            IncludesTextBox.Text = string.Join(Environment.NewLine, inputSet.IncludePaths);
         }
 
 
@@ -334,10 +333,9 @@ namespace TextrudeInteractive
             var timer = new TimedOperation<ApplicationEngine>(engine);
 
             foreach (var m in gi.Models)
-                engine = engine.WithModel(m.Text, m.Format);
+                engine = engine.WithModel(m.Name, m.Text, m.Format);
             engine = engine
                 .WithEnvironmentVariables()
-                .WithDefinitions(gi.Definitions)
                 .WithIncludePaths(gi.IncludePaths)
                 .WithHelpers()
                 .WithTemplate(gi.Template);
@@ -389,13 +387,16 @@ namespace TextrudeInteractive
                 => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
 
             var models = _modelManager.Panes
+                .Where(p => p.PaneType == MonacoPaneType.PaneModel || p.PaneType == MonacoPaneType.Definitions)
                 .Select(m => new ModelText(m.Text, TryFormat(m.Format), m.ScribanName, m.LinkedPath))
                 .ToArray();
+            var includeText = _modelManager.Panes.Single(p => p.PaneType == MonacoPaneType.IncludePaths)
+                .Text;
             return new EngineInputSet(TemplateTextBox.Text,
                 templateFileBar.PathName,
                 models,
-                DefinitionsTextBox.Text,
-                IncludesTextBox.Text);
+                string.Empty,
+                includeText);
         }
 
         #endregion
@@ -481,30 +482,5 @@ namespace TextrudeInteractive
             OpenHome("issues/new?assignees=&labels=question&template=ask-a-question.md&title=Help");
 
         #endregion
-    }
-
-    public static class ViewModelFactory
-    {
-        public static EditPaneViewModel CreateOutput(OutputPaneModel f, int n) =>
-            new EditPaneViewModel
-            {
-                Format = f.Format,
-                LinkedPath = f.Path,
-                ScribanName = $"output{n}",
-                AvailableFormats = new MonacoResourceFetcher().GetSupportedFormats().ToArray()
-            };
-
-        public static EditPaneViewModel CreateModel(ModelText model, int n)
-        {
-            var outputFormats = new MonacoResourceFetcher().GetSupportedFormats();
-            return new EditPaneViewModel
-            {
-                Format = model.Format.ToString(),
-                Text = model.Text,
-                ScribanName = $"model{n}",
-                LinkedPath = model.Path,
-                AvailableFormats = Enum.GetNames(typeof(ModelFormat))
-            };
-        }
     }
 }

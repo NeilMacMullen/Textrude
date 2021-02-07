@@ -12,6 +12,7 @@ namespace TextrudeInteractive
         private string _linkedPath = string.Empty;
         private string _scribanName = string.Empty;
         private string _text = string.Empty;
+        public FileLinkageTypes FileLinkage { get; set; } = FileLinkageTypes.LoadSave;
 
         public string Text
         {
@@ -59,6 +60,7 @@ namespace TextrudeInteractive
 
         //this doesn't have to be notifiable because it is constant 
         public string[] AvailableFormats { get; set; } = Array.Empty<string>();
+        public MonacoPaneType PaneType { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

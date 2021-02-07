@@ -3,6 +3,8 @@
     public enum MonacoPaneType
     {
         PaneModel,
-        PaneOutput
+        PaneOutput,
+        Definitions,
+        IncludePaths
     }
 }
