@@ -129,10 +129,11 @@ Task("Build")
                                 );
                             } else {
                                 AnsiConsole.MarkupLine(
-                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
+                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}: {4}[/]",
                                     warn.Groups["file"].Value,
                                     warn.Groups["row"].Value,
                                     warn.Groups["col"].Value,
+                                    warn.Groups["code"].Value,
                                     warn.Groups["text"].Value.EscapeMarkup()
                                 );
                             }
