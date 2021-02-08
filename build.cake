@@ -116,7 +116,7 @@ Task("Build")
                             var offendingFile = File(warn.Groups["file"].Value);
                             if (AnsiConsole.Capabilities.SupportsInteraction) {
                                 AnsiConsole.MarkupLine(
-                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
+                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
                                     offendingFile.Path.GetFilename(),
                                     warn.Groups["row"].Value,
                                     warn.Groups["col"].Value,
@@ -124,12 +124,12 @@ Task("Build")
                                         - offendingFile.Path.GetFilename().FullPath.Length
                                         - warn.Groups["row"].Value.Length
                                         - warn.Groups["col"].Value.Length
-                                        - 20
+                                        - 35
                                     )
                                 );
                             } else {
                                 AnsiConsole.MarkupLine(
-                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
+                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
                                     warn.Groups["file"].Value,
                                     warn.Groups["row"].Value,
                                     warn.Groups["col"].Value,
