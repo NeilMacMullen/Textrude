@@ -1,4 +1,3 @@
-#addin nuget:?package=Wcwidth&version=0.2.0
 #addin nuget:?package=Spectre.Console&version=0.37.0
 
 using System.Text.RegularExpressions;
@@ -7,6 +6,8 @@ using Spectre.Console;
 var target = Argument("target", "Build");
 
 Setup<BuildData>(ctx => {
+    AnsiConsole.MarkupLine("Interaction: {0}", AnsiConsole.Capabilities.SupportsInteraction);
+
     var build = new BuildData(
         ctx,
         target,
@@ -93,35 +94,62 @@ Task("Build")
 
                     if (o.Length < 2000) {
                         if (projFinished.TryMatch(o, out var pfm)) {
-                            AnsiConsole.MarkupLine(
-                                "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                                pfm.Groups["project"].Value,
-                                Truncate(pfm.Groups["output"].Value, AnsiConsole.Width - pfm.Groups["project"].Value.Length - 20)
-                            );
+                            if (AnsiConsole.Capabilities.SupportsInteraction) {
+                                AnsiConsole.MarkupLine(
+                                    "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
+                                    pfm.Groups["project"].Value,
+                                    Truncate(pfm.Groups["output"].Value, AnsiConsole.Width
+                                        - pfm.Groups["project"].Value.Length
+                                        - 20
+                                    )
+                                );
+                            } else {
+                                AnsiConsole.MarkupLine(
+                                    "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
+                                    pfm.Groups["project"].Value,
+                                    pfm.Groups["output"].Value
+                                );
+                            }
                             buildTask.Increment(1);
                             return null;
                         } else if (warning.TryMatch(o, out var warn)) {
                             var offendingFile = File(warn.Groups["file"].Value);
-                            AnsiConsole.MarkupLine(
-                                "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
-                                offendingFile.Path.GetFilename(),
-                                warn.Groups["row"].Value,
-                                warn.Groups["col"].Value,
-                                Truncate(warn.Groups["text"].Value.EscapeMarkup(), AnsiConsole.Width 
-                                    - offendingFile.Path.GetFilename().FullPath.Length
-                                    - warn.Groups["row"].Value.Length
-                                    - warn.Groups["col"].Value.Length
-                                    - 20
-                                )
-                            );
+                            if (AnsiConsole.Capabilities.SupportsInteraction) {
+                                AnsiConsole.MarkupLine(
+                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
+                                    offendingFile.Path.GetFilename(),
+                                    warn.Groups["row"].Value,
+                                    warn.Groups["col"].Value,
+                                    Truncate(warn.Groups["text"].Value.EscapeMarkup(), AnsiConsole.Width 
+                                        - offendingFile.Path.GetFilename().FullPath.Length
+                                        - warn.Groups["row"].Value.Length
+                                        - warn.Groups["col"].Value.Length
+                                        - 20
+                                    )
+                                );
+                            } else {
+                                AnsiConsole.MarkupLine(
+                                    "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
+                                    warn.Groups["file"].Value,
+                                    warn.Groups["row"].Value,
+                                    warn.Groups["col"].Value,
+                                    warn.Groups["text"].Value.EscapeMarkup()
+                                );
+                            }
                             return null;
                         }
                     }
                     
                     if (!string.IsNullOrWhiteSpace(o))  {
-                        AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
-                            Truncate(o.EscapeMarkup(), AnsiConsole.Width - 25)
-                        );
+                        if (AnsiConsole.Capabilities.SupportsInteraction) { 
+                            AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
+                                Truncate(o.EscapeMarkup(), AnsiConsole.Width - 25)
+                            );
+                        } else {
+                            AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
+                                o.EscapeMarkup()
+                            );
+                        }
                     }
                     return null;
                 },
