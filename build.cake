@@ -12,7 +12,6 @@ Setup<BuildData>(ctx => {
         target,
         configuration: Argument("configuration", "Debug"),
         doClean: HasArgument("clean"),
-        dotnetVerbosity: Argument("dotnet_verbosity", DotNetCoreVerbosity.Minimal),
         solutionPath: File("Textrude.sln")
     );
     build.Describe();
@@ -21,12 +20,12 @@ Setup<BuildData>(ctx => {
 
 Task("Clean")
     .Description("Runs dotnet clean and cleans the NuGet cache (when in GitHub Actions)")
-    .WithCriteria<BuildData>((ctx, build) => build.DoClean)
+    .WithCriteria<BuildData>((ctx, build) => build.DoClean || target == "Clean")
     .Does<BuildData>(build =>
 {
     DotNetCoreClean(build.SolutionPath.FullPath, new DotNetCoreCleanSettings() {
         Configuration = build.Configuration,
-        Verbosity = build.DotnetVerbosity
+        Verbosity = DotNetCoreVerbosity.Minimal
     });
 
     if (GitHubActions.IsRunningOnGitHubActions) {
@@ -45,7 +44,7 @@ Task("Restore")
 {
     DotNetCoreRestore(build.SolutionPath.FullPath, new DotNetCoreRestoreSettings() {
         ArgumentCustomization = args => args.Append($"-p:Configuration={build.Configuration}"),
-        Verbosity = build.DotnetVerbosity
+        Verbosity = DotNetCoreVerbosity.Minimal
     });
 });
 
@@ -76,6 +75,7 @@ Task("Build")
             });
 
             var projFinished = new Regex("(?<project>.+) -> (?<output>.+)");
+            var warning = new Regex(@"(?<file>.+)\((?<row>\d+),(?<col>\d+)\): warning (?<code>[A-Z0-9]+): (?<text>.+)");
 
             buildTask.StartTask();
             var exit = StartProcess("dotnet", new ProcessSettings() {
@@ -83,22 +83,44 @@ Task("Build")
                     .Append("build")
                     .Append("--no-restore")
                     .Append($"-c {build.Configuration}")
-                    .Append($"-v {build.DotnetVerbosity}"),
+                    .Append($"-v Minimal")
+                    .Append("-consoleLoggerParameters:NoSummary;NoItemAndPropertyList")
+                    .Append("-binaryLogger:LogFile=build.binlog"),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectedStandardOutputHandler = o => {
                     if (o == null) return null;
 
-                    if (projFinished.TryMatch(o, out var pfm)) {
-                        AnsiConsole.MarkupLine(
-                            "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                            pfm.Groups["project"].Value,
-                            Truncate(pfm.Groups["output"].Value, AnsiConsole.Width - pfm.Groups["project"].Value.Length - 20)
-                        );
-                        buildTask.Increment(1);
-                    } else if (!string.IsNullOrWhiteSpace(o))  {
+                    if (o.Length < 2000) {
+                        if (projFinished.TryMatch(o, out var pfm)) {
+                            AnsiConsole.MarkupLine(
+                                "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
+                                pfm.Groups["project"].Value,
+                                Truncate(pfm.Groups["output"].Value, AnsiConsole.Width - pfm.Groups["project"].Value.Length - 20)
+                            );
+                            buildTask.Increment(1);
+                            return null;
+                        } else if (warning.TryMatch(o, out var warn)) {
+                            var offendingFile = File(warn.Groups["file"].Value);
+                            AnsiConsole.MarkupLine(
+                                "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): {3}[/]",
+                                offendingFile.Path.GetFilename(),
+                                warn.Groups["row"].Value,
+                                warn.Groups["col"].Value,
+                                Truncate(warn.Groups["text"].Value.EscapeMarkup(), AnsiConsole.Width 
+                                    - offendingFile.Path.GetFilename().FullPath.Length
+                                    - warn.Groups["row"].Value.Length
+                                    - warn.Groups["col"].Value.Length
+                                    - 20
+                                )
+                            );
+                            return null;
+                        }
+                    }
+                    
+                    if (!string.IsNullOrWhiteSpace(o))  {
                         AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
-                            Truncate(o.EscapeMarkup(), AnsiConsole.Width - 15)
+                            Truncate(o.EscapeMarkup(), AnsiConsole.Width - 25)
                         );
                     }
                     return null;
@@ -129,7 +151,7 @@ Task("Test")
         NoRestore = true,
         NoBuild = true,
         Configuration = build.Configuration,
-        Verbosity = build.DotnetVerbosity
+        Verbosity = DotNetCoreVerbosity.Minimal
     });
 });
 
@@ -146,14 +168,12 @@ public class BuildData
         string target,
         string configuration,
         bool doClean,
-        DotNetCoreVerbosity dotnetVerbosity,
         FilePath solutionPath)
     {
         this.ctx = ctx;
         Target = target;
         Configuration = configuration;
         DoClean = doClean;
-        DotnetVerbosity = dotnetVerbosity;
         SolutionPath = solutionPath;
         Solution = ctx.ParseSolution(solutionPath);
     }
@@ -161,7 +181,6 @@ public class BuildData
     public string Target { get; }
     public string Configuration { get; }
     public bool DoClean { get; }
-    public DotNetCoreVerbosity DotnetVerbosity { get; }
     public FilePath SolutionPath { get; }
     public SolutionParserResult Solution { get; }
 
