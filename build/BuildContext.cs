@@ -40,7 +40,7 @@ namespace Build
 
             var build = new Tree(":rocket: Build");
             build
-                .AddNode(":pencil: Settings")
+                .AddNode(":notebook: Settings")
                 .AddNode(new Table()
                     .AddColumns("Clean", "Configuration")
                     .AddRow(DoClean.ToString(), BuildConfiguration)
@@ -53,7 +53,7 @@ namespace Build
                 projects.AddRow(project.Name, repoDir.GetRelativePath(project.Path).FullPath);
             }
 
-            build.AddNode(":pick: Projects")
+            build.AddNode(":hammer: Projects")
                 .AddNode(projects);
             AnsiConsole.Render(build);
         }
