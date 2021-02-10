@@ -21,4 +21,4 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Test
-      run: ./build --target Test --configuration ${{ matrix.build_config }} --clean
+      run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
