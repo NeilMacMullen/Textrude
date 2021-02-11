@@ -49,10 +49,14 @@ namespace Textrude
                 $"Unable to read file {_options.Template}");
         }
 
+
         public void Run()
         {
-            var lastModelDate = GetLastWrittenDates(_options.Models, DateTime.MinValue, false).Max();
-            var earliestOutputDate = GetLastWrittenDates(_options.Output, DateTime.MinValue, true).Min();
+            var models = NamedFileFactory.ToNamedFiles(_options.Models, NameProvider.IndexedModel);
+            var outputs = NamedFileFactory.ToNamedFiles(_options.Output, NameProvider.IndexedOutput);
+
+            var lastModelDate = GetLastWrittenDates(models.Select(m => m.Path), DateTime.MinValue, false).Max();
+            var earliestOutputDate = GetLastWrittenDates(outputs.Select(m => m.Path), DateTime.MinValue, true).Min();
             var templateDate = GetLastWrittenDates(new[] {_options.Template}, DateTime.MinValue, false).Max();
 
             var lastInputDate = lastModelDate > templateDate ? lastModelDate : templateDate;
@@ -70,11 +74,11 @@ namespace Textrude
                 .WithDefinitions(_options.Definitions)
                 .WithTemplate(template);
 
-            foreach (var modelPath in _options.Models)
+            foreach (var model in models)
             {
-                var modelText = TryReadFile(modelPath);
-                var format = ModelDeserializerFactory.FormatFromExtension(modelPath);
-                engine = engine.WithModel(modelText, format);
+                var modelText = TryReadFile(model.Path);
+                var format = ModelDeserializerFactory.FormatFromExtension(model.Path);
+                engine = engine.WithModel(model.Name, modelText, format);
             }
 
             engine = engine.WithIncludePaths(_options.Include);
@@ -92,25 +96,22 @@ namespace Textrude
             if (engine.HasErrors)
                 _sys.GetOrQuit<int>(() => throw new ApplicationException(), "");
 
-            var outputFiles = _options.Output.ToArray();
-            var outputFileCount = outputFiles.Length;
-            if (outputFileCount != 0)
+
+            if (outputs.Any())
             {
-                var outputs = engine.GetOutput(outputFileCount);
-                for (var i = 0; i < outputFileCount; i++)
+                foreach (var output in outputs)
                 {
-                    var outputFile = outputFiles[i];
-                    var text = outputs[i];
-                    _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(outputFile, text),
-                        $"Unable to write output to {outputFile}");
+                    var text = engine.GetOutputFromVariable(output.Name);
+                    _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(output.Path, text),
+                        $"Unable to write output to {output.Path}");
                 }
             }
             else
             {
-                var outputs = engine.GetOutput(10);
+                var outputStrings = engine.GetOutput(10);
                 for (var i = 0; i < outputs.Length; i++)
                 {
-                    var text = outputs[i];
+                    var text = outputStrings[i];
                     if (text.Length == 0)
                         continue;
                     Console.WriteLine($"----------------- output{i} -------------------");

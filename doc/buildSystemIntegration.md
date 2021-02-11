@@ -16,6 +16,11 @@ If no *--output* is specified, the output will be written to stdout.
 
 ```textrude.exe render --models "model0.Yaml" "model1.Json" "model2.Csv" --template "template.sbn" --output "out.txt" "out1.txt"```
 
+## Multiple input/output with named models and outputs
+
+```textrude.exe render --models "m1=model0.Yaml" "m2=model1.Json" "m3=model2.Csv" --template "template.sbn" --output "output.txt" "out2=out1.txt"```
+
+
 ## Definitions
 
 ```textrude.exe render --models model.yaml --template template.sbn --output out.txt --definitions "LANGUAGE=ENGLISH" "COUNTRY=UK"
