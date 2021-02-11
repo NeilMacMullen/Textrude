@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Engine.Application;
+using SharedApplication;
 
 namespace TextrudeInteractive
 {
@@ -11,7 +12,7 @@ namespace TextrudeInteractive
             var outputName =
                 f.Name.Length != 0
                     ? f.Name
-                    : $"output{(n == 0 ? "" : n)}";
+                    : NameProvider.IndexedOutput(n);
             return new EditPaneViewModel
             {
                 Format = f.Format,
@@ -28,7 +29,7 @@ namespace TextrudeInteractive
             var modelName =
                 model.Name.Length != 0
                     ? model.Name
-                    : $"model{(n == 0 ? "" : n)}";
+                    : NameProvider.IndexedModel(n);
             return new EditPaneViewModel
             {
                 Format = model.Format.ToString(),

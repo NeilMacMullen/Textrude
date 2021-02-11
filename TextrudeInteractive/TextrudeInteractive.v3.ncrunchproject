@@ -1,5 +1,8 @@
 ﻿<ProjectConfiguration>
   <Settings>
+    <AdditionalFilesToIncludeForProject>
+      <Value>obj\TextrudeInteractive.csproj.nuget.dgspec.json</Value>
+    </AdditionalFilesToIncludeForProject>
     <CustomBuildProperties>
       <Value>DisableGitVersionTask = true</Value>
     </CustomBuildProperties>

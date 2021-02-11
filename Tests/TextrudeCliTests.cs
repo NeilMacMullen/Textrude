@@ -11,25 +11,6 @@ namespace Tests
     [TestClass]
     public class TextrudeCliTests
     {
-        private const string modelFile = "model.yaml";
-        private const string outputFile = "output.txt";
-        private const string templateFile = "template.sbn";
-        private readonly MockFileSystem _fileSystem = new();
-
-        private readonly Helpers _helper = new()
-        {
-            ExitHandler =
-                msg => throw new ApplicationException(msg)
-        };
-
-        private readonly RenderOptions _options = new();
-
-
-        private void Run()
-        {
-            CmdRender.Run(_options, new RunTimeEnvironment(_fileSystem), _helper);
-        }
-
         [TestMethod]
         public void SimpleRenderPass()
         {
@@ -56,6 +37,31 @@ namespace Tests
             _fileSystem.ReadAllText(outputFile)
                 .Should().Be("123 ddd");
         }
+
+        [TestMethod]
+        public void NamedModelsAreUnderstood()
+        {
+            AddModel("test", modelFile, "A: 123");
+            AddTemplate("{{test.A}} ddd");
+            AddOutputFile(outputFile);
+
+            Run();
+            _fileSystem.ReadAllText(outputFile)
+                .Should().Be("123 ddd");
+        }
+
+        [TestMethod]
+        public void NamedOutputsAreUnderstood()
+        {
+            AddModel(modelFile, "A: 123");
+            AddTemplate("{{capture testOut}}hello{{end}} ");
+            AddOutputFile("testOut", outputFile);
+
+            Run();
+            _fileSystem.ReadAllText(outputFile)
+                .Should().Be("hello");
+        }
+
 
         [TestMethod]
         public void WhenLazyEngineDoesNotRunUnlessInputTouched()
@@ -92,6 +98,26 @@ namespace Tests
             _fileSystem.ReadAllText(outputFile).Should().Be("123");
         }
 
+        #region helper methods
+
+        private const string modelFile = "model.yaml";
+        private const string outputFile = "output.txt";
+        private const string templateFile = "template.sbn";
+        private readonly MockFileSystem _fileSystem = new();
+
+        private readonly Helpers _helper = new()
+        {
+            ExitHandler =
+                msg => throw new ApplicationException(msg)
+        };
+
+        private readonly RenderOptions _options = new();
+
+
+        private void Run()
+        {
+            CmdRender.Run(_options, new RunTimeEnvironment(_fileSystem), _helper);
+        }
 
         private void AddTemplate(string someText)
         {
@@ -100,14 +126,27 @@ namespace Tests
         }
 
         private void AddModel(string fileName, string text)
+            => AddModel(string.Empty, fileName, text);
+
+        private string Name(string modelName, string fileName)
+            => modelName.Length == 0
+                ? fileName
+                : $"{modelName}={fileName}";
+
+        private void AddModel(string modelName, string fileName, string text)
         {
             _fileSystem.WriteAllText(fileName, text);
-            _options.Models = _options.Models.Append(fileName).ToArray();
+            _options.Models = _options.Models.Append(Name(modelName, fileName)).ToArray();
         }
 
         private void AddOutputFile(string fileName)
+            => AddOutputFile(string.Empty, fileName);
+
+        private void AddOutputFile(string name, string fileName)
         {
-            _options.Output = _options.Output.Append(fileName).ToArray();
+            _options.Output = _options.Output.Append(Name(name, fileName)).ToArray();
         }
+
+        #endregion
     }
 }
