@@ -18,141 +18,126 @@ namespace Build.Tasks
     {
         public override void Run(BuildContext context)
         {
-            AnsiConsole.Progress()
-                .AutoClear(false)
-                .AutoRefresh(true)
-                .Columns(new ProgressColumn[]
-                {
-                    new TaskDescriptionColumn(),
-                    new ProgressBarColumn(),
-                    new PercentageColumn(),
-                    new RemainingTimeColumn(),
-                    new SpinnerColumn(Spinner.Known.CircleQuarters),
-                })
-                .Start(ctx =>
-                {
-                    var buildTask = ctx.AddTask("Build", new ProgressTaskSettings()
+            if (AnsiConsole.Capabilities.SupportsInteraction)
+            {
+                AnsiConsole.Progress()
+                    .AutoClear(false)
+                    .AutoRefresh(true)
+                    .Columns(new ProgressColumn[]
                     {
-                        MaxValue = context.ProjectsToBuild.Count(),
-                        AutoStart = false
-                    });
-                    var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings()
+                        new TaskDescriptionColumn(),
+                        new ProgressBarColumn(),
+                        new PercentageColumn(),
+                        new RemainingTimeColumn(),
+                        new SpinnerColumn(Spinner.Known.CircleQuarters),
+                    })
+                    .Start(ctx =>
                     {
-                        MaxValue = 1,
-                        AutoStart = false
-                    });
-
-                    var projFinished = new Regex("(?<project>.+) -> (?<output>.+)");
-                    var warning = new Regex(@"(?<file>.+)\((?<row>\d+),(?<col>\d+)\): warning (?<code>[A-Z0-9]+): (?<text>.+)");
-
-                    buildTask.StartTask();
-                    var exit = context.StartProcess("dotnet", new ProcessSettings()
-                    {
-                        Arguments = new ProcessArgumentBuilder()
-                            .Append("build")
-                            .Append("--no-restore")
-                            .AppendSwitch("-c", context.BuildConfiguration)
-                            .AppendSwitch("-v", DotNetCoreVerbosity.Minimal.ToString())
-                            .Append("-consoleLoggerParameters:NoSummary;NoItemAndPropertyList")
-                            .Append("-binaryLogger:LogFile=build.binlog"),
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        RedirectedStandardOutputHandler = o =>
+                        var buildTask = ctx.AddTask("Build", new ProgressTaskSettings()
                         {
-                            if (o == null) return null;
-
-                            if (o.Length < 2000)
-                            {
-                                if (projFinished.TryMatch(o, out var pfm))
-                                {
-                                    if (AnsiConsole.Capabilities.SupportsInteraction)
-                                    {
-                                        AnsiConsole.MarkupLine(
-                                            "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                                            pfm.Groups["project"].Value,
-                                            pfm.Groups["output"].Value.Truncate(AnsiConsole.Width
-                                                - pfm.Groups["project"].Value.Length
-                                                - 20
-                                            )
-                                        );
-                                    }
-                                    else
-                                    {
-                                        AnsiConsole.MarkupLine(
-                                            "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                                            pfm.Groups["project"].Value,
-                                            pfm.Groups["output"].Value
-                                        );
-                                    }
-                                    buildTask.Increment(1);
-                                    return null;
-                                }
-                                else if (warning.TryMatch(o, out var warn))
-                                {
-                                    var offendingFile = context.File(warn.Groups["file"].Value);
-                                    if (AnsiConsole.Capabilities.SupportsInteraction)
-                                    {
-                                        AnsiConsole.MarkupLine(
-                                            "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
-                                            offendingFile.Path.GetFilename(),
-                                            warn.Groups["row"].Value,
-                                            warn.Groups["col"].Value,
-                                            warn.Groups["text"].Value.EscapeMarkup().Truncate(AnsiConsole.Width
-                                                - offendingFile.Path.GetFilename().FullPath.Length
-                                                - warn.Groups["row"].Value.Length
-                                                - warn.Groups["col"].Value.Length
-                                                - 35
-                                            )
-                                        );
-                                    }
-                                    else
-                                    {
-                                        AnsiConsole.MarkupLine(
-                                            "dotnet build: {0}({1},{2}): warning {3}: {4}",
-                                            warn.Groups["file"].Value,
-                                            warn.Groups["row"].Value,
-                                            warn.Groups["col"].Value,
-                                            warn.Groups["code"].Value,
-                                            warn.Groups["text"].Value.EscapeMarkup()
-                                        );
-                                    }
-                                    return null;
-                                }
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(o))
-                            {
-                                if (AnsiConsole.Capabilities.SupportsInteraction)
-                                {
-                                    AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
-                                        o.EscapeMarkup().Truncate(AnsiConsole.Width - 25)
-                                    );
-                                }
-                                else
-                                {
-                                    AnsiConsole.MarkupLine("[grey54]dotnet build:[/] {0}",
-                                        o.EscapeMarkup()
-                                    );
-                                }
-                            }
-                            return null;
-                        },
-                        RedirectedStandardErrorHandler = o =>
+                            MaxValue = context.ProjectsToBuild.Count(),
+                            AutoStart = false
+                        });
+                        var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings()
                         {
-                            if (!string.IsNullOrWhiteSpace(o))
-                                AnsiConsole.MarkupLine("[red]{0}[/]", o.EscapeMarkup());
-                            return null;
-                        },
-                    });
-                    buildTask.StopTask();
-                    if (exit != 0)
-                        throw new Exception("Build failed!");
+                            MaxValue = 1,
+                            AutoStart = false
+                        });
 
-                    buildDocTask.StartTask();
-                    context.DotNetCoreRun("Textrude", @"render --models ScriptLibrary/doc.yaml --template ScriptLibrary/doctemplate.sbn --output doc/lib.md");
-                    buildDocTask.Increment(1);
-                    buildDocTask.StopTask();
-                });
+                        buildTask.StartTask();
+                        BuildSolution(context,
+                            color: true,
+                            new Progress<int>(p => buildTask.Increment(p)));
+                        buildTask.StopTask();
+
+                        buildDocTask.StartTask();
+                        GenerateDocumentation(context);
+                        buildDocTask.Increment(1);
+                        buildDocTask.StopTask();
+                    });
+            }
+            else
+            {
+                BuildSolution(context, color: false);
+                GenerateDocumentation(context);
+            }
+        }
+
+        private void BuildSolution(BuildContext context, bool color, IProgress<int> progress = default(IProgress<int>))
+        {
+            var projFinished = new Regex("(?<project>.+) -> (?<output>.+)");
+            var warning = new Regex(
+                @"(?<file>.+)\((?<row>\d+),(?<col>\d+)\): warning (?<code>[A-Z0-9]+): (?<text>.+) \[(?<project>.+)\]");
+
+            var exit = context.StartProcess("dotnet", new ProcessSettings()
+            {
+                Arguments = new ProcessArgumentBuilder()
+                    .Append("build")
+                    .Append("--no-restore")
+                    .AppendSwitch("-c", context.BuildConfiguration)
+                    .AppendSwitch("-v", DotNetCoreVerbosity.Minimal.ToString())
+                    .Append("-consoleLoggerParameters:NoSummary;NoItemAndPropertyList")
+                    .Append("-binaryLogger:LogFile=build.binlog"),
+                RedirectStandardOutput = true,
+                RedirectedStandardOutputHandler = o =>
+                {
+                    if (o == null) return null;
+                    if (!color)
+                    {
+                        Console.WriteLine(o);
+                        return null;
+                    }
+
+                    if (o.Length < 2000)
+                    {
+                        if (projFinished.TryMatch(o, out var pfm))
+                        {
+                            progress?.Report(1);
+                            RenderLine(
+                                "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
+                                pfm.Groups["project"].Value,
+                                pfm.Groups["output"].Value
+                            );
+                            return null;
+                        }
+                        else if (warning.TryMatch(o, out var warn))
+                        {
+                            var offendingFile = context.File(warn.Groups["file"].Value);
+                            RenderLine(
+                                "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
+                                offendingFile.Path.GetFilename(),
+                                warn.Groups["row"].Value,
+                                warn.Groups["col"].Value,
+                                warn.Groups["text"].Value.EscapeMarkup()
+                            );
+                            return null;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(o))
+                    {
+                        RenderLine(
+                            "[grey54]dotnet build:[/] {0}",
+                            o.EscapeMarkup()
+                        );
+                    }
+                    return null;
+                },
+            });
+            if (exit != 0)
+                throw new Exception("Build failed!");
+
+            void RenderLine(string format, params object[] args)
+            {
+                var line = new Markup(string.Format(format, args) + Environment.NewLine)
+                    .Overflow(Overflow.Ellipsis);
+                AnsiConsole.Render(line);
+            }
+        }
+
+        private void GenerateDocumentation(BuildContext context)
+        {
+            context.DotNetCoreRun("Textrude", @"render --models ScriptLibrary/doc.yaml --template ScriptLibrary/doctemplate.sbn --output doc/lib.md");
         }
     }
 }
