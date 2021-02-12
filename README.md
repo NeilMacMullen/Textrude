@@ -41,6 +41,7 @@ The current release is **v1.3.0**.
 ## What's new
 
 ### vNext (source only)
+- **Note - code completion is known to be broken in the current source build** 
 - Update to Monaco 22.3 which supports an extra couple of languages
 - Rewire font-size control, line numbers, wordwarp to model/output panes
 - remove minimap from model/output panes
