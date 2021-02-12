@@ -10,7 +10,6 @@ namespace Build
     {
         public static int Main(string[] args)
         {
-            Spectre.Console.AnsiConsole.Capabilities.SupportsInteraction = true;
             var projectDir = new DirectoryInfo(".");
             Environment.CurrentDirectory = projectDir.Parent.FullName;
 
