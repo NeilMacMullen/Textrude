@@ -20,7 +20,7 @@ namespace TextrudeInteractive
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MaterialWindow, INotifyPropertyChanged
+    public partial class MainWindow : MaterialWindow
     {
         private const string HomePage = @"https://github.com/NeilMacMullen/Textrude";
 
@@ -108,8 +108,6 @@ namespace TextrudeInteractive
             UnlockRender();
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void ApplyVisualSettings(object sender, PropertyChangedEventArgs args)
         {

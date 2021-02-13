@@ -10,7 +10,7 @@ namespace TextrudeInteractive
     ///     Manages a TabControl
     /// </summary>
     /// <typeparam name="T"> type of Pane</typeparam>
-    public class TabControlManager : EditPaneViewModel
+    public class TabControlManager
     {
         private readonly InputMonacoPane _editPane;
 

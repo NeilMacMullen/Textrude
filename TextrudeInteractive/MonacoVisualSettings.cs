@@ -8,7 +8,7 @@ namespace TextrudeInteractive
     {
         private bool _lineNumbers = true;
         private bool _showWhitespace;
-        private string _templateText;
+
         private double _textSize = 14;
 
         private bool _wordWrap;
@@ -55,7 +55,7 @@ namespace TextrudeInteractive
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
