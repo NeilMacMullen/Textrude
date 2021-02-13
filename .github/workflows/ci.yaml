@@ -20,11 +20,22 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Clean
-      run: dotnet clean -p:Configuration=${{ matrix.build_config }} && dotnet nuget locals all --clear
-    - name: Restore dependencies
-      run: dotnet restore -p:Configuration=${{ matrix.build_config }}
-    - name: Build
-      run: dotnet build -p:Configuration=${{ matrix.build_config }} --no-restore
     - name: Test
-      run: dotnet test -p:Configuration=${{ matrix.build_config }} --no-build
+      run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
+  package:
+    needs: test
+    env:
+      DisableGitVersionTask: true
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Package
+      run: dotnet run --project build/Build.csproj -- --target Package
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Textrude.zip
+        path: publish/Textrude.zip
