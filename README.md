@@ -1,5 +1,7 @@
 # Textrude
 
+[![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=code-coverage)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=code-coverage)
+
 ## Give a Star! :star:
 
 If you like or are using this project please give it a star or leave some feedback in the [discussions](https://github.com/NeilMacMullen/Textrude/discussions/categories/send-a-smile) section. A little feedback goes a long way - thanks!
