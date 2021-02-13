@@ -23,6 +23,7 @@ jobs:
     - name: Test
       run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
   package:
+    needs: test
     env:
       DisableGitVersionTask: true
     runs-on: windows-latest
