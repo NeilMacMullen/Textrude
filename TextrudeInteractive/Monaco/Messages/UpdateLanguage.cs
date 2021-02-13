@@ -11,4 +11,9 @@ namespace TextrudeInteractive.Monaco.Messages
 
         public string Language { get; }
     }
+
+
+    public record CompletionNode(string name, string description);
+
+    public record Completions(CompletionNode[] helpers);
 }

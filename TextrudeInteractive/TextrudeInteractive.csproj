@@ -43,4 +43,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Monaco\NewFolder\" />
+    <Folder Include="Resources\NewFolder\" />
+  </ItemGroup>
+
 </Project>

@@ -164,6 +164,16 @@ namespace TextrudeInteractive
         public void SetTextSize(double textSize)
         {
             PostMessage(new FontSize(textSize));
+
+            var msg = new UpdateCompletions(
+                new Completions(
+                    new[]
+                    {
+                        new CompletionNode($"abcd {textSize}", "def"),
+                        new CompletionNode($"hhhh {textSize}", "xyz"),
+                    }));
+            var json = JsonSerializer.Serialize(msg, new JsonSerializerOptions {WriteIndented = true});
+            PostMessage(msg);
         }
 
         public void SetLineNumbers(bool onOff)
@@ -176,12 +186,6 @@ namespace TextrudeInteractive
             PostMessage(new WordWrap(onOff));
         }
 
-        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
-        {
-            SetTextSize(textSize);
-            SetLineNumbers(lineNumbersOn);
-            SetWordWrap(wordWrapOn);
-        }
 
         public void Setup(string format, bool onOff)
         {
