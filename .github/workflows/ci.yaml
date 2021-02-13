@@ -22,3 +22,14 @@ jobs:
         dotnet-version: 5.0.x
     - name: Test
       run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
+  pacakge:
+    env:
+      DisableGitVersionTask: true
+    runs-on: windows-latest
+    steps:
+    - name: Package
+      run: dotnet run --project build/Build.csproj -- --target Package
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Textrude.zip
+        path: publish/Textrude.zip
