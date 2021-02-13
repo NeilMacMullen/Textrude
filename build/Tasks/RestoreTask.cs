@@ -12,7 +12,7 @@ namespace Build.Tasks
     {
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreRestore(context.SolutionPath.FullPath, new DotNetCoreRestoreSettings()
+            context.DotNetCoreRestore(context.SolutionFile, new DotNetCoreRestoreSettings()
             {
                 ArgumentCustomization = args => args.Append($"-p:Configuration={context.BuildConfiguration}"),
                 Verbosity = DotNetCoreVerbosity.Minimal

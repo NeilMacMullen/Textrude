@@ -1,4 +1,5 @@
 ﻿using Cake.Common;
+using Cake.Common.Build;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Core;
@@ -18,7 +19,12 @@ namespace Build.Tasks
     {
         public override void Run(BuildContext context)
         {
-            if (AnsiConsole.Capabilities.SupportsInteraction)
+            if (context.GitHubActions().IsRunningOnGitHubActions)
+            {
+                BuildSolution(context, color: false);
+                GenerateDocumentation(context);
+            }
+            else
             {
                 AnsiConsole.Progress()
                     .AutoClear(false)
@@ -55,11 +61,6 @@ namespace Build.Tasks
                         buildDocTask.Increment(1);
                         buildDocTask.StopTask();
                     });
-            }
-            else
-            {
-                BuildSolution(context, color: false);
-                GenerateDocumentation(context);
             }
         }
 

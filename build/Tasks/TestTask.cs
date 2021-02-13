@@ -11,7 +11,7 @@ namespace Build.Tasks
     {
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreTest(context.SolutionPath.FullPath, new DotNetCoreTestSettings()
+            context.DotNetCoreTest(context.SolutionFile, new DotNetCoreTestSettings()
             {
                 NoRestore = true,
                 NoBuild = true,

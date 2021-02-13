@@ -8,6 +8,8 @@ using Cake.Frosting;
 using System.Collections.Generic;
 using System.Linq;
 using Spectre.Console;
+using Cake.Common.IO;
+using Cake.Common.IO.Paths;
 
 namespace Build
 {
@@ -20,13 +22,17 @@ namespace Build
         {
             BuildConfiguration = context.Argument<string>("configuration", "Debug");
             DoClean = context.HasArgument("clean");
-            SolutionPath = "Textrude.sln";
-            Solution = context.ParseSolution(SolutionPath);
+            RepoDir = context.Directory(System.Environment.CurrentDirectory);
+            PublishDir = RepoDir + context.Directory("publish");
+            SolutionFile = RepoDir + context.File("Textrude.sln");
+            Solution = context.ParseSolution(SolutionFile);
         }
 
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
-        public FilePath SolutionPath { get; }
+        public ConvertableDirectoryPath RepoDir { get; }
+        public ConvertableDirectoryPath PublishDir { get; }
+        public ConvertableFilePath SolutionFile { get; }
         public SolutionParserResult Solution { get; }
 
         public IEnumerable<SolutionProject> ProjectsToBuild
@@ -36,8 +42,6 @@ namespace Build
 
         public void Describe()
         {
-            var repoDir = new DirectoryPath(System.Environment.CurrentDirectory);
-
             var build = new Tree(":rocket: Build");
             build
                 .AddNode(":notebook: Settings")
@@ -50,7 +54,7 @@ namespace Build
                 .AddColumns("Name", "Path");
             foreach (var project in ProjectsToBuild.OrderBy(p => p.Name))
             {
-                projects.AddRow(project.Name, repoDir.GetRelativePath(project.Path).FullPath);
+                projects.AddRow(project.Name, RepoDir.Path.GetRelativePath(project.Path).FullPath);
             }
 
             build.AddNode(":hammer: Projects")

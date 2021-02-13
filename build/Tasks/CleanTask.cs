@@ -16,7 +16,7 @@ namespace Build.Tasks
 
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreClean(context.SolutionPath.FullPath, new DotNetCoreCleanSettings()
+            context.DotNetCoreClean(context.SolutionFile, new DotNetCoreCleanSettings()
             {
                 Configuration = context.BuildConfiguration,
                 Verbosity = DotNetCoreVerbosity.Minimal
