@@ -41,7 +41,7 @@ The current release is **v1.3.0**.
 ## What's new
 
 ### vNext (source only)
-- **Note - template intellisense/code-completion is known to be broken in the current source build** 
+- ~~Note - template intellisense/code-completion is known to be broken in the current source build~~ 
 - Update to Monaco 22.3 which supports an extra couple of languages
 - Rewire font-size control, line numbers, wordwarp to model/output panes
 - remove minimap from model/output panes
@@ -52,6 +52,7 @@ The current release is **v1.3.0**.
 - the template is now edited using Monaco and (rudimentary) syntax hightlight is applied
 - models and outputs can now be renamed in TextrudeInteractive
 - Textrude CLI now supports named models/outputs via "mymodel=d:/model.csv" syntax
+- Basic auto-completion restored
 
 ### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis
