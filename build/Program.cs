@@ -14,6 +14,7 @@ namespace Build
             Environment.CurrentDirectory = projectDir.Parent.FullName;
 
             return new CakeHost()
+                .InstallTool(new Uri("nuget:?package=ReportGenerator&version=4.8.5"))
                 .UseContext<BuildContext>()
                 .UseSetup<BuildSetup>()
                 .Run(args);
