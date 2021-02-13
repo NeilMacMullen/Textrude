@@ -32,6 +32,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "build\Build.csproj", "{A93C9654-6AE7-4A4E-9988-6B0B89158CE7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub workflows", "GitHub workflows", "{02A73D75-89E1-4C65-8799-A3A9DBE32A40}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yaml = .github\workflows\ci.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +88,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A93C9654-6AE7-4A4E-9988-6B0B89158CE7} = {9FBD6430-C7F0-4D07-974C-EBEB5EB962C2}
+		{02A73D75-89E1-4C65-8799-A3A9DBE32A40} = {9FBD6430-C7F0-4D07-974C-EBEB5EB962C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57A6CC74-8B87-40FD-8982-02692EF23818}
