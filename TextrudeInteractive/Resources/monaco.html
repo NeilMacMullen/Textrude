@@ -35,6 +35,7 @@
             });
             const model = editor.getModel();
             var settingText = false;
+            var completions = { };
 
             window.addEventListener('resize', (event) => {
                 editor.layout();
@@ -62,12 +63,11 @@
                         settingText = true;
                         model.setValue(event.data.Text);
 
-
                     } else if (event.data.Type === "UpdateLanguage") {
                         monaco.editor.setModelLanguage(model, event.data.Language);
                     } else if (event.data.Type === "FontSize") {
                         editor.updateOptions({
-                            fontSize: event.data.Size
+                            fontSize:  event.data.Size
                         });
                     } else if (event.data.Type === "LineNumbers") {
                         editor.updateOptions({
@@ -81,9 +81,55 @@
                         editor.updateOptions({
                             renderWhitespace: event.data.WhitespaceType
                         });
+                    } else if (event.data.Type === "UpdateCompletions") {
+                        completions = event.data.Completions;
                     }
 
                 });
+
+
+            function ShowAutocompletion(obj) {
+
+                // Register object that will return autocomplete items 
+                monaco.languages.registerCompletionItemProvider('scriban', {
+                    // Run this function when the period or open parenthesis is typed (and anything after a space)
+                    triggerCharacters: ['.', '('],
+
+                    // Function to generate autocompletion results
+                    provideCompletionItems: function(model, position, token) {
+                        // Split everything the user has typed on the current line up at each space, and only look at the last word
+                        var last_chars = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 0, endLineNumber: position.lineNumber, endColumn: position.column });
+                        var words = last_chars.replace("\t", "").split(" ");
+                        var active_typing = words[words.length - 1]; // What the user is currently typing (everything after the last space)
+
+
+                        // Array of autocompletion results
+                        var result = [];
+                        // Create completion object
+                        if (active_typing.length >=3)
+                        completions.helpers.forEach(function(item) {
+                            if (item.name.startsWith(active_typing)) {
+                                
+                                var to_push = {
+                                    label: item.name,
+                                    kind: item.kind,
+                                    detail: item.description,
+                                    insertText: item.name.substr(active_typing.length)
+                                };
+                                // Add to final results
+                                result.push(to_push);
+                            }
+                        });
+                      
+                    return {
+                            suggestions: result
+                        };
+                    }
+                });
+            };
+
+            ShowAutocompletion();
+
             //forcing a layout here seems to help with the white flash slightly
             monaco.editor.setModelLanguage(model, "csharp");
             editor.layout();

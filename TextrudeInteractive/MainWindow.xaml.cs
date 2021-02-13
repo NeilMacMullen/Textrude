@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Windows;
 using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
+using TextrudeInteractive.Monaco.Messages;
 
 namespace TextrudeInteractive
 {
@@ -450,7 +452,22 @@ namespace TextrudeInteractive
                 Errors.Text += "No errors";
             }
 
-            //_mainEditWindow.SetCompletion(engine.ModelPaths());
+            CompletionType MapType(ModelPath.PathType type)
+            {
+                var d = new Dictionary<ModelPath.PathType, CompletionType>
+                {
+                    [ModelPath.PathType.Method] = CompletionType.Method,
+                    [ModelPath.PathType.Property] = CompletionType.Property,
+                    [ModelPath.PathType.Keyword] = CompletionType.Keyword
+                };
+                return d.TryGetValue(type, out var k) ? k : CompletionType.Value;
+            }
+
+            var nodes = engine.ModelPaths()
+                .Select(r => new CompletionNode(r.Render(), r.Terminal(), MapType(r.ModelType)
+                )).ToArray();
+            var comp = new Completions(nodes);
+            TempateEditPane.MonacoPane.SetCompletions(comp);
         }
 
 

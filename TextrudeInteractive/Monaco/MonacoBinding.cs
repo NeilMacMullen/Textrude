@@ -166,6 +166,14 @@ namespace TextrudeInteractive
             PostMessage(new FontSize(textSize));
         }
 
+        public void SetCompletions(Completions completions)
+        {
+            var msg = new UpdateCompletions(
+                completions);
+            //var json = JsonSerializer.Serialize(msg, new JsonSerializerOptions { WriteIndented = true });
+            PostMessage(msg);
+        }
+
         public void SetLineNumbers(bool onOff)
         {
             PostMessage(new LineNumbers(onOff));
@@ -176,12 +184,6 @@ namespace TextrudeInteractive
             PostMessage(new WordWrap(onOff));
         }
 
-        public void SetViewOptions(double textSize, bool lineNumbersOn, bool wordWrapOn)
-        {
-            SetTextSize(textSize);
-            SetLineNumbers(lineNumbersOn);
-            SetWordWrap(wordWrapOn);
-        }
 
         public void Setup(string format, bool onOff)
         {
