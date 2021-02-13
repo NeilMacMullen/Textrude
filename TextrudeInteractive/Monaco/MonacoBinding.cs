@@ -164,15 +164,13 @@ namespace TextrudeInteractive
         public void SetTextSize(double textSize)
         {
             PostMessage(new FontSize(textSize));
+        }
 
+        public void SetCompletions(Completions completions)
+        {
             var msg = new UpdateCompletions(
-                new Completions(
-                    new[]
-                    {
-                        new CompletionNode($"abcd {textSize}", "def"),
-                        new CompletionNode($"hhhh {textSize}", "xyz"),
-                    }));
-            var json = JsonSerializer.Serialize(msg, new JsonSerializerOptions {WriteIndented = true});
+                completions);
+            //var json = JsonSerializer.Serialize(msg, new JsonSerializerOptions { WriteIndented = true });
             PostMessage(msg);
         }
 

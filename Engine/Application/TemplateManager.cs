@@ -136,7 +136,14 @@ namespace Engine.Application
 
             foreach (var keyValuePair in container)
             {
-                var p = prefix.WithChild(keyValuePair.Key);
+                var type = keyValuePair.Value.GetType().FullName;
+
+                var mType = ModelPath.PathType.Property;
+                if (type.Contains("Scriban") && type.Contains("Function"))
+                    mType = ModelPath.PathType.Method;
+
+
+                var p = prefix.WithChild(keyValuePair.Key).WithType(mType);
                 if (keyValuePair.Value is IDictionary<string, object> child)
                     ret.AddRange(PathsForObjectTree(child, p));
                 else ret.Add(p);
@@ -148,7 +155,23 @@ namespace Engine.Application
         public ImmutableArray<ModelPath> GetBuiltIns() => PathsForObjectTree(_context.BuiltinObject, ModelPath.Empty);
         public ImmutableArray<ModelPath> GetObjectTree() => PathsForObjectTree(_top, ModelPath.Empty);
 
-        public ImmutableArray<ModelPath> ModelPaths() => GetBuiltIns().Concat(GetObjectTree())
-            .ToImmutableArray();
+        public ImmutableArray<ModelPath> GetKeywords()
+        {
+            var keywords =
+                @"func end if else for break continue
+                  in  while capture readonly import
+                  with wrap include ret case  when this
+                empty tablerow";
+            return keywords.Split(" \r\n".ToCharArray(),
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(s => ModelPath.FromString(s).WithType(ModelPath.PathType.Keyword))
+                .ToImmutableArray();
+        }
+
+        public ImmutableArray<ModelPath> ModelPaths() =>
+            GetBuiltIns()
+                .Concat(GetObjectTree())
+                .Concat(GetKeywords())
+                .ToImmutableArray();
     }
 }

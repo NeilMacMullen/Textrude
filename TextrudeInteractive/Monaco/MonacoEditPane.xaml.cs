@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using TextrudeInteractive.Monaco.Messages;
 
 namespace TextrudeInteractive.Monaco
 {
@@ -17,6 +18,8 @@ namespace TextrudeInteractive.Monaco
             _monacoBinding = new MonacoBinding(WebView, false) {OnUserInput = _ => OnUserInput()};
             _monacoBinding.Initialize().ConfigureAwait(false);
         }
+
+        public void SetCompletions(Completions completions) => _monacoBinding.SetCompletions(completions);
 
         public void SetReadOnly(bool onOff)
         {

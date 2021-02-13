@@ -35,27 +35,7 @@
             });
             const model = editor.getModel();
             var settingText = false;
-            var completions = {
-                helpers: [
-                    {
-                        name: "humanizr.camelcase",
-                        description: "CameCasing"
-                    },
-                    {
-                        name: "humanizr.pascalcase",
-                        description: "PascalCasing"
-                    },
-                    {
-                        name: "humanizr.kebaberize",
-                        description: "kebab-like-string"
-                    },
-                    {
-                        name: "debug",
-                        description: "some more useful stuff"
-                    }
-
-                    ]
-            };
+            var completions = { };
 
             window.addEventListener('resize', (event) => {
                 editor.layout();
@@ -82,7 +62,6 @@
                     } else if (event.data.Type === "UpdateText") {
                         settingText = true;
                         model.setValue(event.data.Text);
-
 
                     } else if (event.data.Type === "UpdateLanguage") {
                         monaco.editor.setModelLanguage(model, event.data.Language);
@@ -127,13 +106,15 @@
                         // Array of autocompletion results
                         var result = [];
                         // Create completion object
+                        if (active_typing.length >=3)
                         completions.helpers.forEach(function(item) {
                             if (item.name.startsWith(active_typing)) {
+                                
                                 var to_push = {
                                     label: item.name,
-                                    kind: monaco.languages.CompletionItemKind.Property,
+                                    kind: item.kind,
                                     detail: item.description,
-                                    insertText: item.name
+                                    insertText: item.name.substr(active_typing.length)
                                 };
                                 // Add to final results
                                 result.push(to_push);

@@ -12,6 +12,14 @@ namespace Engine.Application
     /// </remarks>
     public class ModelPath
     {
+        public enum PathType
+        {
+            Method,
+            Property,
+            Unknown,
+            Keyword
+        }
+
         public const string Separator = ".";
 
         /// <summary>
@@ -37,6 +45,8 @@ namespace Engine.Application
         /// </summary>
         public int Length => _tokens.Length;
 
+        public PathType ModelType { get; private set; } = PathType.Unknown;
+
         public static ModelPath FromTokens(IEnumerable<string> tokens)
         {
             var tokenArray = tokens.ToImmutableArray();
@@ -50,6 +60,14 @@ namespace Engine.Application
         /// </summary>
         public ModelPath WithChild(string child) => FromTokens(_tokens.Append(child));
 
+        public ModelPath WithType(PathType type)
+        {
+            var m = FromTokens(_tokens);
+            m.ModelType = type;
+            return m;
+        }
+
+
         /// <summary>
         ///     Returns a "dotted" string representation
         /// </summary>
@@ -57,5 +75,7 @@ namespace Engine.Application
 
         public static ModelPath FromString(string path) =>
             FromTokens((path.Split(Separator)));
+
+        public string Terminal() => IsEmpty ? string.Empty : _tokens.Last();
     }
 }
