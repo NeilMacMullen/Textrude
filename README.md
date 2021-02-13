@@ -1,6 +1,6 @@
 # Textrude
 
-[![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=main)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=main)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=main) [![Join the chat at https://gitter.im/Textrude/community](https://badges.gitter.im/Textrude/community.svg)](https://gitter.im/Textrude/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Give a Star! :star:
 
