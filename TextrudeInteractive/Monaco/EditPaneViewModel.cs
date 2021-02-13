@@ -62,7 +62,7 @@ namespace TextrudeInteractive
         public string[] AvailableFormats { get; set; } = Array.Empty<string>();
         public PaneType PaneType { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void Clear()
         {
