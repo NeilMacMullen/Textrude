@@ -29,7 +29,7 @@ jobs:
         flag-name: run-on-${{ matrix.os }}
         path-to-lcov: TestResults/lcov.info
         parallel: true
-  finish:
+  coveralls-finish:
     needs: test
     runs-on: ubuntu-latest
     steps:
