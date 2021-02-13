@@ -22,6 +22,22 @@ jobs:
         dotnet-version: 5.0.x
     - name: Test
       run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: run-on-${{ matrix.os }}
+        path-to-lcov: TestResults/lcov.info
+        parallel: true
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
   package:
     needs: test
     env:
