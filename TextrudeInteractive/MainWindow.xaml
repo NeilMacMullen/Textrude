@@ -22,6 +22,7 @@
     <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="ShowsPreview" Value="True" />
     </Style>
 
     <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
