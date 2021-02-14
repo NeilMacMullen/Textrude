@@ -8,7 +8,23 @@
 
   <PropertyGroup>
     <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\NewFolder1\**" />
+    <Compile Remove="Resources\NewFolder\**" />
+    <EmbeddedResource Remove="Resources\NewFolder1\**" />
+    <EmbeddedResource Remove="Resources\NewFolder\**" />
+    <None Remove="Resources\NewFolder1\**" />
+    <None Remove="Resources\NewFolder\**" />
+    <Page Remove="Resources\NewFolder1\**" />
+    <Page Remove="Resources\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\app.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.5.1">
@@ -44,8 +60,10 @@
 
   <ItemGroup>
     <Folder Include="Monaco\NewFolder\" />
-    <Folder Include="Resources\NewFolder1\" />
-    <Folder Include="Resources\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.png" />
   </ItemGroup>
 
 </Project>
