@@ -553,8 +553,15 @@ namespace TextrudeInteractive
             Process.Start(ps);
         }
 
+        private void OpenScriban(string doc)
+        {
+            OpenBrowserTo(new Uri($"https://github.com/scriban/scriban/blob/master/doc/{doc}.md"));
+        }
+
         private void ShowLanguageRef(object sender, RoutedEventArgs e) =>
-            OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
+            OpenScriban("language");
+
+        private void ShowBuiltIns(object sender, RoutedEventArgs e) => OpenScriban("builtins");
 
         private void OpenHome(string path) =>
             OpenBrowserTo(new Uri(HomePage + "/" + path));
@@ -572,9 +579,10 @@ namespace TextrudeInteractive
         private void SendASmile(object sender, RoutedEventArgs e) =>
             OpenHome("issues/new?assignees=&labels=smile&template=positive-feedback.md&title=I%20like%20it%21");
 
-
-        private void Questions(object sender, RoutedEventArgs e) =>
-            OpenHome("issues/new?assignees=&labels=question&template=ask-a-question.md&title=Help");
+        private void GoGitter(object sender, RoutedEventArgs e)
+        {
+            OpenBrowserTo(new Uri("https://gitter.im/Textrude/community"));
+        }
 
         #endregion
     }
