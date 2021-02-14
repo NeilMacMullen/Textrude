@@ -16,24 +16,18 @@ If you want single-file artefacts you can  the right-click on the Textrude or Te
 
 ## From the command line Windows/Linux
 
+Textrude builds using [Cake](https://cakebuild.net/) (there is no need to install this).  Use either the `build.ps` or `build.sh` scripts to trigger a build. The easiest way to build the executables is to run 
+
 ``` 
-#build the Textrude Windows CLI 
-dotnet publish Textrude\Textrude.csproj /p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml
-
-#build the Textrude Linux CLI 
-dotnet publish Textrude\Textrude.csproj /p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml
-
-#build the TextrudeInteractive tool (windows only)
-dotnet publish TextrudeInteractive\TextrudeInteractive.csproj /p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml
+build.ps1 -t package  
 ```
-Or just use the powershell script in the Textrude folder
-```
-make_release.ps1
-```
+This will create single-file executables in the Publish folder as well as copying the lib scripts and examples alongside.  A Zip file is also created to make it easy to copy the set of files to another location. 
 
 ## Example projects
 
 There are a number of example projects in the *examples* folder - this is a good place to start if you want to get an idea of what Textrude can do. 
+
+# Advanced modification and extending Textrude
 
 ## Git-less builds
 
