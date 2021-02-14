@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="textrude_app.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 54.232508 27.452035"
+   height="103.75572"
+   width="204.28961"
+   inkscape:export-filename="D:\Repos\Textrude\img\textrude_app.png"
+   inkscape:export-xdpi="159.83167"
+   inkscape:export-ydpi="159.83167">
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="mirror_symmetry"
+       start_point="254,0"
+       end_point="254,285.75"
+       center_point="254,142.875"
+       id="path-effect1235"
+       is_visible="true"
+       lpeversion="1"
+       mode="X"
+       discard_orig_path="false"
+       fuse_paths="false"
+       oposite_fuse="false"
+       split_items="false" />
+    <inkscape:path-effect
+       effect="offset"
+       id="path-effect4504"
+       is_visible="true"
+       lpeversion="1"
+       linejoin_type="miter"
+       unit="px"
+       offset="-12.394946"
+       miter_limit="4"
+       attempt_force_join="true"
+       update_on_knot_move="true" />
+    <inkscape:path-effect
+       effect="offset"
+       id="path-effect4345"
+       is_visible="true"
+       lpeversion="1"
+       linejoin_type="miter"
+       unit="px"
+       offset="-238.27657"
+       miter_limit="4"
+       attempt_force_join="true"
+       update_on_knot_move="true" />
+    <inkscape:path-effect
+       effect="offset"
+       id="path-effect4256"
+       is_visible="true"
+       lpeversion="1"
+       linejoin_type="miter"
+       unit="px"
+       offset="-1.1677"
+       miter_limit="4"
+       attempt_force_join="true"
+       update_on_knot_move="true" />
+    <inkscape:path-effect
+       effect="offset"
+       id="path-effect4250"
+       is_visible="true"
+       lpeversion="1"
+       linejoin_type="miter"
+       unit="px"
+       offset="-1.9"
+       miter_limit="4"
+       attempt_force_join="true"
+       update_on_knot_move="true" />
+    <inkscape:path-effect
+       effect="perspective-envelope"
+       up_left_point="25.269531,363.12305"
+       up_right_point="304.81553,363.1239"
+       down_left_point="44.554957,411.73837"
+       down_right_point="324.09961,411.73828"
+       id="path-effect1209"
+       is_visible="true"
+       lpeversion="1"
+       deform_type="perspective"
+       horizontal_mirror="false"
+       vertical_mirror="false"
+       overflow_perspective="false" />
+    <inkscape:path-effect
+       effect="perspective-envelope"
+       up_left_point="11.686263,736.62392"
+       up_right_point="191.3567,736.62392"
+       down_left_point="-61.041016,779.38672"
+       down_right_point="264.08398,779.38672"
+       id="path-effect916"
+       is_visible="true"
+       lpeversion="1"
+       deform_type="perspective"
+       horizontal_mirror="false"
+       vertical_mirror="false"
+       overflow_perspective="false" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="6.2225396"
+     inkscape:cx="73.419362"
+     inkscape:cy="37.76539"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     showborder="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-7"
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="false"
+     inkscape:object-paths="true"
+     inkscape:snap-global="false"
+     units="px"
+     viewbox-width="509.7"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(-836.0885,-55.882754)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.3444px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:-4.88156px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="834.72699"
+       y="74.360573"
+       id="text1299-1-0"><tspan
+         sodipodi:role="line"
+         id="tspan1297-4-3"
+         x="834.72699"
+         y="74.360573"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.3444px;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583">{{</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.3444px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:-4.88156px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="876.38342"
+       y="74.360573"
+       id="text1303-39-8"><tspan
+         sodipodi:role="line"
+         id="tspan1301-4-6"
+         x="876.38342"
+         y="74.360573">}}</tspan></text>
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:0.118673;paint-order:stroke fill markers"
+       id="rect1211"
+       width="27.442883"
+       height="27.425228"
+       x="849.47882"
+       y="55.896156" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="856.21771"
+       y="77.713707"
+       id="text1309-0-1"><tspan
+         sodipodi:role="line"
+         id="tspan1307-7-5"
+         x="856.21771"
+         y="77.713707"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;stroke-width:0.264583">T</tspan></text>
+  </g>
+</svg>
