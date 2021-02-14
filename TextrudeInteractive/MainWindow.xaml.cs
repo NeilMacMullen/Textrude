@@ -62,9 +62,9 @@ namespace TextrudeInteractive
 
             SetTitle(string.Empty);
 
-            TempateEditPane.SetDirection(PaneType.Model);
-            TempateEditPane.OnUserInput = OnModelChanged;
-            _templateManager = new TabControlManager(Templates, TempateEditPane);
+            TemplateEditPane.SetDirection(PaneType.Model);
+            TemplateEditPane.OnUserInput = OnModelChanged;
+            _templateManager = new TabControlManager(Templates, TemplateEditPane);
 
             SharedInput.SetDirection(PaneType.Model);
             SharedInput.OnUserInput = OnModelChanged;
@@ -115,7 +115,7 @@ namespace TextrudeInteractive
             {
                 SharedInput,
                 SharedOutput,
-                TempateEditPane
+                TemplateEditPane
             };
             foreach (var e in editors)
             {
@@ -179,6 +179,13 @@ namespace TextrudeInteractive
         private void RenameModel(object sender, RoutedEventArgs e)
         {
             Rename(_modelManager, PaneType.Model);
+        }
+
+        private void SaveAllExportInvocation(object sender, RoutedEventArgs e)
+        {
+            SaveAllInputs(null, null);
+            SaveAllOutputs(null, null);
+            ExportInvocation(null, null);
         }
 
         #region jumplist
@@ -465,7 +472,7 @@ namespace TextrudeInteractive
                 .Select(r => new CompletionNode(r.Render(), r.Terminal(), MapType(r.ModelType)
                 )).ToArray();
             var comp = new Completions(nodes);
-            TempateEditPane.MonacoPane.SetCompletions(comp);
+            TemplateEditPane.MonacoPane.SetCompletions(comp);
         }
 
 

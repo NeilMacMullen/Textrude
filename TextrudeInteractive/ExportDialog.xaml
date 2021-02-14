@@ -1,0 +1,114 @@
+﻿<controls:MaterialWindow x:Class="TextrudeInteractive.ExportDialog"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:local="clr-namespace:TextrudeInteractive"
+                         xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+                         mc:Ignorable="d"
+                         Title="Build command line" Height="773" Width="614"
+
+                         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                         TextElement.FontWeight="Regular"
+                         TextElement.FontSize="13"
+                         TextOptions.TextFormattingMode="Ideal"
+                         TextOptions.TextRenderingMode="Auto"
+                         Background="{DynamicResource MaterialDesignPaper}"
+                         FontFamily="{DynamicResource MaterialDesignFont}"
+WindowStartupLocation="CenterOwner"
+                         >
+  <DockPanel Margin="3">
+
+    <StackPanel DockPanel.Dock="Top">
+      <GroupBox Header="Options">
+        <StackPanel>
+          <CheckBox Name="UseFullyQualifiedExe" Checked="OnUpdateUI" Unchecked="OnUpdateUI">Fully-qualified exe</CheckBox>
+          <CheckBox Name="IsLazy" Checked="OnUpdateUI" Unchecked="OnUpdateUI">Only run if input newer than output</CheckBox>
+          <CheckBox Name="IgnoreUnlinked" Checked="OnUpdateUI" Unchecked="OnUpdateUI">Ignore unlinked files</CheckBox>
+        </StackPanel>
+
+      </GroupBox>
+
+
+      <GroupBox Header="Paths">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <RadioButton  Name="UseAbsolutePaths" Checked="OnUpdateUI">Absolute</RadioButton>
+            <RadioButton Checked="OnUpdateUI">Relative to...</RadioButton>
+          </StackPanel>
+
+          <DockPanel DockPanel.Dock="Left" Name="WorkingDirectorySection" >
+
+
+            <Button DockPanel.Dock="Right"
+                      Style="{StaticResource MaterialDesignFlatButton}" Click="OnUpdateHomeFolder" Content="..." />
+            <TextBox Style="{StaticResource MaterialDesignTextBox}"
+                       Name="RootFolder" IsReadOnly="True" TextWrapping="Wrap"
+                       FontFamily="Consolas"
+                       FontSize="18"
+                       Foreground="BurlyWood" />
+
+
+
+          </DockPanel>
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox Header="Invocation">
+
+        <StackPanel Orientation="Horizontal">
+          <RadioButton Name="RenderCli" Content="explicit arguments" Checked="OnUpdateUI" />
+          <RadioButton Name="RenderJson" Content="json argument file" Checked="OnUpdateUI" />
+          <RadioButton Name="RenderYaml" Content="yaml argument file" Checked="OnUpdateUI" />
+        </StackPanel>
+      </GroupBox>
+
+    </StackPanel>
+
+    <GroupBox Header="Output" DockPanel.Dock="Bottom">
+
+      <DockPanel>
+        <DockPanel  DockPanel.Dock="Top" >
+          <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Label Content="Command" />
+            <Button
+              Click="CopyCmdToClipboard"
+              Content="&#x1F4CB;"
+              Style="{StaticResource MaterialDesignFlatButton}"
+              ToolTip="Copy command to clipboard" />
+          </StackPanel>
+          <TextBox Style="{StaticResource MaterialDesignTextBox}" Name="CommandText" IsReadOnly="True" TextWrapping="Wrap"
+                  
+                   FontFamily="Consolas"
+                   FontSize="20"
+                   Foreground="LawnGreen"
+                   AcceptsReturn="True" />
+
+        </DockPanel>
+        <DockPanel>
+
+          <DockPanel   DockPanel.Dock="Bottom" Name="ArgsFileSection">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+              <Label Content="Argument file" />
+              <Button
+                Click="CopyArgsToClipboard"
+                Content="&#x1F4CB;"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Copy arguments file to clipboard" />
+
+            </StackPanel>
+            <TextBox Style="{StaticResource MaterialDesignTextBox}"
+                 
+                     Name="JsonYaml" IsReadOnly="True" TextWrapping="Wrap" FontFamily="Consolas"
+                     FontSize="16"
+                     Foreground="DeepSkyBlue"
+                     VerticalScrollBarVisibility="Visible"
+                     AcceptsReturn="True" />
+          </DockPanel>
+        </DockPanel>
+      </DockPanel>
+    </GroupBox>
+
+  </DockPanel>
+
+</controls:MaterialWindow>

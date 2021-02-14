@@ -19,7 +19,7 @@ namespace TextrudeInteractive
             get => _text;
             set
             {
-                if (value == _text) return;
+                if (value == _text || value == null) return;
                 _text = value;
                 OnPropertyChanged();
             }
@@ -30,7 +30,7 @@ namespace TextrudeInteractive
             get => _format;
             set
             {
-                if (value == _format) return;
+                if (value == _format || value == null) return;
                 _format = value;
                 OnPropertyChanged();
             }
@@ -41,7 +41,7 @@ namespace TextrudeInteractive
             get => _linkedPath;
             set
             {
-                if (value == _linkedPath) return;
+                if (value == _linkedPath || value == null) return;
                 _linkedPath = value;
                 OnPropertyChanged();
             }
@@ -52,7 +52,7 @@ namespace TextrudeInteractive
             get => _scribanName;
             set
             {
-                if (value == _scribanName) return;
+                if (value == _scribanName || value == null) return;
                 _scribanName = value;
                 OnPropertyChanged();
             }
