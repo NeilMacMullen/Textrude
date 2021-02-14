@@ -8,7 +8,24 @@
 
   <PropertyGroup>
     <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
+    <ApplicationIcon>D:\Repos\Textrude\img\textrude_app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\NewFolder1\**" />
+    <Compile Remove="Resources\NewFolder\**" />
+    <EmbeddedResource Remove="Resources\NewFolder1\**" />
+    <EmbeddedResource Remove="Resources\NewFolder\**" />
+    <None Remove="Resources\NewFolder1\**" />
+    <None Remove="Resources\NewFolder\**" />
+    <Page Remove="Resources\NewFolder1\**" />
+    <Page Remove="Resources\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\img\textrude_app.ico" Link="Resources\textrude_app.ico" />
+    <Resource Include="..\img\textrude_app.png" Link="Resources\textrude_app.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.5.1">
@@ -44,8 +61,6 @@
 
   <ItemGroup>
     <Folder Include="Monaco\NewFolder\" />
-    <Folder Include="Resources\NewFolder1\" />
-    <Folder Include="Resources\NewFolder\" />
   </ItemGroup>
 
 </Project>
