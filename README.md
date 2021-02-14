@@ -55,6 +55,9 @@ The current release is **v1.3.0**.
 - models and outputs can now be renamed in TextrudeInteractive
 - Textrude CLI now supports named models/outputs via "mymodel=d:/model.csv" syntax
 - Basic auto-completion restored
+- CAKE build support - thanks to [Martin Hochstrasser](https://github.com/highstreeto)
+- Updated to latest Scriban for [multi-line pipes (yay!)](https://github.com/scriban/scriban/pull/327)
+- Add link to textrude community chat in help menu
 
 ### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis
