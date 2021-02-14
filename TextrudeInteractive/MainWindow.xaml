@@ -57,9 +57,13 @@
         <MenuItem Click="LoadProject" Header="Load" />
         <MenuItem Click="SaveProject" Header="Save" />
         <MenuItem Click="SaveProjectAs" Header="Save as..." />
+      </MenuItem>
+      <MenuItem Header="_Export">
+        <MenuItem Click="ExportInvocation" Header="_Build command-line invocation"
+                  ToolTip="Builds a command line invocation" />
+        <MenuItem Click="SaveAllExportInvocation" Header="_Save all then build command-line invocation"
+                  ToolTip="Saves all linked files to disk then opens the command line builder" />
 
-        <Separator />
-        <MenuItem Click="ExportInvocation" Header="Export as invocation" ToolTip="Builds a commmand line invocation" />
       </MenuItem>
 
       <MenuItem Header="Inputs">
@@ -132,7 +136,7 @@
 
           <DockPanel Grid.Column="2">
             <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="Templates" DockPanel.Dock="Top" />
-            <local:InputMonacoPane x:Name="TempateEditPane" />
+            <local:InputMonacoPane x:Name="TemplateEditPane" />
           </DockPanel>
 
 
@@ -153,6 +157,7 @@
                  IsReadOnly="True"
                  Foreground="OrangeRed"
                  FontSize="16" />
+
 
       </Grid>
     </DockPanel>

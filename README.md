@@ -58,6 +58,8 @@ The current release is **v1.3.0**.
 - CAKE build support - thanks to [Martin Hochstrasser](https://github.com/highstreeto)
 - Updated to latest Scriban for [multi-line pipes (yay!)](https://github.com/scriban/scriban/pull/327)
 - Add link to textrude community chat in help menu
+- Linked files can be toggled between absolute and relative paths
+- Export/Build... menu now brings up a dialog to help build CLI options.
 
 ### v1.3.0 (source/binary)
 - Models and outputs can be added/removed on a per-project basis

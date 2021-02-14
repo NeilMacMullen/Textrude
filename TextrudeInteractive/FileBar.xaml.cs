@@ -10,6 +10,7 @@ namespace TextrudeInteractive
     /// </summary>
     public partial class FileBar : UserControl
     {
+        private readonly PathManipulator _pathMangler;
         private string _pathName = string.Empty;
 
         public Func<string> ObtainText = () => string.Empty;
@@ -19,6 +20,8 @@ namespace TextrudeInteractive
         public FileBar()
         {
             InitializeComponent();
+
+            _pathMangler = PathManipulator.FromExe();
         }
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace TextrudeInteractive
             {
                 _pathName = value;
                 FilePath.Content = _pathName;
+                UpdateAbsRelButton();
             }
         }
 
@@ -102,24 +106,26 @@ namespace TextrudeInteractive
                 FileManager.TrySave(PathName, ObtainText());
         }
 
-        public void SaveIfLinked() => FileManager.TrySave(PathName, ObtainText());
-
-        public void LoadIfLinked() => FileManager.TryLoadFile(PathName, out var t);
-
         private void CopyToClipboard(object sender, RoutedEventArgs e)
         {
-            var maxAttempts = 3;
-            for (var i = 0; i < maxAttempts; i++)
-            {
-                try
-                {
-                    Clipboard.SetText(ObtainText());
-                    return;
-                }
-                catch
-                {
-                }
-            }
+            ClipboardHelper.CopyToClipboard(ObtainText());
+        }
+
+        private void UpdateAbsRelButton()
+        {
+            AbsRelButton.Content = PathManipulator.IsAbsolute(PathName) ? "C:" : "..";
+        }
+
+
+        private void ToggleAbsRel(object sender, RoutedEventArgs e)
+        {
+            if (PathName.Length == 0)
+                return;
+            PathName = PathManipulator.IsAbsolute(PathName)
+                ? _pathMangler.ToRelative(PathName)
+                : _pathMangler.ToAbsolute(PathName);
+
+            OnLoad(PathName, ObtainText());
         }
     }
 }
