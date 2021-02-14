@@ -23,6 +23,7 @@ namespace Build
             BuildConfiguration = context.Argument<string>("configuration", "Debug");
             DoClean = context.HasArgument("clean");
             RepoDir = context.Directory(System.Environment.CurrentDirectory);
+            BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
             SolutionFile = RepoDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
@@ -31,6 +32,7 @@ namespace Build
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
         public ConvertableDirectoryPath RepoDir { get; }
+        public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
         public ConvertableFilePath SolutionFile { get; }
         public SolutionParserResult Solution { get; }
