@@ -1,5 +1,7 @@
 # Textrude
 
+[![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=main)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=main) [![Join the chat at https://gitter.im/Textrude/community](https://badges.gitter.im/Textrude/community.svg)](https://gitter.im/Textrude/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Give a Star! :star:
 
 If you like or are using this project please give it a star or leave some feedback in the [discussions](https://github.com/NeilMacMullen/Textrude/discussions/categories/send-a-smile) section. A little feedback goes a long way - thanks!
