@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
-    <ApplicationIcon>D:\Repos\Textrude\img\textrude_app.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\img\textrude_app.ico" Link="Resources\textrude_app.ico" />
-    <Resource Include="..\img\textrude_app.png" Link="Resources\textrude_app.png" />
+    <None Remove="Resources\app.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +60,10 @@
 
   <ItemGroup>
     <Folder Include="Monaco\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.png" />
   </ItemGroup>
 
 </Project>
