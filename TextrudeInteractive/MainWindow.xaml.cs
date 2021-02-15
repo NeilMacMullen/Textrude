@@ -339,7 +339,7 @@ namespace TextrudeInteractive
             LockRender();
             if (ShouldChangesBeLost())
                 _projectManager.NewProject();
-            LockRender();
+            UnlockRender();
         }
 
         private void LoadProject(object sender, RoutedEventArgs e)
