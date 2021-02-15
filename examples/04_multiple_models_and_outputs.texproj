@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 2,
+        "Text": "enumName: errors  ",
+        "Path": "",
+        "Name": "names"
+      },
+      {
+        "Format": 1,
+        "Text": "id,description\r\n123,disk\r\n34,display\r\n73,monitor\r\n5,keyboard\r\n2,camera\r\n",
+        "Path": "",
+        "Name": "errors"
+      }
+    ],
+    "Template": "You can use as many models or outputs as\r\nyou want.\r\n\r\nThis project has 2 models \r\n- \u0027names\u0027 - a yaml model\r\n- \u0027errors\u0027 - a csv file containing \r\n               error descriptions\r\n\r\nand 3 outputs\r\n- \u0027output\u0027 which is the default\r\n- \u0027cpp\u0027 for a C\u002B\u002B source file\r\n- \u0027h\u0027 for a C\u002B\u002B header file\r\n\r\n\r\nTo write to a particular output, use the \r\ncapture keyword...\r\n\r\n{{typeName =names.enumName \u002B\u0022_t\u0022}}\r\n\r\n{{-capture h}}\r\n#pragma once\r\ntypedef enum {\r\n{{-for error in (errors | array.sort \u0022id\u0022)}}\r\n      err_{{error.description}} = {{error.id}},\r\n{{-end}}    \r\n} {{typeName}};    \r\n\r\n{{end}}\r\n\r\n\r\n{{-capture cpp}}\r\n#include \u0022err.h\u0022\r\nvoid showError({{typeName}} error) {\r\n{{for i in errors~}}\r\n if (error == {{i.id}})\r\n   printf(\u0022ERROR - {{i.description}}\u0022);\r\nelse   \r\n{{-end}}\r\n   printf(\u0022UNKNOWN ERROR\u0022);\r\n}    \r\n{{end}}\r\n",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      },
+      {
+        "Format": "cpp",
+        "Name": "cpp",
+        "Path": ""
+      },
+      {
+        "Format": "cpp",
+        "Name": "h",
+        "Path": ""
+      }
+    ]
+  }
+}

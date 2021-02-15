@@ -1,0 +1,46 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      "LANGUAGE=ENGLISH",
+      "",
+      "COUNTRY=United Kingdom"
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 3,
+        "Text": "",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "Textrude automatically provides access \r\nto environment variables via the \u0027env\u0027 \r\nnamespace:\r\n\r\nFor example, your username is: \r\n\r\n    {{env.USERNAME}}\r\n\r\nAs well as environment variables, you\r\ncan supply your own definitions in the \r\n\u0027def\u0027 tab.  These are available via \r\nthe \u0027def\u0027 namespace:\r\n\r\n    {{def.LANGUAGE}} / {{def.COUNTRY}}\r\n\r\nYou can easily list all environment \r\nvariables using the debug.dump command:\r\n\r\n{{debug.dump env}}\r\n\r\nor just type \u0027env.\u0027 and use intellisense  \r\n\r\n\r\n",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

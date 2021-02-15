@@ -1,0 +1,44 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 3,
+        "Text": "",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "\r\n/***\r\n  You can include scripts from the \r\n  \u0027system\u0027 lib folder or from your\r\n  own library.  \r\n\r\n  Additional include paths are specified \r\n in  the \u0027inc\u0027 tab to the left. \r\n \r\n Here\u0027s a standard warning...\r\n ***/\r\n\r\n{{include \u0022lib/warnings.sbn\u0022}}\r\n{{autogenwarning}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "cpp",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}
