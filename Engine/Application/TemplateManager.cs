@@ -136,9 +136,8 @@ namespace Engine.Application
 
             foreach (var keyValuePair in container)
             {
-                //we need to be careful here - there is nothing to stop the user
-                //deliberately or accidentally injecting null values into the model
-                var type = keyValuePair.Value?.GetType()?.FullName ?? string.Empty;
+                var type = keyValuePair.Value.GetType().FullName;
+
                 var mType = ModelPath.PathType.Property;
                 if (type.Contains("Scriban") && type.Contains("Function"))
                     mType = ModelPath.PathType.Method;
