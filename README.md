@@ -28,7 +28,7 @@ Let's face it, there are any number of code-generation technologies you might co
 
 ## Download/build
 
-The current release is **v1.3.0**.
+The current release is **v1.4.0**.
 
 **Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will be prompted to install it.**
 
@@ -42,36 +42,20 @@ The current release is **v1.3.0**.
 
 ## What's new
 
-### vNext (source only)
-- ~~Note - template intellisense/code-completion is known to be broken in the current source build~~ 
-- Update to Monaco 22.3 which supports an extra couple of languages
-- Rewire font-size control, line numbers, wordwarp to model/output panes
-- remove minimap from model/output panes
-- added spinner to monaco panes and made white flash a bit briefer
-- whitespace can be made visible in input/output panes
-- reuse single Monaco edit pane for multiple models/outputs for cleaner switching & lower resource use
-- definitions and includes are now move to main input section and used Monaco editor
-- the template is now edited using Monaco and (rudimentary) syntax hightlight is applied
-- models and outputs can now be renamed in TextrudeInteractive
-- Textrude CLI now supports named models/outputs via "mymodel=d:/model.csv" syntax
-- Basic auto-completion restored
-- CAKE build support - thanks to [Martin Hochstrasser](https://github.com/highstreeto)
-- Updated to latest Scriban for [multi-line pipes (yay!)](https://github.com/scriban/scriban/pull/327)
-- Add link to textrude community chat in help menu
-- Linked files can be toggled between absolute and relative paths
+### v1.4.0 (source/binary)
+- The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
+- A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
+- The view menu allows visible-whitespace to be toggled on and off
+- Rudimentary syntax highlighting and intellisense are provided for the template editor
+- Models and outputs can now be assigned names
+- Help menu now includes a link to gitter-chat
+- Model, template and output panes now support linking to files.
 - Export/Build... menu now brings up a dialog to help build CLI options.
-
-### v1.3.0 (source/binary)
-- Models and outputs can be added/removed on a per-project basis
-- Syntax highlighting for output panes
-- Input/ouput panes can be "linked" to files and load/save are supported
-- fontsize, wordwrap and line-number settings are now persisted
-- warning dialog is now shown if the current project has unsaved changes
-- default rendering throttle reduced to 50ms for better responsiveness
-- Taskbar icon now shows jumplist, TextrudeInteractive can be started with name of project as parameter
-- TextrudeInteractive now opens last used project when reopened
-- TextrudeInteractive now uses the Monaco editor (from VS Code) hugely improving the syntax highlighting abilities.   Massive thanks to [Martin Hochstrasser](https://github.com/highstreeto) for this! 
-- upgrade to latest Scriban which supports [captured variables in anonymous functions](https://github.com/scriban/scriban/issues/322) 
+- Updated to latest Scriban for [multi-line pipes](https://github.com/scriban/scriban/pull/327)
+- Special thanks to [Martin Hochstrasser](https://github.com/highstreeto) for
+  - CAKE build support 
+  - The fancy new logo! 
+  
 
 [Full change history](doc/changeHistory.md)
 
