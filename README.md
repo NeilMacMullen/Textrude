@@ -79,7 +79,6 @@ Textrude makes heavy use of the following components:
 - [Json.Net](https://www.newtonsoft.com/json) for Json deserialisation
 - [Humanizr](https://github.com/Humanizr/Humanizer) for useful text-processing
 - [MaterialDesignToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit),   [MaterialDesignExtensions](https://spiegelp.github.io/MaterialDesignExtensions) and [Ookii Dialogs](https://github.com/augustoproiete/ookii-dialogs-wpf)to make the UI a bit less clunky
-- [AvalonEdit](http://avalonedit.net/) for text-editing goodness
 
 Huge thanks to the contributors:
 - [Martin Hochstrasser](https://github.com/highstreeto) - Docker support, general build enhancements and integration of the Monaco editor
