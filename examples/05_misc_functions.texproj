@@ -1,0 +1,38 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 0,
+        "Text": "{\r\n\u0022top\u0022 : {\r\n \u0022number\u0022: 1,\r\n \u0022string\u0022: \u0022a string\u0022,\r\n \u0022array\u0022: [ 1,2,3,4]\r\n}\r\n}",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "This project demonstrates some\r\nof the methods in the \u0027misc\u0027\r\nnamespace:\r\n\r\nCreate a fresh guid...\r\n\r\n    {{misc.new_guid}}\r\n\r\nDump an object or model:\r\n\u0060\u0060\u0060\r\n{{debug.dump model}}\r\n\u0060\u0060\u0060\r\n",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}
