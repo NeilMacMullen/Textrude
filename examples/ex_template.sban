@@ -1,0 +1,21 @@
+Model 0 is {{model.name}}
+Model 1 is {{model1.name}}
+Model 2 is {{model2[0].name}}
+
+'model' is synonymous with 'model0'...
+
+'{{model.name}}' shoud be the same as '{{model.name}}'
+
+To write to another output, use the capture keyword...
+
+{{-capture output1}}
+You won't see this in the output window. 
+Check the "output1" window instead
+{{end}}
+
+
+{{-capture output2}}
+Capture scopes are temporary.
+{{end}}
+
+That's all!

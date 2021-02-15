@@ -1,0 +1,12 @@
+{
+  "Name": "current",
+  "Panes": [
+    {
+      "Name": "reports",
+      "Type": "reports",
+      "Parameters": {
+        "types": "AccelerationDiagnosticsBlock,AccelerationSig,AccelerometerFail,AccelerometerSpuriousWakeups,BackgroundUpload,Base,BatteryLevel,BleBlockReport,CellConnectFail,CellConnectFailWithMovement,CellConnectInfo,CellConnectOk,CellConnectStart,CellConnectStartWithMovement,CellConnectUartRxCount,CellDataFail,CellDataFailWithMovement,CellDataOk,CellDataOkWithMovement,DbgBleScan,DbgMaxAcceleration,DbgMovement,DbgRawwakeup,DbgWakeup,DbgWokenByAccelerometer,DebugBlock,GpsFail,GpsResults,GpsResultsWithMovement,GpsStart,MemoryAllocationCount,MovementDetected,MovementState,NULL_EVENT,OldBleSig,OldBlewithmovementSig,OldSensorReading,OldWakeup,Panic,PowerReport,RemoteData,SensorReading,SigfoxOk,Startup,StateChangeAway,StateChangeBase,StateChangeIntransit,StateSig,TestSig,Timeshift,WifiConnectFail,WifiDataFail,WifiDataOk,WifiScanResults,WifiScanResultsWithMovement"
+      }
+    }
+  ]
+}

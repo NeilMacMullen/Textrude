@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
 using TextrudeInteractive.Monaco.Messages;
@@ -297,7 +296,7 @@ namespace TextrudeInteractive
 
             //ensure there is always at least one output - otherwise things can get confusing for the user
             if (!_outputManager.Panes.Any())
-                _outputManager.AddPane(new EditPaneViewModel());
+                _outputManager.AddPane(ViewModelFactory.CreateOutput(OutputPaneModel.Empty, 0));
 
             _outputManager.FocusFirst();
         }

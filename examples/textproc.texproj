@@ -1,0 +1,56 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 3,
+        "Text": "description,emphasize\r\n\u0022can import models in JSON,YAML, or CSV\u0022, false\r\nautomatically imports build context,false\r\nuses SCRIBAN for scripting and templating\r\nruns on Windows or Linux\r\ncomes with an interactive editor\r\nis free and open-source,true  ",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "{{func display (a)\r\n    for line in a\r\n-}}\r\n{{line}}  \r\n{{end\r\nend}}\r\n\r\n{{-func c(a,b)\r\nret a | \r\narray.filter @(do; ret $0 | string.contains b;end)\r\nend-}}\r\n\r\n{{model | \r\nc \u0022on\u0022|\r\ndisplay\r\n\r\n}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "text",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

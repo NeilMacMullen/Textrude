@@ -1,0 +1,11 @@
+Model 0 is yaml
+Model 1 is json
+Model 2 is csv
+
+'model' is synonymous with 'model0'...
+
+'yaml' shoud be the same as 'yaml'
+
+To write to another output, use the capture keyword...
+
+That's all!
