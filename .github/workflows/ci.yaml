@@ -38,20 +38,3 @@ jobs:
       with:
         github-token: ${{ secrets.github_token }}
         parallel-finished: true
-  package:
-    needs: test
-    env:
-      DisableGitVersionTask: true
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Package
-      run: dotnet run --project build/Build.csproj -- --target Package
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Textrude.zip
-        path: publish/Textrude.zip
