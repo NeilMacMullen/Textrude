@@ -100,7 +100,7 @@ namespace TextrudeInteractive
             _busy--;
         }
 
-        private void VmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void VmOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetFromContext();
         }

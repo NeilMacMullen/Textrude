@@ -1,0 +1,38 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 1,
+        "Text": "text\r\na variable\r\nNameOfThing\r\nThe title of this book is\r\n\u0022  with spaces   \u0022",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "** Textrude includes \r\n[Humanizr](https://github.com/Humanizr/Humanizer)\r\nfor convenient text processing.\r\n\r\n\r\n{{for v in model\r\ntxt =v.text\r\n}}\r\n# {{txt}}\r\n-   _PASCALIZE_   \u0027{{txt | \r\n                    humanizr.pascalize}}\u0027\r\n-   _CAMEL_       \u0027{{txt | \r\n                    humanizr.camelize}}\u0027\r\n-   _UNDERSCORE_  \u0027{{txt | \r\n                    humanizr.underscore}}\u0027\r\n-   _TITLE_       \u0027{{txt | \r\n                    humanizr.titleize}}\u0027\r\n-   _KEBAB_       \u0027{{txt | \r\n                    humanizr.kebaberize}}\u0027\r\n{{end}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

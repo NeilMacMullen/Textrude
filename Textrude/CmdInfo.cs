@@ -20,6 +20,7 @@ Version {GitVersionInformation.SemVer} built {GitVersionInformation.CommitDate} 
 Useful links:
  - Textrude homepage:      https://github.com/NeilMacMullen/Textrude
  - Scriban language docs:  https://github.com/scriban/scriban/blob/master/doc/language.md
+ - Chat and questions:     https://gitter.im/Textrude/community
 ");
 
             var latestVersion = await UpgradeManager.GetLatestVersion();

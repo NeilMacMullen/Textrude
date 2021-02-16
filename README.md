@@ -1,4 +1,6 @@
-# Textrude
+# ![Textude](img/textrude_logo.png)
+![GitHub release (latest by SemVer including pre-releases)](https://img.shields.io/github/downloads-pre/NeilMacmullen/Textrude/total)
+[![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=main&kill_cache=1)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=main) [![Join the chat at https://gitter.im/Textrude/community](https://badges.gitter.im/Textrude/community.svg)](https://gitter.im/Textrude/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Give a Star! :star:
 
@@ -26,7 +28,7 @@ Let's face it, there are any number of code-generation technologies you might co
 
 ## Download/build
 
-The current release is **v1.3.0**.
+The current release is **v1.4.0**.
 
 **Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will be prompted to install it.**
 
@@ -40,29 +42,20 @@ The current release is **v1.3.0**.
 
 ## What's new
 
-### vNext (source only)
-- Update to Monaco 22.3 which supports an extra couple of languages
-- Rewire font-size control, line numbers, wordwarp to model/output panes
-- remove minimap from model/output panes
-- added spinner to monaco panes and made white flash a bit briefer
-- whitespace can be made visible in input/output panes
-- reuse single Monaco edit pane for multiple models/outputs for cleaner switching & lower resource use
-- definitions and includes are now move to main input section and used Monaco editor
-- the template is now edited using Monaco and (rudimentary) syntax hightlight is applied
-- models and outputs can now be renamed in TextrudeInteractive
-- Textrude CLI now supports named models/outputs via "mymodel=d:/model.csv" syntax
-
-### v1.3.0 (source/binary)
-- Models and outputs can be added/removed on a per-project basis
-- Syntax highlighting for output panes
-- Input/ouput panes can be "linked" to files and load/save are supported
-- fontsize, wordwrap and line-number settings are now persisted
-- warning dialog is now shown if the current project has unsaved changes
-- default rendering throttle reduced to 50ms for better responsiveness
-- Taskbar icon now shows jumplist, TextrudeInteractive can be started with name of project as parameter
-- TextrudeInteractive now opens last used project when reopened
-- TextrudeInteractive now uses the Monaco editor (from VS Code) hugely improving the syntax highlighting abilities.   Massive thanks to [Martin Hochstrasser](https://github.com/highstreeto) for this! 
-- upgrade to latest Scriban which supports [captured variables in anonymous functions](https://github.com/scriban/scriban/issues/322) 
+### v1.4.0 (source/binary)
+- The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
+- A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
+- The view menu allows visible-whitespace to be toggled on and off
+- Rudimentary syntax highlighting and intellisense are provided for the template editor
+- Models and outputs can now be assigned names
+- Help menu now includes a link to gitter-chat
+- Model, template and output panes now support linking to files.
+- Export/Build... menu now brings up a dialog to help build CLI options.
+- Updated to latest Scriban for [multi-line pipes](https://github.com/scriban/scriban/pull/327)
+- Special thanks to [Martin Hochstrasser](https://github.com/highstreeto) for
+  - CAKE build support 
+  - The fancy new logo! 
+  
 
 [Full change history](doc/changeHistory.md)
 
@@ -86,7 +79,6 @@ Textrude makes heavy use of the following components:
 - [Json.Net](https://www.newtonsoft.com/json) for Json deserialisation
 - [Humanizr](https://github.com/Humanizr/Humanizer) for useful text-processing
 - [MaterialDesignToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit),   [MaterialDesignExtensions](https://spiegelp.github.io/MaterialDesignExtensions) and [Ookii Dialogs](https://github.com/augustoproiete/ookii-dialogs-wpf)to make the UI a bit less clunky
-- [AvalonEdit](http://avalonedit.net/) for text-editing goodness
 
 Huge thanks to the contributors:
 - [Martin Hochstrasser](https://github.com/highstreeto) - Docker support, general build enhancements and integration of the Monaco editor

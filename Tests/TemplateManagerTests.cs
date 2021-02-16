@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Application;
@@ -39,6 +40,16 @@ namespace Tests
             var f = mgr.GetObjectTree().Select(p => p.Render()).ToArray();
 
             f.Should().Contain("test.element");
+        }
+
+
+        [TestMethod]
+        public void CodeCompletionDoesNotThrowIfNullInjected()
+        {
+            var mgr = new TemplateManager(_files);
+            mgr.AddVariable("test", new Dictionary<string, object> {["element"] = null});
+            Action getModelPaths = () => mgr.ModelPaths();
+            getModelPaths.Should().NotThrow();
         }
     }
 }

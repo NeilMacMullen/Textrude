@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -12,13 +13,14 @@ using System.Windows;
 using System.Windows.Media;
 using Engine.Application;
 using MaterialDesignExtensions.Controls;
+using TextrudeInteractive.Monaco.Messages;
 
 namespace TextrudeInteractive
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MaterialWindow, INotifyPropertyChanged
+    public partial class MainWindow : MaterialWindow
     {
         private const string HomePage = @"https://github.com/NeilMacMullen/Textrude";
 
@@ -60,9 +62,9 @@ namespace TextrudeInteractive
 
             SetTitle(string.Empty);
 
-            TempateEditPane.SetDirection(PaneType.Model);
-            TempateEditPane.OnUserInput = OnModelChanged;
-            _templateManager = new TabControlManager(Templates, TempateEditPane);
+            TemplateEditPane.SetDirection(PaneType.Model);
+            TemplateEditPane.OnUserInput = OnModelChanged;
+            _templateManager = new TabControlManager(Templates, TemplateEditPane);
 
             SharedInput.SetDirection(PaneType.Model);
             SharedInput.OnUserInput = OnModelChanged;
@@ -107,15 +109,13 @@ namespace TextrudeInteractive
         }
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void ApplyVisualSettings(object sender, PropertyChangedEventArgs args)
         {
             var editors = new[]
             {
                 SharedInput,
                 SharedOutput,
-                TempateEditPane
+                TemplateEditPane
             };
             foreach (var e in editors)
             {
@@ -179,6 +179,13 @@ namespace TextrudeInteractive
         private void RenameModel(object sender, RoutedEventArgs e)
         {
             Rename(_modelManager, PaneType.Model);
+        }
+
+        private void SaveAllExportInvocation(object sender, RoutedEventArgs e)
+        {
+            SaveAllInputs(null, null);
+            SaveAllOutputs(null, null);
+            ExportInvocation(null, null);
         }
 
         #region jumplist
@@ -289,7 +296,7 @@ namespace TextrudeInteractive
 
             //ensure there is always at least one output - otherwise things can get confusing for the user
             if (!_outputManager.Panes.Any())
-                _outputManager.AddPane(new EditPaneViewModel());
+                _outputManager.AddPane(ViewModelFactory.CreateOutput(OutputPaneModel.Empty, 0));
 
             _outputManager.FocusFirst();
         }
@@ -332,7 +339,7 @@ namespace TextrudeInteractive
             LockRender();
             if (ShouldChangesBeLost())
                 _projectManager.NewProject();
-            LockRender();
+            UnlockRender();
         }
 
         private void LoadProject(object sender, RoutedEventArgs e)
@@ -450,7 +457,22 @@ namespace TextrudeInteractive
                 Errors.Text += "No errors";
             }
 
-            //_mainEditWindow.SetCompletion(engine.ModelPaths());
+            CompletionType MapType(ModelPath.PathType type)
+            {
+                var d = new Dictionary<ModelPath.PathType, CompletionType>
+                {
+                    [ModelPath.PathType.Method] = CompletionType.Method,
+                    [ModelPath.PathType.Property] = CompletionType.Property,
+                    [ModelPath.PathType.Keyword] = CompletionType.Keyword
+                };
+                return d.TryGetValue(type, out var k) ? k : CompletionType.Value;
+            }
+
+            var nodes = engine.ModelPaths()
+                .Select(r => new CompletionNode(r.Render(), r.Terminal(), MapType(r.ModelType)
+                )).ToArray();
+            var comp = new Completions(nodes);
+            TemplateEditPane.MonacoPane.SetCompletions(comp);
         }
 
 
@@ -538,8 +560,15 @@ namespace TextrudeInteractive
             Process.Start(ps);
         }
 
+        private void OpenScriban(string doc)
+        {
+            OpenBrowserTo(new Uri($"https://github.com/scriban/scriban/blob/master/doc/{doc}.md"));
+        }
+
         private void ShowLanguageRef(object sender, RoutedEventArgs e) =>
-            OpenBrowserTo(new Uri("https://github.com/scriban/scriban/blob/master/doc/language.md"));
+            OpenScriban("language");
+
+        private void ShowBuiltIns(object sender, RoutedEventArgs e) => OpenScriban("builtins");
 
         private void OpenHome(string path) =>
             OpenBrowserTo(new Uri(HomePage + "/" + path));
@@ -557,9 +586,10 @@ namespace TextrudeInteractive
         private void SendASmile(object sender, RoutedEventArgs e) =>
             OpenHome("issues/new?assignees=&labels=smile&template=positive-feedback.md&title=I%20like%20it%21");
 
-
-        private void Questions(object sender, RoutedEventArgs e) =>
-            OpenHome("issues/new?assignees=&labels=question&template=ask-a-question.md&title=Help");
+        private void GoGitter(object sender, RoutedEventArgs e)
+        {
+            OpenBrowserTo(new Uri("https://gitter.im/Textrude/community"));
+        }
 
         #endregion
     }

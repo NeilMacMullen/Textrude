@@ -1,5 +1,20 @@
 # Full change history
 
+### v1.4.0
+- The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
+- A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
+- The view menu allows visible-whitespace to be toggled on and off
+- Rudimentary syntax highlighting and intellisense are provided for the template editor
+- Models and outputs can now be assigned names
+- Help menu now includes a link to gitter-chat
+- Model, template and output panes now support linking to files.
+- Export/Build... menu now brings up a dialog to help build CLI options.
+- Updated to latest Scriban for [multi-line pipes](https://github.com/scriban/scriban/pull/327)
+- Special thanks to [Martin Hochstrasser](https://github.com/highstreeto) for
+  - CAKE build support 
+  - The fancy new logo! 
+
+
 ### v1.3.0 
 - Models and outputs can be added/removed on a per-project basis
 - Syntax highlighting for output panes

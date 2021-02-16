@@ -1,6 +1,14 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
 
 jobs:
   test:
@@ -20,11 +28,21 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Clean
-      run: dotnet clean -p:Configuration=${{ matrix.build_config }} && dotnet nuget locals all --clear
-    - name: Restore dependencies
-      run: dotnet restore -p:Configuration=${{ matrix.build_config }}
-    - name: Build
-      run: dotnet build -p:Configuration=${{ matrix.build_config }} --no-restore
     - name: Test
-      run: dotnet test -p:Configuration=${{ matrix.build_config }} --no-build
+      run: dotnet run --project build/Build.csproj -- --target Test --configuration ${{ matrix.build_config }} --clean
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: run-on-${{ matrix.os }}
+        path-to-lcov: TestResults/lcov.info
+        parallel: true
+  coveralls-finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true

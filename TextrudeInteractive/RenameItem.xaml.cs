@@ -17,7 +17,7 @@ namespace TextrudeInteractive
             NewName.Focus();
         }
 
-        public string Name { get; private set; }
+        public new string Name { get; private set; }
 
         private void OnOk(object sender, RoutedEventArgs e)
         {

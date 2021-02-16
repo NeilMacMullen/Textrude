@@ -8,17 +8,33 @@
 
   <PropertyGroup>
     <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.0.1" />
+    <Compile Remove="Resources\NewFolder1\**" />
+    <Compile Remove="Resources\NewFolder\**" />
+    <EmbeddedResource Remove="Resources\NewFolder1\**" />
+    <EmbeddedResource Remove="Resources\NewFolder\**" />
+    <None Remove="Resources\NewFolder1\**" />
+    <None Remove="Resources\NewFolder\**" />
+    <Page Remove="Resources\NewFolder1\**" />
+    <Page Remove="Resources\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\app.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MaterialDesignExtensions" Version="3.2.0" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+   
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.790-prerelease" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
@@ -41,6 +57,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Monaco\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.png" />
   </ItemGroup>
 
 </Project>

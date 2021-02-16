@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Textrude
+namespace SharedApplication
 {
     /// <summary>
     ///     Creates NamedFiles from raw text input
@@ -28,6 +28,11 @@ namespace Textrude
                     (r, i) => SplitAssignment(r, defaultNamer(i))
                 )
                 .ToImmutableArray();
+        }
+
+        public static ImmutableArray<string> Squash(IEnumerable<NamedFile> files)
+        {
+            return files.Select(f => $"{f.Name}={f.Path}").ToImmutableArray();
         }
     }
 }

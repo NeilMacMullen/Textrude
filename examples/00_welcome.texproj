@@ -1,0 +1,57 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      "color=blue",
+      "",
+      "size=large"
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 2,
+        "Text": "str: a string\r\nnum: 100\r\nlst:\r\n - 45\r\n - 23\r\n",
+        "Path": "",
+        "Name": "model"
+      },
+      {
+        "Format": 1,
+        "Text": "Num,Description\r\n100,failure\r\n200,breakage",
+        "Path": "",
+        "Name": "model1"
+      }
+    ],
+    "Template": "\r\nHello \r\n    {{env.USERNAME}} \r\n    {{ date.now | \r\n       date.to_string \u0022%r on %A, %d %h %Y\u0022}}\r\n\r\nYour model is: \r\n\u0060\u0060\u0060\r\n{{debug.dump model}}\r\n\u0060\u0060\u0060\r\nProperty access :\r\n    \u0022{{model.str}}\u0022 \r\n\r\nArray access: \r\n    {{model.lst[0] \u002B model.lst[1]}}\r\n\r\nThe \u0022model1\u0022 tab contains a CSV model  \r\n\u0060\u0060\u0060\r\n{{debug.dump model1}}\r\n\u0060\u0060\u0060\r\nThe \u0022defs\u0022 tab contains::\r\n{{for d in def~}}\r\n    {{for.index}}.  \u0027{{d.key}}\u0027 is \u0027{{d.value}}\u0027\r\n{{~end}}\r\n\r\nThe _output1_ tab on the right should\r\ninclude text captured like this... \r\n{{capture output1}} \r\n  Text for output1 window \r\n{{end}}\r\n\r\nOutput is regenerated whenever you edit \r\nthe template, models or definitions.\r\n\r\nMore examples are available; use \r\nProject-\u003ELoad from the menu. \r\n",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      },
+      {
+        "Format": "text",
+        "Name": "output1",
+        "Path": ""
+      }
+    ]
+  }
+}
