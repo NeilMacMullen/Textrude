@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -109,7 +108,6 @@ namespace TextrudeInteractive
             //reset control size to fill window to try and avoid white flash
             _webView.Width = double.NaN;
             _webView.Height = double.NaN;
-            _webView.DefaultBackgroundColor = Color.BlueViolet;
         }
 
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
