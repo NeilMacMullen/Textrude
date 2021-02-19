@@ -153,6 +153,7 @@ namespace Engine.Application
         /// </remarks>
         public ApplicationEngine WithTemplate(string templateText)
         {
+            templateText = TemplateProcessor.ApplyAllTransforms(templateText);
             _templateManager.SetTemplate(templateText);
             Errors = Errors.AddRange(_templateManager.ErrorList);
             return this;
@@ -236,14 +237,5 @@ namespace Engine.Application
                 _templateManager.AddIncludePath(inc);
             return this;
         }
-    }
-
-    public static class ScribanNamespaces
-    {
-        public const string ModelPrefix = "model";
-        public const string OutputPrefix = "output";
-        public const string EnvironmentNamespace = "env";
-        public const string DefinitionsNamespace = "def";
-        public const string TextrudeExe = "TEXTRUDE_EXE";
     }
 }

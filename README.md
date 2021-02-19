@@ -42,6 +42,9 @@ The current release is **v1.4.0**.
 
 ## What's new
 
+### vNext (source only)
+- Add some [syntactic sugar](doc/syntaxExtensions.md) 
+- 
 ### v1.4.0 (source/binary)
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
 - A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
@@ -61,7 +64,8 @@ The current release is **v1.4.0**.
 
 ## Documentation
 
-- [Getting started with template generation](doc/gettingStarted.md) 
+- [Getting started with template generation](doc/gettingStarted.md)
+- [Extended Scriban syntax](doc/syntaxExtensions.md)  
 - [Built in helpers](doc/builtIns.md)
 - [Library functions](doc/lib.md)
 - [Environment variables and user-definitions](doc/environmentAndDefinitions.md)
