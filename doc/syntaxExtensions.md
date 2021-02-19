@@ -29,7 +29,7 @@ Control
  |>  text in this section will be   <|
  |>  emitted with normal formatting <|  
 {{# textrude pop nopipehoist}}
-
+```
 
 ## Automatic whitespace snarfing for functions
 
