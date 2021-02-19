@@ -44,7 +44,7 @@ these blank  lines will be preserved..
 {{func f
 end}}
 {{# textrude pop nofuncsnarf}}
-
+```
 
 ## Terse anonymous function syntax
 
@@ -64,5 +64,6 @@ Control
 ```
 {{# textrude push noterselambda}}
 {{# textrude pop noterselambda}}
+```
 
 
