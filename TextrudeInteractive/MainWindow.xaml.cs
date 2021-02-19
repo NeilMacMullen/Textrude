@@ -574,7 +574,7 @@ namespace TextrudeInteractive
             OpenBrowserTo(new Uri(HomePage + "/" + path));
 
         private void ShowAbout(object sender, RoutedEventArgs e) =>
-            OpenHome(string.Empty);
+            OpenHome("blob/main/README.md");
 
 
         private void NewIssue(object sender, RoutedEventArgs e) =>
@@ -585,6 +585,9 @@ namespace TextrudeInteractive
 
         private void SendASmile(object sender, RoutedEventArgs e) =>
             OpenHome("issues/new?assignees=&labels=smile&template=positive-feedback.md&title=I%20like%20it%21");
+
+        private void ShowExtendedSyntax(object sender, RoutedEventArgs e)
+            => OpenHome("blob/main/doc/syntaxExtensions.md");
 
         private void GoGitter(object sender, RoutedEventArgs e)
         {

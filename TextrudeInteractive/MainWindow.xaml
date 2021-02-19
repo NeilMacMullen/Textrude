@@ -99,6 +99,7 @@
         <MenuItem Header="Scriban...">
           <MenuItem Header="Language reference..." Click="ShowLanguageRef" />
           <MenuItem Header="Built-ins..." Click="ShowBuiltIns" />
+          <MenuItem Header="Extended syntax..." Click="ShowExtendedSyntax" />
         </MenuItem>
         <Separator />
         <MenuItem Header="Send feedback">
