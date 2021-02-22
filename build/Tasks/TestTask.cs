@@ -49,9 +49,6 @@ namespace Build.Tasks
                 context.Directory("TestReports"),
                 new ReportGeneratorSettings()
                 {
-                    ToolPath = context.IsRunningOnLinux()
-                        ? context.RepoDir + context.File("tools/ReportGenerator.4.8.5/tools/net5.0/ReportGenerator.dll")
-                        : null,
                     ReportTypes = new[]
                     {
                         ReportGeneratorReportType.Html,
@@ -65,9 +62,6 @@ namespace Build.Tasks
                 context.Directory("TestResults"),
                 new ReportGeneratorSettings()
                 {
-                    ToolPath = context.IsRunningOnLinux()
-                        ? context.RepoDir + context.File("tools/ReportGenerator.4.8.5/tools/net5.0/ReportGenerator.dll")
-                        : null,
                     ArgumentCustomization = args => args.Append("-reporttypes:lcov")
                 }
             );

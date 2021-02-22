@@ -4,6 +4,7 @@ using Cake.Frosting;
 using System.IO;
 using Cake.Core;
 using Cake.Common.Tools.GitVersion;
+using Cake.Common.IO;
 
 namespace Build
 {
@@ -15,8 +16,9 @@ namespace Build
             Environment.CurrentDirectory = projectDir.Parent.FullName;
 
             return new CakeHost()
-                .InstallTool(new Uri("nuget:?package=ReportGenerator&version=4.8.5"))
-                .InstallTool(new Uri("nuget:?package=GitVersion.CommandLine&version=5.6.6"))
+                .UseModule<Cake.DotNetTool.Module.DotNetToolModule>()
+                .InstallTool(new Uri("dotnet:?package=dotnet-reportgenerator-globaltool&version=4.8.6"))
+                .InstallTool(new Uri("dotnet:?package=GitVersion.Tool&version=5.6.6"))
                 .UseContext<BuildContext>()
                 .UseSetup<BuildSetup>()
                 .Run(args);
