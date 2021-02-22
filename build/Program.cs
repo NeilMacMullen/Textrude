@@ -4,6 +4,7 @@ using Cake.Frosting;
 using System.IO;
 using Cake.Common.Tools.GitVersion;
 using Cake.Core.Diagnostics;
+using Cake.Common.Build;
 
 namespace Build
 {
@@ -29,12 +30,26 @@ namespace Build
         public override void Setup(BuildContext context)
         {
             context.Log.Information("Start GitVersion");
-            context.Version = context.GitVersion(new GitVersionSettings() {
-                Verbosity = GitVersionVerbosity.Debug
-            });
+            context.Version = context.GitVersion(
+                DetermineGitVersionSettings(context)
+            );
             context.Log.Information("End GitVersion");
             
             context.Describe();
+        }
+
+        private GitVersionSettings DetermineGitVersionSettings(BuildContext context) {
+            var gha = context.GitHubActions();
+            if (gha.IsRunningOnGitHubActions) {
+                var workflow = gha.Environment.Workflow;
+                return new GitVersionSettings() {
+                    RepositoryPath = $"{workflow.ServerUrl}/{workflow.Repository}",
+                    Branch = workflow.Ref,
+                    Commit = workflow.Sha
+                };
+            } else {
+                return new GitVersionSettings(); // run locally - no config needed
+            }
         }
     }
 
