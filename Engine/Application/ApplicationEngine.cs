@@ -196,6 +196,9 @@ namespace Engine.Application
             Add(ExtensionCache.KnownAssemblies.Humanizr,
                 ExtensionCache.GetHumanizrMethods());
 
+            Add(ExtensionCache.KnownAssemblies.Textrude,
+                ExtensionCache.GetTextrudeMethods());
+
             return this;
         }
 

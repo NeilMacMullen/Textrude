@@ -44,7 +44,8 @@ The current release is **v1.4.0**.
 
 ### vNext (source only)
 - Add some [syntactic sugar](doc/syntaxExtensions.md) 
-- 
+- Provide [create_library](doc/userLibrary.md) method for improved library creation 
+
 ### v1.4.0 (source/binary)
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
 - A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
