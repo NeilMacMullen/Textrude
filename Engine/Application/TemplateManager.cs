@@ -41,6 +41,7 @@ namespace Engine.Application
         public TemplateManager(IFileSystemOperations ops)
         {
             _context.StrictVariables = true;
+            _context.LoopLimit = int.MaxValue;
             _scriptLoader = new ScriptLoader(ops);
             _context.TemplateLoader = _scriptLoader;
             _context.PushGlobal(_top);
