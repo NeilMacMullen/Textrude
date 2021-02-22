@@ -2,9 +2,7 @@ using Build.Tasks;
 using System;
 using Cake.Frosting;
 using System.IO;
-using Cake.Core;
 using Cake.Common.Tools.GitVersion;
-using Cake.Common.IO;
 
 namespace Build
 {
@@ -29,7 +27,9 @@ namespace Build
     {
         public override void Setup(BuildContext context)
         {
-            context.Version = context.GitVersion();
+            context.Version = context.GitVersion(new GitVersionSettings() {
+                Verbosity = GitVersionVerbosity.Debug
+            });
             
             context.Describe();
         }
