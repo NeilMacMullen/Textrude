@@ -10,6 +10,7 @@ using System.Linq;
 using Spectre.Console;
 using Cake.Common.IO;
 using Cake.Common.IO.Paths;
+using Cake.Common.Tools.GitVersion;
 
 namespace Build
 {
@@ -22,6 +23,7 @@ namespace Build
         {
             BuildConfiguration = context.Argument<string>("configuration", "Debug");
             DoClean = context.HasArgument("clean");
+
             RepoDir = context.Directory(System.Environment.CurrentDirectory);
             BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
@@ -31,6 +33,9 @@ namespace Build
 
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
+
+        public GitVersion Version { get; internal set; }
+
         public ConvertableDirectoryPath RepoDir { get; }
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
@@ -50,6 +55,29 @@ namespace Build
                 .AddNode(new Table()
                     .AddColumns("Clean", "Configuration")
                     .AddRow(DoClean.ToString(), BuildConfiguration)
+                );
+
+            build
+                .AddNode(":notebook: Version")
+                .AddNode(new Table()
+                    .HideHeaders()
+                    .AddColumns("Key", "Value")
+                    .AddRow("FullSemVer", Version.FullSemVer)
+                    .AddRow("AssemblySemVer", Version.AssemblySemVer)
+                    .AddRow("AssemblySemFileVer", Version.AssemblySemFileVer)
+                    .AddRow("NuGetVersion", Version.NuGetVersion)
+                    .AddRow("NuGetVersionV2", Version.NuGetVersionV2)
+                    .AddRow("BuildMetaData", Version.BuildMetaData)
+                    .AddRow("FullBuildMetaData", Version.FullBuildMetaData)
+                    .AddRow("InformationalVersion", Version.InformationalVersion)
+                    .AddRow("PreReleaseLabel", Version.PreReleaseLabel)
+                    .AddRow("PreReleaseNumber", Version.PreReleaseNumber?.ToString() ?? "N/A")
+                    .AddRow("PreReleaseTag", Version.PreReleaseTag)
+                    .AddRow("PreReleaseTagWithDash", Version.PreReleaseTagWithDash)
+                    .AddRow("Branch", Version.BranchName)
+                    .AddRow("Commit", Version.Sha)
+                    .AddRow("CommitDate", Version.CommitDate)
+                    .AddRow("CommitsSinceVersionSource", Version.CommitsSinceVersionSource?.ToString()  ?? "N/A")
                 );
 
             var projects = new Table()

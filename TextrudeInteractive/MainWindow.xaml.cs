@@ -303,13 +303,11 @@ namespace TextrudeInteractive
 
         public void SetTitle(string path)
         {
-#if HASGITVERSION
-
             var file = Path.GetFileNameWithoutExtension(path);
             var title =
-                $"Textrude Interactive {GitVersionInformation.SemVer} : {file}";
+                // TODO
+                $"Textrude Interactive {1} : {file}";
             Title = title;
-#endif
         }
 
         public EngineOutputSet CollectOutput()

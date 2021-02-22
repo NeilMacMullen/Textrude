@@ -3,6 +3,7 @@ using System;
 using Cake.Frosting;
 using System.IO;
 using Cake.Core;
+using Cake.Common.Tools.GitVersion;
 
 namespace Build
 {
@@ -15,6 +16,7 @@ namespace Build
 
             return new CakeHost()
                 .InstallTool(new Uri("nuget:?package=ReportGenerator&version=4.8.5"))
+                .InstallTool(new Uri("nuget:?package=GitVersion.CommandLine&version=5.6.6"))
                 .UseContext<BuildContext>()
                 .UseSetup<BuildSetup>()
                 .Run(args);
@@ -25,6 +27,8 @@ namespace Build
     {
         public override void Setup(BuildContext context)
         {
+            context.Version = context.GitVersion();
+            
             context.Describe();
         }
     }

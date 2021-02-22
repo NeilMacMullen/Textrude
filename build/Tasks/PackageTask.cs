@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace Build.Tasks
 {
     [TaskName("Package")]
+    [IsDependentOn(typeof(BrandTask))]
     public sealed class PackageTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
