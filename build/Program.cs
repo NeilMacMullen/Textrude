@@ -43,7 +43,7 @@ namespace Build
             if (gha.IsRunningOnGitHubActions) {
                 var workflow = gha.Environment.Workflow;
                 return new GitVersionSettings() {
-                    RepositoryPath = $"{workflow.ServerUrl}/{workflow.Repository}",
+                    Url = $"{workflow.ServerUrl}/{workflow.Repository}",
                     Branch = workflow.Ref,
                     Commit = workflow.Sha
                 };
