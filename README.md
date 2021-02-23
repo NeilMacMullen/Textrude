@@ -45,6 +45,7 @@ The current release is **v1.4.0**.
 ### vNext (source only)
 - Add some [syntactic sugar](doc/syntaxExtensions.md) 
 - Provide [create_library](doc/userLibrary.md) method for improved library creation 
+- LoopLimit now removed and cancellation for long-running in-flight renders is supported
 
 ### v1.4.0 (source/binary)
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
