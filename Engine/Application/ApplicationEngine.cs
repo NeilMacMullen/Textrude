@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Scriban.Runtime;
 
 namespace Engine.Application
@@ -163,10 +164,13 @@ namespace Engine.Application
         ///     Run the render pass of the engine.
         /// </summary>
         public ApplicationEngine Render()
+            => Render(CancellationToken.None);
+
+        public ApplicationEngine Render(CancellationToken cancel)
         {
             try
             {
-                Output = _templateManager.Render();
+                Output = _templateManager.Render(cancel);
             }
             catch (Exception e)
             {

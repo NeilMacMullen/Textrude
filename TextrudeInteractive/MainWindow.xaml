@@ -146,18 +146,24 @@
           <DockPanel Grid.Column="4">
             <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="OutputTab"
                         DockPanel.Dock="Top" />
-            <local:InputMonacoPane x:Name="SharedOutput" />
+            <DockPanel>
+              <ProgressBar Style="{StaticResource MaterialDesignLinearProgressBar}" IsIndeterminate="{Binding IsBusy}"
+                           DockPanel.Dock="Top"/>
+              <local:InputMonacoPane x:Name="SharedOutput"
+                                     DockPanel.Dock="Bottom"/>
+            </DockPanel>
+          
           </DockPanel>
 
         </Grid>
         <GridSplitter Grid.Row="1" />
-
-
-        <TextBox Grid.Row="2" Name="Errors"
+      
+          <TextBox  Name="Errors"  Grid.Row="2"
                  FontWeight="Normal"
                  IsReadOnly="True"
                  Foreground="OrangeRed"
                  FontSize="16" />
+      
 
 
       </Grid>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Scriban;
 using Scriban.Runtime;
 using Scriban.Syntax;
@@ -55,12 +56,14 @@ namespace Engine.Application
         /// <summary>
         ///     Run the render pass and capture any errors
         /// </summary>
-        public string Render()
+        public string Render() => Render(CancellationToken.None);
+
+        public string Render(CancellationToken cancel)
         {
             if (ErrorList.Any())
                 return string.Empty;
 
-
+            _context.CancellationToken = cancel;
             _output = _compiledTemplate.Render(_context);
             if (_compiledTemplate.HasErrors)
                 ErrorList = ErrorList
