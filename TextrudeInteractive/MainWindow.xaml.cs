@@ -35,6 +35,7 @@ namespace TextrudeInteractive
         private readonly TabControlManager _outputManager;
         private readonly ProjectManager _projectManager;
         private readonly TabControlManager _templateManager;
+        private int _inFlightCount;
 
         private UpgradeManager.VersionInfo _latestVersion = UpgradeManager.VersionInfo.Default;
         private int _responseTimeMs = 50;
@@ -96,7 +97,10 @@ namespace TextrudeInteractive
             }
 
             _inputStream
+                .Do(_ => currentOp.Cancel())
                 .Throttle(TimeSpan.FromMilliseconds(_responseTimeMs))
+                .ObserveOn(SynchronizationContext.Current)
+                .Do(_ => SetBusyIndicator(+1))
                 .ObserveOn(NewThreadScheduler.Default)
                 .Select(Render)
                 .ObserveOn(SynchronizationContext.Current)
@@ -406,6 +410,15 @@ namespace TextrudeInteractive
             }
         }
 
+        private CancellationTokenSource currentOp = new CancellationTokenSource();
+
+        private bool SetBusyIndicator(int increment)
+        {
+            _inFlightCount += increment;
+            _editorVisualSettings.IsBusy = (_inFlightCount > 0);
+            return _editorVisualSettings.IsBusy;
+        }
+
         private TimedOperation<ApplicationEngine> Render(EngineInputSet gi)
         {
             var rte = new RunTimeEnvironment(new FileSystemOperations());
@@ -421,7 +434,8 @@ namespace TextrudeInteractive
                 .WithHelpers()
                 .WithTemplate(gi.Template);
 
-            engine.Render();
+            currentOp = new CancellationTokenSource();
+            engine.Render(currentOp.Token);
             return timer;
         }
 
@@ -436,6 +450,8 @@ namespace TextrudeInteractive
             }
 
             Errors.Text = string.Empty;
+            SetBusyIndicator(-1);
+
 #if HASGITVERSION
             if (_latestVersion.Supersedes(GitVersionInformation.SemVer))
             {
@@ -457,7 +473,11 @@ namespace TextrudeInteractive
                 Errors.Text += "No errors";
             }
 
-            CompletionType MapType(ModelPath.PathType type)
+
+            //There's no point in updating  completion data if the render pass was unsuccessful
+            if (engine.HasErrors) return;
+
+            static CompletionType MapType(ModelPath.PathType type)
             {
                 var d = new Dictionary<ModelPath.PathType, CompletionType>
                 {
@@ -471,6 +491,8 @@ namespace TextrudeInteractive
             var nodes = engine.ModelPaths()
                 .Select(r => new CompletionNode(r.Render(), r.Terminal(), MapType(r.ModelType)
                 )).ToArray();
+
+
             var comp = new Completions(nodes);
             TemplateEditPane.MonacoPane.SetCompletions(comp);
         }

@@ -51,5 +51,24 @@ namespace Tests
             Action getModelPaths = () => mgr.ModelPaths();
             getModelPaths.Should().NotThrow();
         }
+
+
+        [TestMethod]
+        public void LoopLimitIsLarge()
+        {
+            var mgr = new TemplateManager(_files);
+            var template = @"{{
+for a in 1..10000
+if (a > 9990)
+  "" "" + a + "" ""
+end
+end
+                
+            }}";
+            mgr.SetTemplate(template);
+            var res = mgr.Render();
+            res.Should()
+                .Contain("9999");
+        }
     }
 }
