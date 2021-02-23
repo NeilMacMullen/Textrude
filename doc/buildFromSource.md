@@ -1,5 +1,7 @@
 # Building Textrude from source
 
+**IMPORTANT - if you have  *downloaded* rather than *cloned* the source, refer to the section below describing git-less builds**
+
 If you want to build the *bleeding-edge* checkout *main*
 
 `git checkout main`
@@ -44,7 +46,7 @@ Edit scriban.js in TextrudeInteractive/Resources.
 
 ## Updating the version of Monaco
 
-Monaco is the WebView based editor which is developed [here](https://github.com/Microsoft/monaco-editor)  You get get the latest downlaod from [here](https://microsoft.github.io/monaco-editor/index.html)
+Monaco is the WebView based editor which is developed [here](https://github.com/Microsoft/monaco-editor)  You get get the latest download from [here](https://microsoft.github.io/monaco-editor/index.html)
 
 To incorporate this in the build you must follow a few steps....
 - remove all the .map files from the downloaded zip (otherwise the image will be huge!)
