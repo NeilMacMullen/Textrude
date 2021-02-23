@@ -75,6 +75,8 @@ The current release is **v1.4.0**.
 - [Creating and using library functions](doc/userlibrary.md)
 - [Using Textrude in a build system](doc/buildSystemIntegration.md)
 - [Docker image](Docker.md)
+- [Understanding file-linkages](doc/fileLinkage.md)
+- [Constructing command lines](doc/exportInvocation.md)
 
 ## Credits and contributors
 Textrude makes heavy use of the following components:
