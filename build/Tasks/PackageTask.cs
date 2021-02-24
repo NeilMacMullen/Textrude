@@ -21,17 +21,17 @@ namespace Build.Tasks
             context.CleanDirectory(context.PublishDir);
 
             // Publish Textrude (Win64, Linux64)
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"src\Textrude\Textrude.csproj", new DotNetCorePublishSettings()
             {
                 ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml")
             });
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"src\Textrude\Textrude.csproj", new DotNetCorePublishSettings()
             {
                 ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml")
             });
 
             // Publish TextrudeInteractive (Win64)
-            context.DotNetCorePublish(@"TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"src\TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings()
             {
                 ArgumentCustomization = args => args.Append(@"/p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml")
             });
