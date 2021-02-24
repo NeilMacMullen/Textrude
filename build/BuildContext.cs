@@ -28,12 +28,24 @@ namespace Build
             PublishDir = RepoDir + context.Directory("publish");
             SolutionFile = SourceDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
+
+            DefaultPublishConfiguration = new PublishConfiguration(
+                Configuration: "Release",
+                Framework: "net5.0",
+                Runtime: null,
+                SelfContained: false,
+                PublishSingleFile: true,
+                PublishReadyToRun: true,
+                PublishTrimmed: false,
+                PublishDirectory: PublishDir
+            );
         }
 
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
 
         public BuildSystem BuildSystem { get; internal set; }
+        public PublishConfiguration DefaultPublishConfiguration { get; } 
         public GitVersion Version { get; internal set; }
 
         public ConvertableDirectoryPath RepoDir { get; }

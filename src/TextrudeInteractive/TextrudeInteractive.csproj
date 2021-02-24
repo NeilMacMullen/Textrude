@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,7 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\app.png" />
+    <Compile Include="..\VersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,14 +45,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Monaco\NewFolder\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\app.png" />
   </ItemGroup>
 
 </Project>

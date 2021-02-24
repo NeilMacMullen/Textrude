@@ -1,5 +1,7 @@
 ﻿using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
+using Cake.Common.Tools.DotNetCore.MSBuild;
+using Cake.Common.Tools.DotNetCore.Pack;
 using Cake.Common.Tools.DotNetCore.Publish;
 using Cake.Core;
 using Cake.Core.IO;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 namespace Build.Tasks
 {
     [TaskName("Package")]
+    [IsDependentOn(typeof(CleanTask))]
     [IsDependentOn(typeof(BrandTask))]
     public sealed class PackageTask : FrostingTask<BuildContext>
     {
@@ -20,41 +23,66 @@ namespace Build.Tasks
         {
             context.CleanDirectory(context.PublishDir);
 
+            ZipRelease(context);
+            NuGet(context);
+        }
+
+        public void ZipRelease(BuildContext context)
+        {
+            var stageDir = context.PublishDir + context.Directory("_ziprelease");
+
             // Publish Textrude (Win64, Linux64)
-            context.DotNetCorePublish(@"src\Textrude\Textrude.csproj", new DotNetCorePublishSettings()
-            {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml")
-            });
-            context.DotNetCorePublish(@"src\Textrude\Textrude.csproj", new DotNetCorePublishSettings()
-            {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml")
-            });
+            context.DotNetCorePublish("src/Textrude/Textrude.csproj",
+                (context.DefaultPublishConfiguration with
+                {
+                    Runtime = "win-x64",
+                    PublishDirectory = stageDir
+                })
+                .ToDotNetCorePublishSettings()
+            );
+            context.DotNetCorePublish("src/Textrude/Textrude.csproj",
+                (context.DefaultPublishConfiguration with
+                {
+                    Runtime = "linux-x64",
+                    PublishDirectory = stageDir + context.Directory("linux")
+                })
+                .ToDotNetCorePublishSettings()
+            );
 
             // Publish TextrudeInteractive (Win64)
-            context.DotNetCorePublish(@"src\TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings()
-            {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml")
-            });
+            context.DotNetCorePublish("src/TextrudeInteractive/TextrudeInteractive.csproj",
+                (context.DefaultPublishConfiguration with
+                {
+                    Runtime = "win-x64",
+                    Framework = "net5.0-windows",
+                    PublishDirectory = stageDir
+                })
+                .ToDotNetCorePublishSettings()
+            );
 
             // Move linux executable up
             context.MoveFile(
-                context.PublishDir + context.Directory("linux") + context.File("Textrude"),
-                context.PublishDir + context.File("Textrude_linux")
+                stageDir + context.Directory("linux") + context.File("Textrude"),
+                stageDir + context.File("Textrude_linux")
             );
 
             // Remove unneeded files
-            context.DeleteFiles(GlobPattern.FromString(context.PublishDir + context.File("*.pdb")));
-            DeleteDirRecursive(context.PublishDir + context.Directory("linux"));
-            DeleteDirRecursive(context.PublishDir + context.Directory("x86"));
-            DeleteDirRecursive(context.PublishDir + context.Directory("arm64"));
+            context.DeleteFiles(GlobPattern.FromString(stageDir + context.File("*.pdb")));
+            DeleteDirRecursive(stageDir + context.Directory("linux"));
+            DeleteDirRecursive(stageDir + context.Directory("x86"));
+            DeleteDirRecursive(stageDir + context.Directory("arm64"));
 
             // Copy examples to publish
-            context.CopyDirectory("examples", context.PublishDir + context.Directory("examples"));
+            context.CopyDirectory("examples", stageDir + context.Directory("examples"));
 
             context.Zip(
-                context.PublishDir,
+                stageDir,
                 context.PublishDir + context.File("Textrude.zip")
             );
+            context.DeleteDirectory(stageDir, new DeleteDirectorySettings()
+            {
+                Recursive = true
+            });
 
             void DeleteDirRecursive(params DirectoryPath[] pathsToCombine)
             {
@@ -64,6 +92,28 @@ namespace Build.Tasks
                     Recursive = true
                 });
             }
+        }
+
+        public void NuGet(BuildContext context)
+        {
+            context.DotNetCorePack("src/Textrude", new DotNetCorePackSettings()
+            {
+                Configuration = "Release",
+                IncludeSymbols = true,
+                MSBuildSettings = new DotNetCoreMSBuildSettings()
+                    .WithProperty("PackageVersion", context.Version.NuGetVersion)
+                    .WithProperty("Authors", "Textrude contributers")
+                    .WithProperty("Description", @"Textrude is a cross-platform general-purpose code-generation tool.
+It can easily import data from CSV, YAML, JSON or plain-text files and apply Scriban templates to quickly scaffold output files.")
+                    .WithProperty("Copyright", "Copyright (c) 2021 Textrude contributors")
+                    .WithProperty("PackageLicenseExpression", "MIT")
+                    .WithProperty("PackageProjectUrl", "https://github.com/NeilMacMullen/Textrude")
+                    .WithProperty("RepositoryUrl", "https://github.com/NeilMacMullen/Textrude.git")
+                    .WithProperty("RepositoryType", "git")
+                    .WithProperty("RepositoryBranch", context.Version.BranchName)
+                    .WithProperty("RepositoryCommit", context.Version.Sha)
+                    .WithProperty("PackageOutputPath", context.PublishDir)
+            });
         }
     }
 }

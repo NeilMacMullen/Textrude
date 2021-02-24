@@ -305,8 +305,7 @@ namespace TextrudeInteractive
         {
             var file = Path.GetFileNameWithoutExtension(path);
             var title =
-                // TODO
-                $"Textrude Interactive {1} : {file}";
+                $"Textrude Interactive {VersionInfo.SemanticVersion} : {file}";
             Title = title;
         }
 
