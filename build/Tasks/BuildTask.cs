@@ -127,18 +127,53 @@ namespace Build.Tasks
             });
             if (exit != 0)
                 throw new Exception("Build failed!");
-
-            void RenderLine(string format, params object[] args)
-            {
-                var line = new Markup(string.Format(format, args) + Environment.NewLine)
-                    .Overflow(Overflow.Ellipsis);
-                AnsiConsole.Render(line);
-            }
         }
+        private void RenderLine(string format, params object[] args)
+        {
+            var line =
+                new Markup(string.Format(format, args) + Environment.NewLine)
+                    .Overflow(Overflow.Ellipsis);
+            AnsiConsole.Render(line);
+        }
+
+        private string FileStub(IFile path) =>
+            path.Path.GetFilenameWithoutExtension().ToString();
 
         private void GenerateDocumentation(BuildContext context)
         {
-            context.DotNetCoreRun("Textrude", @"render --models ScriptLibrary/doc.yaml --template ScriptLibrary/doctemplate.sbn --output doc/lib.md");
+            var libFolder = "ScriptLibrary";
+            var extractionScript = $"{libFolder}/extractDoc.sbn";
+            var markDownScript = $"{libFolder}/doctemplate.sbn";
+            var tempDocModel = $"{libFolder}/doc.yaml";
+            var markDownOutput = "doc/lib.md";
+            var libFiles =
+                context
+                    .FileSystem
+                    .GetDirectory("./ScriptLibrary/lib")
+                    .GetFiles("*.sbn", SearchScope.Current);
+
+            var modelNames = string.Join(" ", libFiles.Select(FileStub));
+
+            var modelPaths =
+                string
+                    .Join(" ",
+                        libFiles
+                            .Select(file => $"__{FileStub(file)}=\"{file.Path}\""));
+
+            RenderLine("[green]textrude extracting docs:[/] {0}", modelNames);
+            context
+                .DotNetCoreRun("Textrude",
+                    $"render --models {modelPaths}" +
+                    $" --template {extractionScript}" +
+                    $" --definitions \"MODELLIST={modelNames}\"" +
+                    $" --output {tempDocModel} ");
+
+            RenderLine("[green]textrude generating lib.md:[/]");
+            context
+                .DotNetCoreRun("Textrude",
+                    $"render --models {tempDocModel}" +
+                    $" --template {markDownScript}" +
+                    $" --output {markDownOutput}");
         }
     }
 }
