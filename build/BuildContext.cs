@@ -1,9 +1,6 @@
 using Cake.Common;
-using Cake.Common.Diagnostics;
 using Cake.Common.Solution;
 using Cake.Core;
-using Cake.Core.Diagnostics;
-using Cake.Core.IO;
 using Cake.Frosting;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +8,7 @@ using Spectre.Console;
 using Cake.Common.IO;
 using Cake.Common.IO.Paths;
 using Cake.Common.Tools.GitVersion;
+using Cake.Common.Build;
 
 namespace Build
 {
@@ -25,18 +23,21 @@ namespace Build
             DoClean = context.HasArgument("clean");
 
             RepoDir = context.Directory(System.Environment.CurrentDirectory);
+            SourceDir = RepoDir + context.Directory("src");
             BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
-            SolutionFile = RepoDir + context.File("Textrude.sln");
+            SolutionFile = SourceDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
         }
 
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
 
+        public BuildSystem BuildSystem { get; internal set; }
         public GitVersion Version { get; internal set; }
 
         public ConvertableDirectoryPath RepoDir { get; }
+        public ConvertableDirectoryPath SourceDir { get; }
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
         public ConvertableFilePath SolutionFile { get; }

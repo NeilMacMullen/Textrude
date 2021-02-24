@@ -11,17 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\NewFolder1\**" />
-    <Compile Remove="Resources\NewFolder\**" />
-    <EmbeddedResource Remove="Resources\NewFolder1\**" />
-    <EmbeddedResource Remove="Resources\NewFolder\**" />
-    <None Remove="Resources\NewFolder1\**" />
-    <None Remove="Resources\NewFolder\**" />
-    <Page Remove="Resources\NewFolder1\**" />
-    <Page Remove="Resources\NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\app.png" />
   </ItemGroup>
 

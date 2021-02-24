@@ -34,6 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "build\Build.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub workflows", "GitHub workflows", "{02A73D75-89E1-4C65-8799-A3A9DBE32A40}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\cd.yaml = .github\workflows\cd.yaml
 		.github\workflows\ci.yaml = .github\workflows\ci.yaml
 	EndProjectSection
 EndProject

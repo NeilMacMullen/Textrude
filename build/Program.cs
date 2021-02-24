@@ -3,7 +3,6 @@ using System;
 using Cake.Frosting;
 using System.IO;
 using Cake.Common.Tools.GitVersion;
-using Cake.Core.Diagnostics;
 using Cake.Common.Build;
 
 namespace Build
@@ -29,19 +28,17 @@ namespace Build
     {
         public override void Setup(BuildContext context)
         {
-            context.Log.Information("Start GitVersion");
+            context.BuildSystem = context.BuildSystem();
             context.Version = context.GitVersion(
                 DetermineGitVersionSettings(context)
             );
-            context.Log.Information("End GitVersion");
             
             context.Describe();
         }
 
         private GitVersionSettings DetermineGitVersionSettings(BuildContext context) {
-            var gha = context.GitHubActions();
-            if (gha.IsRunningOnGitHubActions) {
-                var workflow = gha.Environment.Workflow;
+            if (context.BuildSystem.GitHubActions.IsRunningOnGitHubActions) {
+                var workflow = context.BuildSystem.GitHubActions.Environment.Workflow;
                 return new GitVersionSettings() {
                     Url = $"{workflow.ServerUrl}/{workflow.Repository}",
                     Branch = workflow.Ref,

@@ -1,3 +1,10 @@
-*/bin/
-*/obj/
+*.log
+*.binlog
+src/*/bin/
+src/*/obj/
 out/
+act/
+publish/
+TestReports/
+TestResults/
+tools/

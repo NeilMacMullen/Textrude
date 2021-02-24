@@ -78,7 +78,8 @@ namespace Build.Tasks
                     .AppendSwitch("-c", context.BuildConfiguration)
                     .AppendSwitch("-v", DotNetCoreVerbosity.Minimal.ToString())
                     .Append("-consoleLoggerParameters:NoSummary;NoItemAndPropertyList")
-                    .Append("-binaryLogger:LogFile=build.binlog"),
+                    .Append("-binaryLogger:LogFile=build.binlog")
+                    .Append(context.SolutionFile),
                 RedirectStandardOutput = true,
                 RedirectedStandardOutputHandler = o =>
                 {
@@ -138,7 +139,7 @@ namespace Build.Tasks
 
         private void GenerateDocumentation(BuildContext context)
         {
-            context.DotNetCoreRun("Textrude", @"render --models ScriptLibrary/doc.yaml --template ScriptLibrary/doctemplate.sbn --output doc/lib.md");
+            context.DotNetCoreRun("src/Textrude", @"render --models src/ScriptLibrary/doc.yaml --template src/ScriptLibrary/doctemplate.sbn --output doc/lib.md");
         }
     }
 }
