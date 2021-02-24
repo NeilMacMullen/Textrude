@@ -366,3 +366,4 @@ MigrationBackup/
 FodyWeavers.xsd
 .vscode/tasks.json
 .vscode/launch.json
+ScriptLibrary/doc.yaml
