@@ -66,19 +66,21 @@ namespace Engine.Model.Helpers
 
                 case JTokenType.Date:
                     return p.Value<DateTime>();
-/*
-                Unused types...
-                case JTokenType.None:
-                case JTokenType.Constructor:
-                case JTokenType.Property:
-                case JTokenType.Comment:
                 case JTokenType.Null:
-                case JTokenType.Undefined:
-                case JTokenType.Raw:
-                case JTokenType.Bytes:
-                case JTokenType.Uri:
-                case JTokenType.TimeSpan:
-*/
+                    return null;
+                /*
+                                Unused types...
+                                case JTokenType.None:
+                                case JTokenType.Constructor:
+                                case JTokenType.Property:
+                                case JTokenType.Comment:
+
+                                case JTokenType.Undefined:
+                                case JTokenType.Raw:
+                                case JTokenType.Bytes:
+                                case JTokenType.Uri:
+                                case JTokenType.TimeSpan:
+                */
                 default:
                     throw new InvalidOperationException($"Don't know what to do with token of type {p.Type}");
             }

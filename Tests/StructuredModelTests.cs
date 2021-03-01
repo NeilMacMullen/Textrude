@@ -119,6 +119,38 @@ namespace Tests
         }
 
         [TestMethod]
+        public void NullsInJsonCanBeProcessed()
+        {
+            var model = "{\"label\": null}";
+            var engine = new ApplicationEngine(_rte)
+                .WithTemplate("{{model.variable}}")
+                .WithModel(model, ModelFormat.Json)
+                .Render();
+            engine.HasErrors.Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void CommentsInJsonCanBeProcessed()
+        {
+            var model = @"[
+1, //a comment
+2, //another comment
+3 /* a third comment */
+]";
+            var engine = new ApplicationEngine(_rte)
+                .WithTemplate("{{model[0] + model[2] }}")
+                .WithModel(model, ModelFormat.Json)
+                .Render()
+                ;
+            engine.HasErrors.Should().BeFalse();
+            engine.Output.Should().Be("4");
+        }
+
+
+
+
+        [TestMethod]
         public void NumericTypesCanBeAdded()
         {
             Test(
