@@ -42,7 +42,7 @@ namespace TextrudeInteractive
         {
             //TODO - this is a rather roundabout way of the getting the current application folder!
             var exePath =
-                Path.Combine(new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder());
+                Path.Combine(new RunTimeEnvironment(new FileSystem()).ApplicationFolder());
             return new PathManipulator(exePath);
         }
     }

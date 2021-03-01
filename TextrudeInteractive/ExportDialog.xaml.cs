@@ -21,7 +21,7 @@ namespace TextrudeInteractive
         public ExportDialog(TextrudeProject project)
         {
             proj = project;
-            _homeFolder = new RunTimeEnvironment(new FileSystemOperations()).ApplicationFolder();
+            _homeFolder = new RunTimeEnvironment(new FileSystem()).ApplicationFolder();
             InitializeComponent();
             RenderCli.IsChecked = true;
             UseAbsolutePaths.IsChecked = true;
@@ -56,7 +56,8 @@ namespace TextrudeInteractive
                     : rootManipulator.ToRelative(path);
             }
 
-            NamedFile GetFile(string name, string path) => new NamedFile(name, RelAbsPath(path));
+            NamedFile GetFile(string name, string path, ModelFormat format) =>
+                new NamedFile(name, RelAbsPath(path), format);
 
             var options = new RenderOptions
             {
@@ -65,12 +66,12 @@ namespace TextrudeInteractive
                     .ToArray(),
                 Models = NamedFileFactory.Squash(
                         engine.Models
-                            .Select(m => GetFile(m.Name, m.Path))
+                            .Select(m => GetFile(m.Name, m.Path, m.Format))
                             .Where(CheckLink)
                     )
                     .ToArray(),
                 Output = NamedFileFactory.Squash(
-                        proj.OutputControl.Outputs.Select(m => GetFile(m.Name, m.Path))
+                        proj.OutputControl.Outputs.Select(m => GetFile(m.Name, m.Path, ModelFormat.Unknown))
                             .Where(CheckLink))
                     .ToArray(),
                 Lazy = IsLazy.IsChecked == true,

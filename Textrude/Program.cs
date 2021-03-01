@@ -8,7 +8,14 @@ namespace Textrude
     {
         private static void Main(string[] args)
         {
-            var rte = new RunTimeEnvironment(new FileSystemOperations());
+            //Note that the handlers needed to be supplied
+            //in order of how picky they are
+            var fs = new HybridFileSystem(
+                new ConsoleFileSystem(),
+                new WebFileSystem(),
+                new FileSystem()
+            );
+            var rte = new RunTimeEnvironment(fs);
             var sys = new Helpers();
             var result = Parser.Default
                     .ParseArguments(args,

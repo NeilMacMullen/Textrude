@@ -46,9 +46,8 @@ namespace Textrude
         private string TryReadFile(string path)
         {
             return _sys.GetOrQuit(() => _runtime.FileSystem.ReadAllText(path),
-                $"Unable to read file {_options.Template}");
+                $"Unable to read file {path}");
         }
-
 
         public void Run()
         {
@@ -77,7 +76,10 @@ namespace Textrude
             foreach (var model in models)
             {
                 var modelText = TryReadFile(model.Path);
-                var format = ModelDeserializerFactory.FormatFromExtension(model.Path);
+
+                var format = model.Format == ModelFormat.Unknown
+                    ? _runtime.FileSystem.DefaultFormat(model.Path)
+                    : model.Format;
                 engine = engine.WithModel(model.Name, modelText, format);
             }
 
@@ -108,15 +110,7 @@ namespace Textrude
             }
             else
             {
-                var outputStrings = engine.GetOutput(10);
-                for (var i = 0; i < outputs.Length; i++)
-                {
-                    var text = outputStrings[i];
-                    if (text.Length == 0)
-                        continue;
-                    Console.WriteLine($"----------------- output{i} -------------------");
-                    Console.WriteLine(text);
-                }
+                Console.WriteLine(engine.Output);
             }
         }
 

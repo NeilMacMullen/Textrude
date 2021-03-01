@@ -421,7 +421,7 @@ namespace TextrudeInteractive
 
         private TimedOperation<ApplicationEngine> Render(EngineInputSet gi)
         {
-            var rte = new RunTimeEnvironment(new FileSystemOperations());
+            var rte = new RunTimeEnvironment(new FileSystem());
             var engine = new ApplicationEngine(rte);
             var timer = new TimedOperation<ApplicationEngine>(engine);
 
