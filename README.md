@@ -49,6 +49,8 @@ The current release is **v1.4.0**.
 - Add some [syntactic sugar](doc/syntaxExtensions.md) 
 - Provide [create_library](doc/userLibrary.md) method for improved library creation 
 - LoopLimit now removed and cancellation for long-running in-flight renders is supported
+- textrude.exe can now read models from STDIN or from a URL.  See [this doc](doc/buildSystemIntegration.md)
+- textrude.exe model/output specifiers can now include explicit format declaration
 
 ### v1.4.0 (source/binary)
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
