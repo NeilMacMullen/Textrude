@@ -11,12 +11,13 @@ namespace Tests
     internal class MockFileSystem : IFileSystemOperations
     {
         private readonly Dictionary<string, DatedContent> _files = new();
+        private readonly HashSet<string> _inaccessible = new();
+
 
         public bool Exists(string path) => _files.ContainsKey(path);
 
-
         public string ReadAllText(string path) =>
-            Exists(path)
+            Exists(path) && Accessible(path)
                 ? _files[path].Content
                 : throw new IOException("file not present");
 
@@ -31,6 +32,13 @@ namespace Tests
             var dc = new DatedContent(content, DateTime.UtcNow);
             _files[path] = dc;
         }
+
+        public bool CanHandle(string path) => true;
+        public ModelFormat DefaultFormat(string path) => ModelDeserializerFactory.FormatFromExtension(path);
+
+        public bool Accessible(string path) => !_inaccessible.Contains(path);
+
+        public void ThrowOnRead(string path) => _inaccessible.Add(path);
 
         public string ApplicationFolder() => "exeFolder";
 

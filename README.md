@@ -10,7 +10,10 @@ If you like or are using this project please give it a star or leave some feedba
 
 Textrude is a cross-platform general-purpose code-generation tool.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to quickly scaffold output files. 
 
-Templates and models can quickly be developed using the bundled TextrudeInteractive tool. A command-line executable is provided for easy integration with automated build-systems.
+Textrude comes in 3 flavours:
+- **textrude.exe** is a Windows CLI tool for use from the console and within build-systems
+- **textrude_linux** as above but for Linux
+- **TextrudeInteractive** is a Windows UI tool for rapid prototyping and development of models and templates.
 
 ![Screenshot of TextrudeInteractive](img/textrudedemo.gif)
 
