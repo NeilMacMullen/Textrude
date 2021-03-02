@@ -21,5 +21,5 @@ jobs:
       run: dotnet run --project build/Build.csproj -- --target Package
     - uses: actions/upload-artifact@v2
       with:
-        name: Textrude.zip
-        path: publish/Textrude.zip
+        name: Textrude (NuGet + ZIP)
+        path: publish/*
