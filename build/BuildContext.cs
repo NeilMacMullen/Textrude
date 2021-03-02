@@ -27,6 +27,7 @@ namespace Build
             BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
             SolutionFile = SourceDir + context.File("Textrude.sln");
+            VersionInfoFile = SourceDir + context.File("VersionInfo.cs");
             Solution = context.ParseSolution(SolutionFile);
 
             DefaultPublishConfiguration = new PublishConfiguration(
@@ -53,6 +54,7 @@ namespace Build
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
         public ConvertableFilePath SolutionFile { get; }
+        public ConvertableFilePath VersionInfoFile { get; }
         public SolutionParserResult Solution { get; }
 
         public IEnumerable<SolutionProject> ProjectsToBuild
