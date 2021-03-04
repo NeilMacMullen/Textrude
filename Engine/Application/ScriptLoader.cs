@@ -45,7 +45,7 @@ namespace Engine.Application
 
 
         public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
-            => _filesystem.ReadAllText(templatePath);
+            => TemplateProcessor.ApplyAllTransforms(_filesystem.ReadAllText(templatePath));
 
 
         public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath) =>
