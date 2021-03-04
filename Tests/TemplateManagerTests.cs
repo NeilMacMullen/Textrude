@@ -22,6 +22,22 @@ namespace Tests
             res.Should().Be("abcde");
         }
 
+
+        [TestMethod]
+        public void TemplateProcessorIsAppliedToIncludedFile()
+        {
+            var mgr = new TemplateManager(_files);
+            _files.WriteAllText("test",
+                @"{{[1,2,3]
+|> array.each @{$0*$0}@
+}}"
+            );
+
+            mgr.SetTemplate("{{include 'test'}}");
+            var res = mgr.Render();
+            res.Should().Be("[1, 4, 9]");
+        }
+
         [TestMethod]
         public void CodeCompletionCanFetchBuiltInFunctions()
         {
