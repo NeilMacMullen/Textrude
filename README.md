@@ -88,11 +88,9 @@ Huge thanks to the contributors:
 - [Martin Hochstrasser](https://github.com/highstreeto) - Docker support, general build enhancements, integration of the Monaco editor and the fancy logo!
 - [Neil MacMullen](https://github.com/NeilMacMullen) - original application concept and implementation
 
-
 ## Help wanted 
 
 If you fancy making Textrude better, I'd be happy to have help! Grab something from the issues list or suggest an idea. Alternatively you can contribute script snippets, improve the documentation or spread the word by writing an article!
-
 
 ## What's with the name 
 
