@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Scriban.Runtime;
 
 namespace Engine.Application
@@ -153,6 +154,7 @@ namespace Engine.Application
         /// </remarks>
         public ApplicationEngine WithTemplate(string templateText)
         {
+            templateText = TemplateProcessor.ApplyAllTransforms(templateText);
             _templateManager.SetTemplate(templateText);
             Errors = Errors.AddRange(_templateManager.ErrorList);
             return this;
@@ -162,10 +164,13 @@ namespace Engine.Application
         ///     Run the render pass of the engine.
         /// </summary>
         public ApplicationEngine Render()
+            => Render(CancellationToken.None);
+
+        public ApplicationEngine Render(CancellationToken cancel)
         {
             try
             {
-                Output = _templateManager.Render();
+                Output = _templateManager.Render(cancel);
             }
             catch (Exception e)
             {
@@ -194,6 +199,9 @@ namespace Engine.Application
 
             Add(ExtensionCache.KnownAssemblies.Humanizr,
                 ExtensionCache.GetHumanizrMethods());
+
+            Add(ExtensionCache.KnownAssemblies.Textrude,
+                ExtensionCache.GetTextrudeMethods());
 
             return this;
         }
@@ -236,14 +244,5 @@ namespace Engine.Application
                 _templateManager.AddIncludePath(inc);
             return this;
         }
-    }
-
-    public static class ScribanNamespaces
-    {
-        public const string ModelPrefix = "model";
-        public const string OutputPrefix = "output";
-        public const string EnvironmentNamespace = "env";
-        public const string DefinitionsNamespace = "def";
-        public const string TextrudeExe = "TEXTRUDE_EXE";
     }
 }

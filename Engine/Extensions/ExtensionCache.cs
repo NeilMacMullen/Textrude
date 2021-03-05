@@ -12,7 +12,8 @@ namespace Engine.Application
         {
             Debug,
             Humanizr,
-            Misc
+            Misc,
+            Textrude
         }
 
         private static readonly Dictionary<KnownAssemblies, ScriptObject> CachedResults =
@@ -56,6 +57,11 @@ namespace Engine.Application
         public static ScriptObject GetMiscMethods()
         {
             return GetOrCreate(KnownAssemblies.Misc, () => new[] {typeof(MiscMethods)});
+        }
+
+        public static ScriptObject GetTextrudeMethods()
+        {
+            return GetOrCreate(KnownAssemblies.Textrude, () => new[] {typeof(TextrudeMethods)});
         }
     }
 }

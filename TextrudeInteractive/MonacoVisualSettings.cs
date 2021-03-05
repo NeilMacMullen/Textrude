@@ -6,6 +6,7 @@ namespace TextrudeInteractive
 {
     public class MonacoVisualSettings : INotifyPropertyChanged
     {
+        private bool _isBusy;
         private bool _lineNumbers = true;
         private bool _showWhitespace;
 
@@ -51,6 +52,17 @@ namespace TextrudeInteractive
             {
                 if (value == _showWhitespace) return;
                 _showWhitespace = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (value == _isBusy) return;
+                _isBusy = value;
                 OnPropertyChanged();
             }
         }

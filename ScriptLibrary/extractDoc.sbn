@@ -1,0 +1,93 @@
+{{
+# this template scans through all the models it has been provided and generates a 
+# yaml file which contains a reprentation of the documentation for each
+# function it encounters
+# That yaml file is then process by another template to generate the target markdown
+
+func emit_funcName(name)
+"   - name: " +fname[0] | string.replace libname ""
+"
+"
+end 
+
+func emit_usage(line)
+"     " +line
+"
+"
+end 
+
+
+func emit_description
+"     description: |-" 
+"
+"
+end 
+
+func emit_example(line)
+"     " +line
+"
+"
+end 
+
+
+func emit_continuation(line)
+"       " +(line | string.strip)
+"
+"
+end 
+
+func emit_filename(f)
+"- filename: "+f +"
+  functions:
+" 
+end
+
+func emit_model(filename)
+
+#turn the supplied model name into an object called "model"
+#note that the models are actually named with a double underscore 
+#to avoid clashes with built in namespaces
+("model=__"+filename)| object.eval
+libname = "__"+filename+"_"
+emit_filename filename
+emitting=false
+
+# loop over all lines in the input file and emit yaml
+
+for line in model
+    if (line | string.starts_with "func")
+        toks = line | string.split " " 
+        fname = toks[1] | string.split "("
+        f = fname[0] | string.replace libname ""
+        emit_funcName f
+    end
+    if (line | string.starts_with "#")
+        rest = line | string.slice 1 | string.strip
+        cmd = rest | string.split " " | array.first
+        case cmd
+        when "usage:"
+            emit_usage(rest) 
+            emitting=false
+        when "description:"
+            emit_description
+            emitting=true
+        when "example:"
+            emit_example(rest) 
+            emitting=false
+        else 
+            if (emitting)
+                emit_continuation rest
+            end
+        end
+    else
+        emitting=false
+    end 
+end 
+end
+
+# the names of the models are passed via a definition
+modellist = def.MODELLIST | string.split " "
+for m in modellist
+  emit_model m
+end
+}}

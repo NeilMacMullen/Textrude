@@ -11,5 +11,15 @@ namespace Engine.Application
         public string ReadAllText(string path);
         public DateTime GetLastWriteTimeUtc(string path);
         public void WriteAllText(string path, string content);
+
+        /// <summary>
+        ///     True if this filesystem recognizes the kind of path
+        /// </summary>
+        public bool CanHandle(string path);
+
+        /// <summary>
+        ///     Provides a guess at what format to use for a given path
+        /// </summary>
+        ModelFormat DefaultFormat(string path);
     }
 }

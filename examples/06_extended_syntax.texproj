@@ -1,0 +1,38 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 2,
+        "Text": "",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "This project demonstrates the extended \r\nsyntax that Textrude provides...\r\n\r\n# Pipe hoisting\r\n{{ \r\n  [\u0022  a b c   \u0022,\u0022 d e f \u0022]\r\n    |\u003E string.strip\r\n    |\u003E humanizr.kebaberize\r\n}}\r\n\r\n# Terse lambdas\r\n{{\r\n    [1,2,3] | array.each @{$0*$0}@\r\n}}\r\n\r\n# Whitespace snarfing for func\r\n\r\n==with snarfing (default)==\r\n{{func abc ; end}}\r\n{{func xyz ; end}}\r\n===========================\r\n\r\n{{# turn off snarfing}}\r\n{{# textrude push nofuncsnarf }}\r\n**without snarfing**\r\n{{func abc ; end}}\r\n{{func xyz ; end}}\r\n********************\r\n\r\n{{# turn snarfing back on }}\r\n{{# textrude pop nofuncsnarf }}\r\n\r\n",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

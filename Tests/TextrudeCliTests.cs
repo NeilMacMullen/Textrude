@@ -9,6 +9,82 @@ using Textrude;
 namespace Tests
 {
     [TestClass]
+    public class NamedFileTests
+    {
+        [TestMethod]
+        public void SimplePathFillsInModelAndFormat()
+        {
+            var n = NamedFileFactory.SplitAssignment("abc", "model");
+            n.Name.Should().Be("model");
+            n.Path.Should().Be("abc");
+            n.Format.Should().Be(ModelFormat.Unknown);
+        }
+
+        [TestMethod]
+        public void UrlCanBeRecognised()
+        {
+            var n = NamedFileFactory.SplitAssignment("m=http://test", "model");
+            n.Name.Should().Be("m");
+            n.Path.Should().Be("http://test");
+        }
+
+        [TestMethod]
+        public void BareUrlCanBeRecognised()
+        {
+            var n = NamedFileFactory.SplitAssignment("http://test", "model");
+            n.Name.Should().Be("model");
+            n.Path.Should().Be("http://test");
+        }
+
+        [TestMethod]
+        public void StdInCanBeRecognised()
+        {
+            var n = NamedFileFactory.SplitAssignment("m=-", "model");
+            n.Name.Should().Be("m");
+            n.Path.Should().Be("-");
+        }
+
+        [TestMethod]
+        public void FormatCanBeRecognised()
+        {
+            var n = NamedFileFactory.SplitAssignment("json!m=-", "model");
+            n.Name.Should().Be("m");
+            n.Path.Should().Be("-");
+            n.Format.Should().Be(ModelFormat.Json);
+        }
+
+        [TestMethod]
+        public void FormatCanBeSpecifiedWithoutModelName()
+        {
+            var n = NamedFileFactory.SplitAssignment("json!blah", "model");
+            n.Name.Should().Be("model");
+            n.Path.Should().Be("blah");
+            n.Format.Should().Be(ModelFormat.Json);
+        }
+
+
+        [TestMethod]
+        public void EmptyStringDoesntCrash()
+        {
+            var n = NamedFileFactory.SplitAssignment(string.Empty, "model");
+            n.Name.Should().Be("model");
+            n.Path.Should().Be(string.Empty);
+            n.Format.Should().Be(ModelFormat.Unknown);
+        }
+
+
+        [TestMethod]
+        public void YamlIsRecognised()
+        {
+            var n = NamedFileFactory.SplitAssignment("yaml!d:/temp/test.model", "model");
+            n.Name.Should().Be("model");
+            n.Path.Should().Be("d:/temp/test.model");
+            n.Format.Should().Be(ModelFormat.Yaml);
+        }
+    }
+
+
+    [TestClass]
     public class TextrudeCliTests
     {
         [TestMethod]
@@ -22,43 +98,63 @@ namespace Tests
         public void ThrowsWhenCantReadTemplate()
         {
             _options.Template = "nofile";
-            Action act = () => Run();
+            Action act = Run;
             act.Should().Throw<ApplicationException>().WithMessage("*missing*nofile*");
+        }
+
+        [TestMethod]
+        public void ProvidesCorrectFileNameInErrorMessageWhenFileNonExistent()
+        {
+            _options.Models = _options.Models.Append(Name("model", "elusive.json")).ToArray();
+            AddTemplate("{{model.A}} ddd");
+            Action act = Run;
+            act.Should().Throw<ApplicationException>().WithMessage("*elusive.json*");
+        }
+
+        [TestMethod]
+        public void ProvidesCorrectFileNameInErrorMessageWhenReadFault()
+        {
+            var problemFile = "unreadable.json";
+            AddModel(problemFile, "abcd");
+            _fileSystem.ThrowOnRead(problemFile);
+            AddTemplate("{{model.A}} ddd");
+            Action act = Run;
+            act.Should().Throw<ApplicationException>().WithMessage($"*{problemFile}*");
         }
 
         [TestMethod]
         public void SimpleModelGeneratesOutput()
         {
-            AddModel(modelFile, "A: 123");
+            AddModel(ModelFile, "A: 123");
             AddTemplate("{{model.A}} ddd");
-            AddOutputFile(outputFile);
+            AddOutputFile(OutputFile);
 
             Run();
-            _fileSystem.ReadAllText(outputFile)
+            _fileSystem.ReadAllText(OutputFile)
                 .Should().Be("123 ddd");
         }
 
         [TestMethod]
         public void NamedModelsAreUnderstood()
         {
-            AddModel("test", modelFile, "A: 123");
+            AddModel("test", ModelFile, "A: 123");
             AddTemplate("{{test.A}} ddd");
-            AddOutputFile(outputFile);
+            AddOutputFile(OutputFile);
 
             Run();
-            _fileSystem.ReadAllText(outputFile)
+            _fileSystem.ReadAllText(OutputFile)
                 .Should().Be("123 ddd");
         }
 
         [TestMethod]
         public void NamedOutputsAreUnderstood()
         {
-            AddModel(modelFile, "A: 123");
+            AddModel(ModelFile, "A: 123");
             AddTemplate("{{capture testOut}}hello{{end}} ");
-            AddOutputFile("testOut", outputFile);
+            AddOutputFile("testOut", OutputFile);
 
             Run();
-            _fileSystem.ReadAllText(outputFile)
+            _fileSystem.ReadAllText(OutputFile)
                 .Should().Be("hello");
         }
 
@@ -67,23 +163,23 @@ namespace Tests
         public void WhenLazyEngineDoesNotRunUnlessInputTouched()
         {
             _options.Lazy = true;
-            AddModel(modelFile, "A: 123");
+            AddModel(ModelFile, "A: 123");
             AddTemplate("{{model.A}}");
-            AddOutputFile(outputFile);
+            AddOutputFile(OutputFile);
             //create this last so that it post-dates the input
-            _fileSystem.WriteAllText(outputFile, string.Empty);
+            _fileSystem.WriteAllText(OutputFile, string.Empty);
 
             Run();
-            _fileSystem.ReadAllText(outputFile).Should().BeEmpty();
+            _fileSystem.ReadAllText(OutputFile).Should().BeEmpty();
 
-            _fileSystem.Touch(modelFile);
+            _fileSystem.Touch(ModelFile);
             Run();
-            _fileSystem.ReadAllText(outputFile).Should().Be("123");
+            _fileSystem.ReadAllText(OutputFile).Should().Be("123");
 
-            _fileSystem.WriteAllText(templateFile, "abc");
+            _fileSystem.WriteAllText(TemplateFile, "abc");
 
             Run();
-            _fileSystem.ReadAllText(outputFile).Should().Be("abc");
+            _fileSystem.ReadAllText(OutputFile).Should().Be("abc");
         }
 
 
@@ -91,19 +187,20 @@ namespace Tests
         public void WhenLazyEngineRunsIfOutputDoesNotExist()
         {
             _options.Lazy = true;
-            AddModel(modelFile, "A: 123");
+            AddModel(ModelFile, "A: 123");
             AddTemplate("{{model.A}}");
-            AddOutputFile(outputFile);
+            AddOutputFile(OutputFile);
             Run();
-            _fileSystem.ReadAllText(outputFile).Should().Be("123");
+            _fileSystem.ReadAllText(OutputFile).Should().Be("123");
         }
 
         #region helper methods
 
-        private const string modelFile = "model.yaml";
-        private const string outputFile = "output.txt";
-        private const string templateFile = "template.sbn";
+        private const string ModelFile = "model.yaml";
+        private const string OutputFile = "output.txt";
+        private const string TemplateFile = "template.sbn";
         private readonly MockFileSystem _fileSystem = new();
+        private readonly MockFileSystem _mockWeb = new();
 
         private readonly Helpers _helper = new()
         {
@@ -116,13 +213,14 @@ namespace Tests
 
         private void Run()
         {
-            CmdRender.Run(_options, new RunTimeEnvironment(_fileSystem), _helper);
+            var hybrid = new HybridFileSystem(_fileSystem, _mockWeb);
+            CmdRender.Run(_options, new RunTimeEnvironment(hybrid), _helper);
         }
 
         private void AddTemplate(string someText)
         {
-            _fileSystem.WriteAllText(templateFile, someText);
-            _options.Template = templateFile;
+            _fileSystem.WriteAllText(TemplateFile, someText);
+            _options.Template = TemplateFile;
         }
 
         private void AddModel(string fileName, string text)

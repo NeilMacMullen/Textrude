@@ -1,8 +1,13 @@
 {{#read the README.md in Scriptlibrary if adding functions}}
+
 {{-
-#applies a function to an array
-#e.g. [1,2,3] | apply @(do;ret $0+1;end)
 func apply(lst,fn)
+# usage: <list> <function>
+# description:
+#   Applies a function to each element in a list.  Unlike
+#   array.each, this function expects to emit text 'inline'
+#   rather than returning an array
+# example: "[1,2,3] | apply @(do; $0*2;end)"
 for item in lst
    @fn item
 end

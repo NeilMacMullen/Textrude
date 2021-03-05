@@ -9,7 +9,7 @@ namespace Engine.Application
     /// <remarks>
     ///     By routing through an interface we can test application logic a bit more easily
     /// </remarks>
-    public class FileSystemOperations : IFileSystemOperations
+    public class FileSystem : IFileSystemOperations
     {
         public bool Exists(string path) => File.Exists(path);
 
@@ -21,5 +21,8 @@ namespace Engine.Application
         {
             File.WriteAllText(path, content);
         }
+
+        public bool CanHandle(string path) => true;
+        public ModelFormat DefaultFormat(string path) => ModelDeserializerFactory.FormatFromExtension(path);
     }
 }

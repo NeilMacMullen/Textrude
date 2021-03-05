@@ -10,7 +10,10 @@ If you like or are using this project please give it a star or leave some feedba
 
 Textrude is a cross-platform general-purpose code-generation tool.  It can easily import data from CSV,YAML, JSON  or plain-text files and apply [Scriban](https://github.com/scriban/scriban) templates to quickly scaffold output files. 
 
-Templates and models can quickly be developed using the bundled TextrudeInteractive tool. A command-line executable is provided for easy integration with automated build-systems.
+Textrude comes in 3 flavours:
+- **textrude.exe** is a Windows CLI tool for use from the console and within build-systems
+- **textrude_linux** as above but for Linux
+- **TextrudeInteractive** is a Windows UI tool for rapid prototyping and development of models and templates.
 
 ![Screenshot of TextrudeInteractive](img/textrudedemo.gif)
 
@@ -42,6 +45,13 @@ The current release is **v1.4.0**.
 
 ## What's new
 
+### vNext (source only)
+- Add some [syntactic sugar](doc/syntaxExtensions.md) 
+- Provide [create_library](doc/userLibrary.md) method for improved library creation 
+- LoopLimit now removed and cancellation for long-running in-flight renders is supported
+- textrude.exe can now read models from STDIN or from a URL.  See [this doc](doc/buildSystemIntegration.md)
+- textrude.exe model/output specifiers can now include explicit format declaration
+
 ### v1.4.0 (source/binary)
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
 - A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
@@ -61,7 +71,8 @@ The current release is **v1.4.0**.
 
 ## Documentation
 
-- [Getting started with template generation](doc/gettingStarted.md) 
+- [Getting started with template generation](doc/gettingStarted.md)
+- [Extended Scriban syntax](doc/syntaxExtensions.md)  
 - [Built in helpers](doc/builtIns.md)
 - [Library functions](doc/lib.md)
 - [Environment variables and user-definitions](doc/environmentAndDefinitions.md)
@@ -69,6 +80,8 @@ The current release is **v1.4.0**.
 - [Creating and using library functions](doc/userlibrary.md)
 - [Using Textrude in a build system](doc/buildSystemIntegration.md)
 - [Docker image](Docker.md)
+- [Understanding file-linkages](doc/fileLinkage.md)
+- [Constructing command lines](doc/exportInvocation.md)
 
 ## Credits and contributors
 Textrude makes heavy use of the following components:

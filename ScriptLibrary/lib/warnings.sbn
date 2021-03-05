@@ -1,5 +1,13 @@
 {{#read the README.md in Scriptlibrary if adding functions}}
-{{func autogenwarning}}
+
+{{
+func autogenwarning
+# usage: 
+# description:
+#  Generates a boilerplate warning using C++
+#  block commenting
+# example: autogenwarning
+}}
 /*
    WARNING 
    -------

@@ -36,7 +36,8 @@ namespace TextrudeInteractive
                 Text = model.Text,
                 ScribanName = modelName,
                 LinkedPath = model.Path,
-                AvailableFormats = Enum.GetNames(typeof(ModelFormat)),
+                AvailableFormats = Enum.GetNames(typeof(ModelFormat))
+                    .Where(f => f != ModelFormat.Unknown.ToString()).ToArray(),
                 PaneType = PaneType.Model,
                 FileLinkage = FileLinkageTypes.LoadSave
             };
