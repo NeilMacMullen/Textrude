@@ -1,5 +1,12 @@
 # Full change history
 
+### v1.5.0 
+- Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 
+- A [create_library](doc/userLibrary.md) built-in method is now provided to make it easier to create libraries
+- LoopLimit now removed and cancellation of long-running in-flight renders is supported.  This makes it easier to process large text files.
+- **Textrude** can now read models from STDIN or from a URL, making it useful for processing the output of other commands.
+- **Textrude** model/output specifiers can now include explicit format declarations.
+
 ### v1.4.0
 - The Monaco text editor is now used for all edit panes including the template editor, definitions and include paths.
 - A single Monaco edit pane is now used for multiple models/outputs for cleaner switching & improved responsiveness
@@ -13,7 +20,6 @@
 - Special thanks to [Martin Hochstrasser](https://github.com/highstreeto) for
   - CAKE build support 
   - The fancy new logo! 
-
 
 ### v1.3.0 
 - Models and outputs can be added/removed on a per-project basis
