@@ -1,5 +1,11 @@
 [
   {
+    "Version": "1.5.0",
+    "Date": "5 Mar 2020",
+    "Summary": "Syntax extensions, improved command-line usage",
+    "Detail": []
+  },
+  {
     "Version": "1.4.0",
     "Date": "15 feb 2020",
     "Summary": "Use Monaco for all panes",
