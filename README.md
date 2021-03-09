@@ -51,6 +51,9 @@ The current release is **v1.5.0**.
 
 ## What's new
 
+### vNext (source only)
+- Reduce annoying visual flicker when resizing edit panes
+
 ### v1.5.0 (source/binary)
 - Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 
 - A [create_library](doc/userLibrary.md) built-in method is now provided to make it easier to create libraries

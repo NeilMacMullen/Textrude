@@ -44,8 +44,7 @@ namespace Build.Tasks
             // Remove unneeded files
             context.DeleteFiles(GlobPattern.FromString(context.PublishDir + context.File("*.pdb")));
             DeleteDirRecursive(context.PublishDir + context.Directory("linux"));
-            DeleteDirRecursive(context.PublishDir + context.Directory("x86"));
-            DeleteDirRecursive(context.PublishDir + context.Directory("arm64"));
+            DeleteDirRecursive(context.PublishDir + context.Directory("runtimes"));
 
             // Copy examples to publish
             context.CopyDirectory("examples", context.PublishDir + context.Directory("examples"));
@@ -60,7 +59,8 @@ namespace Build.Tasks
                 var dir = pathsToCombine.Aggregate((l, r) => l.Combine(r));
                 context.DeleteDirectory(dir, new DeleteDirectorySettings()
                 {
-                    Recursive = true
+                    Recursive = true,
+                    
                 });
             }
         }
