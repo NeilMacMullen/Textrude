@@ -127,7 +127,6 @@ namespace Tests
                 .WithModel(model, ModelFormat.Json)
                 .Render();
             engine.HasErrors.Should().BeFalse();
-
         }
 
         [TestMethod]
@@ -139,15 +138,13 @@ namespace Tests
 3 /* a third comment */
 ]";
             var engine = new ApplicationEngine(_rte)
-                .WithTemplate("{{model[0] + model[2] }}")
-                .WithModel(model, ModelFormat.Json)
-                .Render()
+                    .WithTemplate("{{model[0] + model[2] }}")
+                    .WithModel(model, ModelFormat.Json)
+                    .Render()
                 ;
             engine.HasErrors.Should().BeFalse();
             engine.Output.Should().Be("4");
         }
-
-
 
 
         [TestMethod]
@@ -177,6 +174,22 @@ namespace Tests
                 "{{model.A || model.B}}",
                 result =>
                     result.Should().Be("true")
+            );
+        }
+
+
+        [TestMethod]
+        public void IntegersAreProvidedAsLongs()
+        {
+            var l = 0x_1abc_def0_1245_5678;
+            Test(
+                new
+                {
+                    A = l,
+                },
+                "{{model.A}}",
+                result =>
+                    result.Should().Be(l.ToString())
             );
         }
     }
