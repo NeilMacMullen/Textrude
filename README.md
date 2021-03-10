@@ -53,6 +53,7 @@ The current release is **v1.5.0**.
 
 ### vNext (source only)
 - Reduce annoying visual flicker when resizing edit panes
+- Integers larger than 32 bits supported in JSON files 
 
 ### v1.5.0 (source/binary)
 - Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 

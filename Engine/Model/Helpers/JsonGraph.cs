@@ -54,7 +54,7 @@ namespace Engine.Model.Helpers
                     return p.Value<string>();
 
                 case JTokenType.Integer:
-                    return p.Value<int>();
+                    return p.Value<long>();
 
                 case JTokenType.Float:
                     return p.Value<double>();
