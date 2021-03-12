@@ -54,6 +54,10 @@ The current release is **v1.5.0**.
 ### vNext (source only)
 - Reduce annoying visual flicker when resizing edit panes
 - Integers larger than 32 bits supported in JSON files 
+- textrude.exe now provides a convenient [pipe](doc/cmdPipe.md) command
+- textrude.exe *render* command now offers a *verbose* option
+- textrude.exe *info* command now shows full application path
+   
 
 ### v1.5.0 (source/binary)
 - Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 
@@ -77,6 +81,7 @@ The current release is **v1.5.0**.
 - [Docker image](Docker.md)
 - [Understanding file-linkages](doc/fileLinkage.md)
 - [Constructing command lines](doc/exportInvocation.md)
+- [command line piping](doc/cmdPipe.md)
 
 ## Credits and contributors
 Textrude makes heavy use of the following components:

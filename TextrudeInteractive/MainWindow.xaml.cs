@@ -15,6 +15,11 @@ using Engine.Application;
 using MaterialDesignExtensions.Controls;
 using TextrudeInteractive.Monaco.Messages;
 
+#if ! HASGITVERSION
+// for default GitVersionInformation
+using SharedApplication;
+#endif
+
 namespace TextrudeInteractive
 {
     /// <summary>
@@ -307,13 +312,10 @@ namespace TextrudeInteractive
 
         public void SetTitle(string path)
         {
-#if HASGITVERSION
-
             var file = Path.GetFileNameWithoutExtension(path);
             var title =
                 $"Textrude Interactive {GitVersionInformation.SemVer} : {file}";
             Title = title;
-#endif
         }
 
         public EngineOutputSet CollectOutput()
@@ -452,14 +454,13 @@ namespace TextrudeInteractive
             Errors.Text = string.Empty;
             SetBusyIndicator(-1);
 
-#if HASGITVERSION
             if (_latestVersion.Supersedes(GitVersionInformation.SemVer))
             {
                 Errors.Text =
                     $"Upgrade to {_latestVersion.Version} available - please visit {UpgradeManager.ReleaseSite}" +
                     Environment.NewLine;
             }
-#endif
+
             Errors.Text += $"Completed: {DateTime.Now.ToLongTimeString()}  Render time: {elapsedMs}ms" +
                            Environment.NewLine;
             if (engine.HasErrors)
