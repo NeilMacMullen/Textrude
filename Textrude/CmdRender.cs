@@ -22,6 +22,13 @@ namespace Textrude
             _sys = sys;
         }
 
+        private void Verbose(string msg)
+        {
+            if (!_options.Verbose)
+                return;
+            Console.WriteLine(msg);
+        }
+
         private DateTime[] GetLastWrittenDates(IEnumerable<string> files, DateTime fallback, bool allowNotExist)
         {
             DateTime GetLastWriteTime(string file)
@@ -63,8 +70,10 @@ namespace Textrude
 
             //check if there is nothing to do...
             if (_options.Lazy && (lastInputDate < earliestOutputDate))
+            {
+                Verbose("Nothing to do - all output is newer than input");
                 return;
-
+            }
 
             var template = TryReadFile(_options.Template);
 
@@ -104,6 +113,7 @@ namespace Textrude
                 foreach (var output in outputs)
                 {
                     var text = engine.GetOutputFromVariable(output.Name);
+                    Verbose($"Writing {text.Length} bytes to {output.Path}");
                     _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(output.Path, text),
                         $"Unable to write output to {output.Path}");
                 }

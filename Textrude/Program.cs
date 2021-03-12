@@ -21,11 +21,13 @@ namespace Textrude
                     .ParseArguments(args,
                         typeof(RenderOptions),
                         typeof(RenderFromFileOptions),
+                        typeof(CmdPipe.Options),
                         typeof(CmdInfo.Options)
                     )
                     .WithParsed<CmdInfo.Options>(o => CmdInfo.Run(o, rte).Wait())
                     .WithParsed<RenderOptions>(o => CmdRender.Run(o, rte, sys))
                     .WithParsed<RenderFromFileOptions>(o => CmdRenderFromFile.Run(o, rte, sys))
+                    .WithParsed<CmdPipe.Options>(o => CmdPipe.Run(o, rte, sys))
                 ;
         }
     }
