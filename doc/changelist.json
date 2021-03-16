@@ -1,31 +1,31 @@
 [
   {
     "Version": "1.5.0",
-    "Date": "5 Mar 2020",
+    "Date": "5 Mar 2021",
     "Summary": "Syntax extensions, improved command-line usage",
     "Detail": []
   },
   {
     "Version": "1.4.0",
-    "Date": "15 feb 2020",
+    "Date": "15 feb 2021",
     "Summary": "Use Monaco for all panes",
     "Detail": []
   },
   {
     "Version": "1.3.0",
-    "Date": "2 feb 2020",
+    "Date": "2 feb 2021",
     "Summary": "Use Monaco for fancy syntax highlighting",
     "Detail": []
   },
   {
     "Version": "1.2.0",
-    "Date": "20 jan 2020",
+    "Date": "20 jan 2021",
     "Summary": "Use AvalonEdit for nicer editing",
     "Detail": []
   },
   {
     "Version": "1.1.0",
-    "Date": "13 jan 2020",
+    "Date": "13 jan 2021",
     "Summary": "First public release",
     "Detail": []
   }
