@@ -1,0 +1,44 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 1,
+        "Text": "name,text\r\none, content for file\r\ntwo, more content\r\nthree, stuff ",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "# Dynamic Output \r\n\r\nThis code creates output files\r\nnamed according to the rows in \r\nthe input model.\r\n\r\nYou need to use the **--dynamicOutput** \r\nflag for textrude.exe to write these.\r\n\r\n\r\n{{\r\nfor f in model   \r\n filename = f.name\u002B\u0022.txt\u0022\r\ncapture content \r\n  filename\u002B\u0022 contains: \u0022\u002Bf.text\r\nend\r\ntextrude.add_output this filename content\r\nend\r\n}}\r\n\r\n## This what the output looks like internally:\r\n\r\n{{\r\ndebug.dump dynamic_output\r\n}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "markdown",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

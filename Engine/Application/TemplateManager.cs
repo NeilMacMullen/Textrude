@@ -131,6 +131,18 @@ namespace Engine.Application
             }
         }
 
+        public T TryGetVariableObject<T>(string variableName)
+        {
+            var scribanVariable = new ScriptVariableGlobal(variableName);
+            try
+            {
+                return (T) _context.GetValue(scribanVariable);
+            }
+            catch
+            {
+                return default;
+            }
+        }
 
         public static ImmutableArray<ModelPath> PathsForObjectTree(IDictionary<string, object> container,
             ModelPath prefix)

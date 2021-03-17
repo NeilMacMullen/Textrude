@@ -9,82 +9,6 @@ using Textrude;
 namespace Tests
 {
     [TestClass]
-    public class NamedFileTests
-    {
-        [TestMethod]
-        public void SimplePathFillsInModelAndFormat()
-        {
-            var n = NamedFileFactory.SplitAssignment("abc", "model");
-            n.Name.Should().Be("model");
-            n.Path.Should().Be("abc");
-            n.Format.Should().Be(ModelFormat.Unknown);
-        }
-
-        [TestMethod]
-        public void UrlCanBeRecognised()
-        {
-            var n = NamedFileFactory.SplitAssignment("m=http://test", "model");
-            n.Name.Should().Be("m");
-            n.Path.Should().Be("http://test");
-        }
-
-        [TestMethod]
-        public void BareUrlCanBeRecognised()
-        {
-            var n = NamedFileFactory.SplitAssignment("http://test", "model");
-            n.Name.Should().Be("model");
-            n.Path.Should().Be("http://test");
-        }
-
-        [TestMethod]
-        public void StdInCanBeRecognised()
-        {
-            var n = NamedFileFactory.SplitAssignment("m=-", "model");
-            n.Name.Should().Be("m");
-            n.Path.Should().Be("-");
-        }
-
-        [TestMethod]
-        public void FormatCanBeRecognised()
-        {
-            var n = NamedFileFactory.SplitAssignment("json!m=-", "model");
-            n.Name.Should().Be("m");
-            n.Path.Should().Be("-");
-            n.Format.Should().Be(ModelFormat.Json);
-        }
-
-        [TestMethod]
-        public void FormatCanBeSpecifiedWithoutModelName()
-        {
-            var n = NamedFileFactory.SplitAssignment("json!blah", "model");
-            n.Name.Should().Be("model");
-            n.Path.Should().Be("blah");
-            n.Format.Should().Be(ModelFormat.Json);
-        }
-
-
-        [TestMethod]
-        public void EmptyStringDoesntCrash()
-        {
-            var n = NamedFileFactory.SplitAssignment(string.Empty, "model");
-            n.Name.Should().Be("model");
-            n.Path.Should().Be(string.Empty);
-            n.Format.Should().Be(ModelFormat.Unknown);
-        }
-
-
-        [TestMethod]
-        public void YamlIsRecognised()
-        {
-            var n = NamedFileFactory.SplitAssignment("yaml!d:/temp/test.model", "model");
-            n.Name.Should().Be("model");
-            n.Path.Should().Be("d:/temp/test.model");
-            n.Format.Should().Be(ModelFormat.Yaml);
-        }
-    }
-
-
-    [TestClass]
     public class TextrudeCliTests
     {
         [TestMethod]
@@ -158,6 +82,35 @@ namespace Tests
                 .Should().Be("hello");
         }
 
+        [TestMethod]
+        public void DynamicOutputsAreUnderstood()
+        {
+            AddModel(ModelFile, "A: 123");
+            AddTemplate(@"
+{{
+
+capture xout
+""this is the value of x""
+end
+textrude.add_output this ""abc.txt"" xout
+}}
+");
+
+            UseDynamicOutput();
+            Run();
+            _fileSystem.ReadAllText("abc.txt")
+                .Should().Be("this is the value of x");
+        }
+
+        [TestMethod]
+        public void EmptyDynamicOutputsDoNotCrash()
+        {
+            AddModel(ModelFile, "A: 123");
+            AddTemplate(@"");
+            UseDynamicOutput();
+            Run();
+        }
+
 
         [TestMethod]
         public void WhenLazyEngineDoesNotRunUnlessInputTouched()
@@ -215,6 +168,11 @@ namespace Tests
         {
             var hybrid = new HybridFileSystem(_fileSystem, _mockWeb);
             CmdRender.Run(_options, new RunTimeEnvironment(hybrid), _helper);
+        }
+
+        private void UseDynamicOutput()
+        {
+            _options.DynamicOutput = true;
         }
 
         private void AddTemplate(string someText)

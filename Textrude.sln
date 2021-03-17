@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0
 		doc\buildSystemIntegration.md = doc\buildSystemIntegration.md
 		doc\builtIns.md = doc\builtIns.md
 		doc\changelist.json = doc\changelist.json
+		dynamicOutput.md = dynamicOutput.md
 		doc\environmentAndDefinitions.md = doc\environmentAndDefinitions.md
 		doc\gettingStarted.md = doc\gettingStarted.md
 		doc\lib.md = doc\lib.md

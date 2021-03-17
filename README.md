@@ -57,6 +57,7 @@ The current release is **v1.5.0**.
 - textrude.exe now provides a convenient [pipe](doc/cmdPipe.md) command
 - textrude.exe *render* command now offers a *verbose* option
 - textrude.exe *info* command now shows full application path
+- textrude.exe now supports [dynamic output](doc/dynamicOutput.md)
    
 
 ### v1.5.0 (source/binary)
