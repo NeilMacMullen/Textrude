@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Scriban.Runtime;
 
 namespace Engine.Application
@@ -8,6 +9,11 @@ namespace Engine.Application
     /// </summary>
     public static class TextrudeMethods
     {
+        /// <summary>
+        ///     Global Scriban variable used to hold dynamic output table
+        /// </summary>
+        public const string DynamicOutputName = "dynamic_output";
+
         /// <summary>
         ///     Allows functions and variables created in root object to be moved to library
         /// </summary>
@@ -33,6 +39,29 @@ namespace Engine.Application
             }
 
             top.SetValue(libraryName, lib, true);
+        }
+
+        /// <summary>
+        ///     Allows an application to register "dynamic" output
+        /// </summary>
+        /// <remarks>
+        ///     The first parameter should be the Scriban "this" object. The second is the
+        ///     name of the output file.  The last is the content
+        /// </remarks>
+        public static void AddOutput(object thisObject, string outputName, string content)
+        {
+            if (thisObject is not ScriptObject top) return;
+            var outputs = new Dictionary<string, string>();
+            if (!top.TryGetValue(DynamicOutputName, out var dynOutput))
+            {
+                top.SetValue(DynamicOutputName, outputs, false);
+            }
+            else
+            {
+                outputs = dynOutput as Dictionary<string, string>;
+            }
+
+            outputs[outputName] = content;
         }
     }
 }

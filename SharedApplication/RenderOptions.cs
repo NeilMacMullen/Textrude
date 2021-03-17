@@ -35,6 +35,9 @@ namespace SharedApplication
         [Option(HelpText = "Only write output files if models/template have been modified since last render pass")]
         public bool Lazy { get; set; }
 
+        [Option(HelpText = "Writes the set of dynamic output files")]
+        public bool DynamicOutput { get; set; }
+
         [Option(HelpText = "Provides commentary on what textrude is doing behind the scenes")]
         public bool Verbose { get; set; }
     }

@@ -231,6 +231,10 @@ namespace Engine.Application
             return _templateManager.TryGetVariable(name);
         }
 
+        public Dictionary<string, string> GetDynamicOutput()
+            => _templateManager.TryGetVariableObject<Dictionary<string, string>>(TextrudeMethods.DynamicOutputName) ??
+               new Dictionary<string, string>();
+
         /// <summary>
         ///     Adds a set of include paths to the engine
         /// </summary>

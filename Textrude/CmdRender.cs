@@ -122,6 +122,20 @@ namespace Textrude
             {
                 Console.WriteLine(engine.Output);
             }
+
+            //write dynamic output
+            if (_options.DynamicOutput)
+            {
+                var d = engine.GetDynamicOutput();
+                foreach (var o in d)
+                {
+                    var text = o.Value;
+                    var path = o.Key;
+                    Verbose($"Writing {text.Length} bytes to {path}");
+                    _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(path, text),
+                        $"Unable to write output to {path}");
+                }
+            }
         }
 
         public static void Run(RenderOptions options, RunTimeEnvironment rte, Helpers sys)

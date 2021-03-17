@@ -75,6 +75,10 @@ Definitions are supplied using the *--definitions* flag.  Each definition consis
 ## Include-paths
 Additional include paths for use by the template are supplied via the *--include* flag.
 
+## Dynamic Output
+Use the --dynamicOutput flag to enable dynamic output (i.e. to enable the template to define its own output set)
+See [dynamicOutput.md] for further details
+
 ## Dependency checking
 
 By default, the render pass is always run.  However, if the *--lazy* flag is supplied the Textrude will only render the output files if:
