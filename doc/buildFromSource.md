@@ -8,7 +8,7 @@ If you want to build the *bleeding-edge* checkout *main*
 
 If you want to build one of the stable releases, checkout one of the release tags
 
-`git checkout tags/v1.2.0`
+`git checkout tags/v1.5.0`
 
 ## Visual Studio
 
@@ -18,7 +18,7 @@ If you want single-file artefacts you can  the right-click on the Textrude or Te
 
 ## From the command line Windows/Linux
 
-Textrude builds using [Cake](https://cakebuild.net/) (there is no need to install this).  Use either the `build.ps` or `build.sh` scripts to trigger a build. The easiest way to build the executables is to run 
+Textrude builds using [Cake](https://cakebuild.net/) (there is no need to install this).  Use either the `build.ps1` or `build.sh` scripts to trigger a build. The easiest way to build the executables is to run 
 
 ``` 
 build.ps1 -t package  
@@ -42,7 +42,7 @@ Textrude uses *gitversion* so that it can search for updates.  If you want to bu
 
 Edit scriban.js in TextrudeInteractive/Resources.
 
-*Note - you must rebuild the project for the resource to be reloaded*
+*Note - you must rebuild the entire solution for the resource to be reloaded*
 
 ## Updating the version of Monaco
 
