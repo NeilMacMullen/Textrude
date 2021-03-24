@@ -1,5 +1,18 @@
 # Full change history
 
+### v1.6.0 (source/binary)
+- Reduce annoying visual flicker when resizing edit panes
+- Integers larger than 32 bits supported in JSON files 
+- textrude.exe now provides a convenient [pipe](doc/cmdPipe.md) command
+- textrude.exe *render* command now offers a *verbose* option
+- textrude.exe *info* command now shows full application path
+- textrude.exe now supports [dynamic output](doc/dynamicOutput.md)
+- Prototype Grouping methods in textrude namespace
+- Improve templates for library autodoc
+- Prototype [cpp](doc/lib.md#lib/cpp.sbn) library
+- Prototype [C#](doc/lib.md#lib/csharp.sbn) library
+- Prototype [text-processing](doc/lib.md#lib/line.sbn) library
+
 ### v1.5.0 
 - Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 
 - A [create_library](doc/userLibrary.md) built-in method is now provided to make it easier to create libraries

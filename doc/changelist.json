@@ -1,5 +1,11 @@
 [
   {
+    "Version": "1.6.0",
+    "Date": "24 Mar 2021",
+    "Summary": "Prototype libraries, improved CLI version",
+    "Detail": []
+  },
+  {
     "Version": "1.5.0",
     "Date": "5 Mar 2021",
     "Summary": "Syntax extensions, improved command-line usage",
