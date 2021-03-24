@@ -48,10 +48,11 @@ The current release is **v1.5.0**.
  - If you just want the binaries,  [go here](doc/getBinaries.md).
  - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
  - Or you can create a [Docker image](Docker.md)
+ - Textrude is also available on [nuget](https://www.nuget.org/packages/textrude/)
 
 ## What's new
 
-### vNext (source only)
+### v1.6.0 (source/binary)
 - Reduce annoying visual flicker when resizing edit panes
 - Integers larger than 32 bits supported in JSON files 
 - textrude.exe now provides a convenient [pipe](doc/cmdPipe.md) command
