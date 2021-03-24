@@ -1,0 +1,78 @@
+{{
+
+__csharp_indent_level=0
+
+func __csharp_indent(n)
+# usage: <n>
+# description: 
+#  Sets the default indent level
+# example: |-
+#  csharp.indent 5
+#  csharp.pad
+#   "padded text"    
+__csharp_indent_level=n
+end    
+
+func __csharp_linefeed
+# usage: 
+# description: 
+#  Inserts a linefeed
+# example: |-
+#  "line1"
+#  csharp.linefeed
+#  "line2"  
+"
+"
+end
+
+
+func __csharp_summary_comment(c)
+# usage: <text>
+# description: 
+#  Creates an intellisense summary block
+# example: |-
+#  csharp.summary_comment "this is a summary"
+"
+/// <summary>
+/// "
+c
+"
+/// </summary>
+"
+end
+
+
+func __csharp_pad
+# usage: 
+# description: 
+#  Inserts a pad at the current indent level
+# example: |-
+#  csharp.indent 5
+#  csharp.pad
+#   "padded text"  
+for i  in 0..__csharp_indent_level
+" "
+end
+end
+
+func __csharp_forall(items,fn)
+# usage: <items> <function>
+# description: 
+#  Applies a function to all items.
+#  All items are separated by a linefeed and comma
+#  except for the last
+# example: |-
+#  ["abc","def"]
+#  |> csharp.forall @{$0}@
+for item in items    
+__csharp_pad
+fn item
+if (! for.last)
+","
+end
+__csharp_linefeed
+end
+end
+
+    textrude.create_library this "csharp"
+}}

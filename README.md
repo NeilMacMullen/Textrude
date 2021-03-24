@@ -58,6 +58,11 @@ The current release is **v1.5.0**.
 - textrude.exe *render* command now offers a *verbose* option
 - textrude.exe *info* command now shows full application path
 - textrude.exe now supports [dynamic output](doc/dynamicOutput.md)
+- Prototype Grouping methods in textrude namespace
+- Improve templates for library autodoc
+- Prototype cpp library
+- Prototype csharp library
+- Prototype line (text processing) library
    
 
 ### v1.5.0 (source/binary)

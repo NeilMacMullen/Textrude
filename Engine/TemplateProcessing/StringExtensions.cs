@@ -36,6 +36,8 @@ namespace Engine.Application
         /// <summary>
         ///     Splits a string into lines
         /// </summary>
-        public static IEnumerable<string> ToLines(this string str) => str.Split(Environment.NewLine);
+        public static IEnumerable<string> ToLines(this string str) =>
+            str.Replace("\r\n","\n")
+           .Split("\n");
     }
 }

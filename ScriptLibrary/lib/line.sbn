@@ -1,0 +1,242 @@
+{{-#text processing library
+
+func __line_i
+# usage:
+# description: 
+#   ensures case-insensitive matching"
+# example: 
+#   import line
+#   ["line1","LINE2"] 
+#   |> must_contain "line" i
+#   |> display
+    ret "i"
+end
+
+func __line_literal(exp)
+# usage: <expression>
+# description: 
+#  escapes a regex to make it literal
+# example: 
+#  import line
+#  "abc.*" |> literal    
+ret exp | regex.escape
+end
+
+func __line_line_match
+# usage: <line> <regex> <options>
+# description: 
+#  tests whether the line matches the regex
+# example: |-
+#  import line
+#  "abcdefg" 
+#  |> line_match "abc..fg"        
+   ret ($0 | regex.match $1 $2 | array.size) >0 
+end
+
+func __line_must_contain
+# usage: <line array> <regex> <options>
+# description: 
+#  returns only lines that contains the supplied regex
+# example: |-
+#  import line
+#  ["abcdefg","abc"]
+#  |> must_contain "abc..fg" 
+#  |> display       
+args = [$1,$2]    
+ret $0 | array.filter @{ $0 | __line_line_match args[0] args[1]  }@
+end
+
+func __line_extract(a, t)
+# usage: <line array> <regex> <options>
+# description: 
+#  extracts only the matching portions of each line
+# example: |-
+#  import line
+#  ["abcdefg","abc123defg"] 
+#  |> extract "abc.." 
+#  |> display       
+ret a | array.each @{ $0 | regex.match t }@
+end
+
+func __line_is_not_empty(aa)
+# usage: <line array> 
+# description: 
+#  returns only non-empty lines
+# example: |-
+#  import line
+#  ["abcdefg","","  ","def "] 
+#  |> extract "abc.." 
+#  |> display     
+ret aa | array.filter @{ ($0 | array.size ) >0 }@
+end
+
+
+func __line_take(a,n)
+# usage: <line array> <n>
+# description: 
+#  Takes the first n lines in the pipeline
+# example: |-
+#  import line
+#  ["1","2","3","4"] 
+#  |> take 2 
+#  |> display        
+ret a | array.limit n
+end
+
+
+func __line_skip(a,n)
+# usage: <line array> <n>
+# description: 
+#  Skips the first n lines in the pipeline
+# example: |-
+#  import line
+#  ["1","2","3","4"] 
+#  |> skip 2 
+#  |> display     
+    ret a | array.offset n
+end
+    
+
+func __line_take_until
+# usage: <line array> <regex> <options>
+# description: 
+#  Takes lines until the regex is matched
+# example: |-
+#  import line
+#  ["1","2","STOP","4"] 
+#  |> take_until "STOP" 
+#  |> display 
+_lc=0
+a =$0
+for line in a
+if (line | __line_line_match $1 $2)
+    break
+end
+_lc = _lc+1
+end
+ret a | __line_take _lc
+end
+
+
+func __line_take_after
+# usage: <line array> <regex> <options>
+# description: 
+#  Skips lines until the regex is matched
+# example: |-
+#  import line
+#  ["1","2","START","4"] 
+#  |> take_until "START" 
+#  |> display 
+    _lc=0
+    a =$0
+    for line in a
+    if (line | __line_line_match $1 $2)
+        break
+    end
+    _lc = _lc+1
+    end
+    ret a | array.offset _lc
+    end
+
+func __line_remove_text
+# usage: <line array> <regex> <options>
+# description: 
+#  Removes text matching the supplied regex from all lines
+# example: |-
+#  import line
+#  ["1abcE","abcxyz","12354","ghabcdere"] 
+#  |> remove_text "abc" 
+#  |> display     
+    a=$0 
+    pat =$1
+    ret a | array.each @{regex.replace $0 pat "" $2  }@
+end
+
+
+func __line_chop_left
+# usage: <line array> <n>
+# description: 
+#  Removes the first n characters from each line in the pipeline
+# example: |-
+#  import line
+#  ["12345678","12345678","STOP","4"] 
+#  |> chop_left "2" 
+#  |> display     
+    a=$0 
+    n =$1
+    ret a | array.each @{ $0 | string.slice n 1000}@
+end
+
+
+func __line_display(a)
+# usage: <line array>
+# description: 
+#  Displays a pipeline with one element per line
+# example: |-
+#  import line
+#  ["12345678","12345678","STOP","4"] 
+#  |> display         
+for line in a
+line
+"
+"
+end
+end
+
+func __line_show_count(a,msg)
+# usage: <line array> <message>
+# description: 
+#  Displays the number of items in the pipeline at each point
+# example: |-
+#  import line
+#  ["12345678","12345678","STOP","4"] 
+#  |> show_count "at beginning of pipeline" 
+#  |> must_contain "12"
+#  |> show_count "after selecting for '12'"    
+#  |> display         
+"Count: "+msg+" "+ (a | array.size)
+"
+"
+ret a
+end
+
+func __line_group_by(a,r)
+# usage: <line array> <regex>
+# description: 
+#  Groups lines by match against regex
+# example: |-
+#  import line
+#  grp = ["12345678","12345678","STOP","4"] 
+#  |> group_by "^." 
+#  debug.dump grp 
+g = group.create
+for l in a
+m = l | regex.match r | array.first
+group.add g m l
+end
+ret g
+end
+
+
+func __line_group_do(g,fn)
+# usage: <group> <function>
+# description: 
+#  Applies a function to a group
+# example: |-
+#  import line
+#  grp = ["12345678","12345678","STOP","4"] 
+#  |> group_by "^." 
+#  |> group_do @{""+$0 +"->" +($1| array.size)+" values" }@
+#  |> group.flatten
+#  |> display        
+    grp = group.create
+    kv =group.to_kv_array g
+    for i in kv
+    group.add_many grp i.key fn(i.key,i.values) 
+    end
+    ret grp
+    end
+
+
+textrude.create_library this "line"
+}}

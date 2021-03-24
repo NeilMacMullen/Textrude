@@ -1,5 +1,16 @@
-﻿{{include "lib/warnings.sbn"}}
+{{include "lib/warnings.sbn"}}
 {{include "lib/misc.sbn"}}
+{{include "lib/line.sbn"}}
+{{include "lib/cpp.sbn"}}
+{{include "lib/csharp.sbn"}}
+
+{{
+"
+line 1
+|>line2
+" |
+textrude.pre_process}}
+
 <!---
 {{autogenwarning}}
 --->
@@ -44,7 +55,9 @@ include "lib/{{file.filename}}.sbn"
 ```
 > **output**
 ```html
-{{"{{"+f.example + "}}" | object.eval_template}}
+{{"{{"+f.example + "}}" 
+|> textrude.pre_process
+|> object.eval_template}}
 ```
 
 {{end}}

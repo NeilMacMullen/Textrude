@@ -10,20 +10,11 @@ func emit_funcName(name)
 "
 end 
 
-func emit_usage(line)
-"     " +line
-"
-"
-end 
-
-
-func emit_description
-"     description: |-" 
-"
-"
-end 
-
-func emit_example(line)
+func emit(line)
+if (line |> string.ends_with ":")
+line = line +" |-"
+end
+    
 "     " +line
 "
 "
@@ -66,14 +57,14 @@ for line in model
         cmd = rest | string.split " " | array.first
         case cmd
         when "usage:"
-            emit_usage(rest) 
-            emitting=false
+            emit rest 
+            emitting=true
         when "description:"
-            emit_description
+            emit rest 
             emitting=true
         when "example:"
-            emit_example(rest) 
-            emitting=false
+            emit rest 
+            emitting=true
         else 
             if (emitting)
                 emit_continuation rest

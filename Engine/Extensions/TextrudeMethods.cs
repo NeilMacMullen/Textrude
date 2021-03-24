@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Scriban.Runtime;
 
@@ -62,6 +63,16 @@ namespace Engine.Application
             }
 
             outputs[outputName] = content;
+        }
+
+        /// <summary>
+        /// Allows scriban code to preprocess other code
+        /// </summary>
+        /// <remarks>
+        /// Useful for auto-doc generation</remarks>
+        public static string PreProcess(string text)
+        {
+            return text == null ? string.Empty : TemplateProcessor.ApplyAllTransforms(text);
         }
     }
 }
