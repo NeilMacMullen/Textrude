@@ -13,7 +13,8 @@ namespace Engine.Application
             Debug,
             Humanizr,
             Misc,
-            Textrude
+            Textrude,
+            Group
         }
 
         private static readonly Dictionary<KnownAssemblies, ScriptObject> CachedResults =
@@ -48,20 +49,18 @@ namespace Engine.Application
             return scriptObject;
         }
 
-        public static ScriptObject GetDebugMethods()
-        {
-            return GetOrCreate(KnownAssemblies.Debug, () => new[] {typeof(DebugMethods)});
-        }
+        public static ScriptObject GetDebugMethods() =>
+            GetOrCreate(KnownAssemblies.Debug, () => new[] {typeof(DebugMethods)});
 
 
-        public static ScriptObject GetMiscMethods()
-        {
-            return GetOrCreate(KnownAssemblies.Misc, () => new[] {typeof(MiscMethods)});
-        }
+        public static ScriptObject GetMiscMethods() =>
+            GetOrCreate(KnownAssemblies.Misc, () => new[] {typeof(MiscMethods)});
 
-        public static ScriptObject GetTextrudeMethods()
-        {
-            return GetOrCreate(KnownAssemblies.Textrude, () => new[] {typeof(TextrudeMethods)});
-        }
+        public static ScriptObject GetTextrudeMethods() =>
+            GetOrCreate(KnownAssemblies.Textrude, () => new[] {typeof(TextrudeMethods)});
+
+
+        public static ScriptObject GetGroupingMethods() =>
+            GetOrCreate(KnownAssemblies.Group, () => new[] {typeof(Group)});
     }
 }

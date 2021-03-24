@@ -1,0 +1,77 @@
+{{
+
+__cpp_indent_level=0
+
+func __cpp_indent(n)
+# usage: <n>
+# description: 
+#  Sets the default indent level
+# example: |-
+#  cpp.indent 5
+#  cpp.pad
+#   "padded text"        
+__cpp_indent_level=n
+end    
+
+func __cpp_linefeed
+# usage: 
+# description: 
+#  Inserts a linefeed
+# example: |-
+#  "line1"
+#  cpp.linefeed
+#  "line2"  
+"
+"
+end
+
+
+
+func __cpp_pad
+# usage: 
+# description: 
+#  Inserts a pad at the current indent level
+# example: |-
+#  cpp.indent 5
+#  cpp.pad
+#   "padded text"  
+for i  in 0..__cpp_indent_level
+" "
+end
+end
+
+func __cpp_block_comment(c)
+# usage: <text>
+# description: 
+#  Creates a brief-style block comment 
+# example: |-
+#  cpp.block_comment "this is a summary"    
+"/*!
+   @brief " 
+c
+"
+*/
+"    
+end
+
+func __cpp_forall(items,fn)
+# usage: <items> <function>
+# description: 
+#  Applies a function to all items.
+#  All items are separated by a linefeed and comma
+#  except for the last
+# example: |-
+#  ["abc","def"]
+#  |> cpp.forall @{$0}@    
+for item in items    
+__cpp_pad
+fn item
+if (! for.last)
+","
+end
+__cpp_linefeed
+end
+end
+
+    textrude.create_library this "cpp"
+}}

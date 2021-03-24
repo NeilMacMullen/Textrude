@@ -203,6 +203,9 @@ namespace Engine.Application
             Add(ExtensionCache.KnownAssemblies.Textrude,
                 ExtensionCache.GetTextrudeMethods());
 
+            Add(ExtensionCache.KnownAssemblies.Group,
+                ExtensionCache.GetGroupingMethods());
+
             return this;
         }
 
