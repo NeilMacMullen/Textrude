@@ -60,9 +60,9 @@ The current release is **v1.5.0**.
 - textrude.exe now supports [dynamic output](doc/dynamicOutput.md)
 - Prototype Grouping methods in textrude namespace
 - Improve templates for library autodoc
-- Prototype cpp library
-- Prototype csharp library
-- Prototype line (text processing) library
+- Prototype [cpp](doc/lib.md#lib/cpp.sbn) library
+- Prototype [C#](doc/lib.md#lib/csharp.sbn) library
+- Prototype [text-processing](doc/lib.md#lib/line.sbn) library
    
 
 ### v1.5.0 (source/binary)
