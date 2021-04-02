@@ -23,6 +23,7 @@ namespace Build
             BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
             NugetDir = RepoDir + context.Directory("nuget");
+            ChocoDir = RepoDir + context.Directory("chocolatey");
             SolutionFile = RepoDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
             ScriptLibrary = context.Directory("ScriptLibrary");
@@ -36,6 +37,7 @@ namespace Build
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
         public ConvertableDirectoryPath NugetDir { get; }
+        public ConvertableDirectoryPath ChocoDir { get; }
         public ConvertableFilePath SolutionFile { get; }
         public SolutionParserResult Solution { get; }
         public ConvertableFilePath ZipFile { get; }
