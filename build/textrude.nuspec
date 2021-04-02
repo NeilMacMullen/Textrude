@@ -8,15 +8,23 @@
       {{if (def.CLIENT=="nuget")}}
       <license type="expression">MIT</license>
       {{else}}
-      <licenseUrl>https://github.com/NeilMacMullen/Textrude/blob/main/LICENSE</licenseUrl>
-      {{end}}
      
+      <licenseUrl>https://github.com/NeilMacMullen/Textrude/blob/main/LICENSE</licenseUrl>
+      <summary>
+       Executables for textrude CLI and textrudeInteractive GUI as well as library scripts and examples.
+      </summary>
+      <docsUrl>https://github.com/NeilMacMullen/Textrude/blob/main/README.md</docsUrl>
+      <bugTrackerUrl>https://github.com/NeilMacMullen/Textrude/issues</bugTrackerUrl>
+      <packageSourceUrl>https://github.com/NeilMacMullen/Textrude</packageSourceUrl>
+      {{end}}
+    
          <projectUrl>https://github.com/NeilMacMullen/textrude</projectUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
       <description>Textrude is a utility that allows you to quickly develop templates for code-generation and text processing.  It runs on Windows and Linux and uses Scriban as the template language.  It comes as a CLI exe for use in build systems as well as an GUI prototyping tool which regenerates output in realtime as templates are edited. Models are automatically imported from JSON, YAML, CSV or plain text.</description>
       <releaseNotes>First nuget release</releaseNotes>
       <copyright>Copyright 2021</copyright>
-      <tags>scriban,code-generation,template,text-processing,json,yaml,csv</tags>
+      <tags>scriban code-generation template text-processing json yaml csv</tags>
+      <iconUrl>https://github.com/NeilMacMullen/Textrude/blob/main/img/textrude_app.png</iconUrl>
     </metadata>
     <files>
       <file src="..\publish\**" target="textrude" />

@@ -1,4 +1,5 @@
-﻿using Cake.Frosting;
+﻿using Cake.Common.IO;
+using Cake.Frosting;
 
 namespace Build.Tasks
 {
@@ -13,6 +14,16 @@ namespace Build.Tasks
             Client = "choco";
             base.Run(context);
             Render.Line($"Use 'choco push {TargetDir}...   -s https://push.chocolatey.org/'".Yellow());
+        }
+
+        protected override void CreatePackage(BuildContext context)
+        {
+            //Chocolately needs us to add some additional content
+
+            context.CopyFileToDirectory(context.File("LICENSE"), context.PublishDir);
+            context.CopyFileToDirectory(context.BuildDir + context.File("VERIFICATION.md"), context.PublishDir);
+
+            base.CreatePackage(context);
         }
     }
 }

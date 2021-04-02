@@ -13,7 +13,7 @@ namespace Build.Tasks
             TargetDir = context.NugetDir;
             Client = "nuget";
             base.Run(context);
-            Render.Line("Use 'nuget push  nuget\textrude...'");
+            Render.Line("Use 'nuget push  nuget\\textrude...'".Yellow());
         }
     }
 }
