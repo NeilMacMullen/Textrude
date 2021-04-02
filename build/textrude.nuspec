@@ -1,0 +1,19 @@
+<package>
+    <metadata>
+      <id>textrude</id>
+      <version>{{model.AssemblySemVer}}</version>
+      <title>textrude - template based code generation and text processing utility</title>
+      <authors>NeilMacMullen</authors>
+      <owners>NeilMacMullen</owners>
+      <license type="expression">MIT</license>
+         <projectUrl>https://github.com/NeilMacMullen/textrude</projectUrl>
+      <requireLicenseAcceptance>false</requireLicenseAcceptance>
+      <description>Textrude is a utility that allows you to quickly develop templates for code-generation and text processing.  It runs on Windows and Linux and uses Scriban as the template language.  It comes as a CLI exe for use in build systems as well as an GUI prototyping tool which regenerates output in realtime as templates are edited. Models are automatically imported from JSON, YAML, CSV or plain text.</description>
+      <releaseNotes>First nuget release</releaseNotes>
+      <copyright>Copyright 2021</copyright>
+      <tags>scriban,code-generation,template,text-processing,json,yaml,csv</tags>
+    </metadata>
+    <files>
+      <file src="..\publish\**" target="textrude" />
+    </files>
+  </package>

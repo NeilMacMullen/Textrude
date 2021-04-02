@@ -1,8 +1,7 @@
-using Build.Tasks;
 using System;
-using Cake.Frosting;
 using System.IO;
-using Cake.Core;
+using Build.Tasks;
+using Cake.Frosting;
 
 namespace Build
 {
@@ -30,6 +29,8 @@ namespace Build
     }
 
     [TaskName("Default")]
-    [IsDependentOn(typeof(BuildTask))]
-    public class DefaultTask : FrostingTask { }
+    [IsDependentOn(typeof(PackageTask))]
+    public class DefaultTask : FrostingTask
+    {
+    }
 }

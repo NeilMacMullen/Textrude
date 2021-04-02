@@ -1,4 +1,7 @@
-﻿using Cake.Common;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Cake.Common;
 using Cake.Common.Build;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
@@ -6,9 +9,6 @@ using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
 using Spectre.Console;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Build.Tasks
 {
@@ -21,7 +21,7 @@ namespace Build.Tasks
         {
             if (context.GitHubActions().IsRunningOnGitHubActions)
             {
-                BuildSolution(context, color: false);
+                BuildSolution(context, false);
                 GenerateDocumentation(context);
             }
             else
@@ -39,12 +39,12 @@ namespace Build.Tasks
                     })
                     .Start(ctx =>
                     {
-                        var buildTask = ctx.AddTask("Build", new ProgressTaskSettings()
+                        var buildTask = ctx.AddTask("Build", new ProgressTaskSettings
                         {
                             MaxValue = context.ProjectsToBuild.Count(),
                             AutoStart = false
                         });
-                        var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings()
+                        var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings
                         {
                             MaxValue = 1,
                             AutoStart = false
@@ -52,25 +52,22 @@ namespace Build.Tasks
 
                         buildTask.StartTask();
                         BuildSolution(context,
-                            color: true,
+                            true,
                             new Progress<int>(p => buildTask.Increment(p)));
                         buildTask.StopTask();
 
-                        buildDocTask.StartTask();
-                        GenerateDocumentation(context);
-                        buildDocTask.Increment(1);
-                        buildDocTask.StopTask();
+                        buildDocTask.Run(context, GenerateDocumentation);
                     });
             }
         }
 
-        private void BuildSolution(BuildContext context, bool color, IProgress<int> progress = default(IProgress<int>))
+        private void BuildSolution(BuildContext context, bool color, IProgress<int> progress = default)
         {
             var projFinished = new Regex("(?<project>.+) -> (?<output>.+)");
             var warning = new Regex(
                 @"(?<file>.+)\((?<row>\d+),(?<col>\d+)\): warning (?<code>[A-Z0-9]+): (?<text>.+) \[(?<project>.+)\]");
 
-            var exit = context.StartProcess("dotnet", new ProcessSettings()
+            var exit = context.StartProcess("dotnet", new ProcessSettings
             {
                 Arguments = new ProcessArgumentBuilder()
                     .Append("build")
@@ -94,63 +91,58 @@ namespace Build.Tasks
                         if (projFinished.TryMatch(o, out var pfm))
                         {
                             progress?.Report(1);
-                            RenderLine(
-                                "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                                pfm.Groups["project"].Value,
-                                pfm.Groups["output"].Value
+                            Render.Line(
+                                "dotnet build".Grey(),
+                                pfm.Groups["project"].Value.Green(),
+                                " -> ",
+                                pfm.Groups["output"].Value.Grey()
                             );
                             return null;
                         }
-                        else if (warning.TryMatch(o, out var warn))
+
+                        if (warning.TryMatch(o, out var warn))
                         {
                             var offendingFile = context.File(warn.Groups["file"].Value);
-                            RenderLine(
-                                "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
-                                offendingFile.Path.GetFilename(),
-                                warn.Groups["row"].Value,
-                                warn.Groups["col"].Value,
-                                warn.Groups["text"].Value.EscapeMarkup()
+                            Render.Line(
+                                "dotnet build:".Grey(),
+                                (
+                                    offendingFile.Path.GetFilename() +
+                                    $"({warn.Groups["row"].Value},{warn.Groups["col"].Value}): " +
+                                    $"warning {warn.Groups["text"].Value.EscapeMarkup()}"
+                                ).Yellow()
                             );
                             return null;
                         }
                     }
 
                     if (!string.IsNullOrWhiteSpace(o))
-                    {
-                        RenderLine(
-                            "[grey54]dotnet build:[/] {0}",
-                            o.EscapeMarkup()
-                        );
-                    }
+                        Render.Line("dotnet build:".Grey(), o.EscapeMarkup());
+
                     return null;
                 },
             });
             if (exit != 0)
                 throw new Exception("Build failed!");
         }
-        private void RenderLine(string format, params object[] args)
-        {
-            var line =
-                new Markup(string.Format(format, args) + Environment.NewLine)
-                    .Overflow(Overflow.Ellipsis);
-            AnsiConsole.Render(line);
-        }
+
 
         private string FileStub(IFile path) =>
             path.Path.GetFilenameWithoutExtension().ToString();
 
         private void GenerateDocumentation(BuildContext context)
         {
-            var libFolder = "ScriptLibrary";
-            var extractionScript = $"{libFolder}/extractDoc.sbn";
-            var markDownScript = $"{libFolder}/doctemplate.sbn";
-            var tempDocModel = $"{libFolder}/doc.yaml";
+            var scriptFolder = context.ScriptLibrary;
+            var libFolder = context.ScriptLibrary + new DirectoryPath("lib");
+            var extractionScript = scriptFolder + new FilePath("extractDoc.sbn");
+            var markDownScript = scriptFolder + new FilePath("doctemplate.sbn");
+            var tempDocModel = scriptFolder + new FilePath("doc.yaml");
             var markDownOutput = "doc/lib.md";
             var libFiles =
                 context
                     .FileSystem
-                    .GetDirectory("./ScriptLibrary/lib")
-                    .GetFiles("*.sbn", SearchScope.Current);
+                    .GetDirectory(libFolder)
+                    .GetFiles("*.sbn", SearchScope.Current)
+                    .ToArray();
 
             var modelNames = string.Join(" ", libFiles.Select(FileStub));
 
@@ -160,7 +152,7 @@ namespace Build.Tasks
                         libFiles
                             .Select(file => $"__{FileStub(file)}=\"{file.Path}\""));
 
-            RenderLine("[green]textrude extracting docs:[/] {0}", modelNames);
+            Render.Line("textrude extracting docs:".Green(), modelNames);
             context
                 .DotNetCoreRun("Textrude",
                     $"render --models {modelPaths}" +
@@ -168,7 +160,7 @@ namespace Build.Tasks
                     $" --definitions \"MODELLIST={modelNames}\"" +
                     $" --output {tempDocModel} ");
 
-            RenderLine("[green]textrude generating lib.md:[/]");
+            Render.Line("textrude generating lib.md:".Green());
             context
                 .DotNetCoreRun("Textrude",
                     $"render --models {tempDocModel}" +
