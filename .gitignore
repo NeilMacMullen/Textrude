@@ -185,6 +185,9 @@ publish/
 # Nuget folder
 nuget/
 
+# Choco folder
+chocolatey/
+
 
 # Publish Web Output
 *.[Pp]ublish.xml
