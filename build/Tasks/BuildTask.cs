@@ -1,4 +1,7 @@
-﻿using Cake.Common;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Cake.Common;
 using Cake.Common.Build;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
@@ -6,9 +9,6 @@ using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
 using Spectre.Console;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Build.Tasks
 {
@@ -21,7 +21,7 @@ namespace Build.Tasks
         {
             if (context.GitHubActions().IsRunningOnGitHubActions)
             {
-                BuildSolution(context, color: false);
+                BuildSolution(context, false);
                 GenerateDocumentation(context);
             }
             else
@@ -39,12 +39,12 @@ namespace Build.Tasks
                     })
                     .Start(ctx =>
                     {
-                        var buildTask = ctx.AddTask("Build", new ProgressTaskSettings()
+                        var buildTask = ctx.AddTask("Build", new ProgressTaskSettings
                         {
                             MaxValue = context.ProjectsToBuild.Count(),
                             AutoStart = false
                         });
-                        var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings()
+                        var buildDocTask = ctx.AddTask("Build Doc.", new ProgressTaskSettings
                         {
                             MaxValue = 1,
                             AutoStart = false
@@ -52,7 +52,7 @@ namespace Build.Tasks
 
                         buildTask.StartTask();
                         BuildSolution(context,
-                            color: true,
+                            true,
                             new Progress<int>(p => buildTask.Increment(p)));
                         buildTask.StopTask();
 
@@ -64,13 +64,13 @@ namespace Build.Tasks
             }
         }
 
-        private void BuildSolution(BuildContext context, bool color, IProgress<int> progress = default(IProgress<int>))
+        private void BuildSolution(BuildContext context, bool color, IProgress<int> progress = default)
         {
             var projFinished = new Regex("(?<project>.+) -> (?<output>.+)");
             var warning = new Regex(
                 @"(?<file>.+)\((?<row>\d+),(?<col>\d+)\): warning (?<code>[A-Z0-9]+): (?<text>.+) \[(?<project>.+)\]");
 
-            var exit = context.StartProcess("dotnet", new ProcessSettings()
+            var exit = context.StartProcess("dotnet", new ProcessSettings
             {
                 Arguments = new ProcessArgumentBuilder()
                     .Append("build")
@@ -101,7 +101,8 @@ namespace Build.Tasks
                             );
                             return null;
                         }
-                        else if (warning.TryMatch(o, out var warn))
+
+                        if (warning.TryMatch(o, out var warn))
                         {
                             var offendingFile = context.File(warn.Groups["file"].Value);
                             RenderLine(
@@ -122,13 +123,15 @@ namespace Build.Tasks
                             o.EscapeMarkup()
                         );
                     }
+
                     return null;
                 },
             });
             if (exit != 0)
                 throw new Exception("Build failed!");
         }
-        private void RenderLine(string format, params object[] args)
+
+        private static void RenderLine(string format, params object[] args)
         {
             var line =
                 new Markup(string.Format(format, args) + Environment.NewLine)
@@ -150,7 +153,8 @@ namespace Build.Tasks
                 context
                     .FileSystem
                     .GetDirectory("./ScriptLibrary/lib")
-                    .GetFiles("*.sbn", SearchScope.Current);
+                    .GetFiles("*.sbn", SearchScope.Current)
+                    .ToArray();
 
             var modelNames = string.Join(" ", libFiles.Select(FileStub));
 

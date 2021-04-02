@@ -1,14 +1,10 @@
-﻿using Cake.Common.IO;
+﻿using System.Linq;
+using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Publish;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Build.Tasks
 {
@@ -20,19 +16,22 @@ namespace Build.Tasks
             context.CleanDirectory(context.PublishDir);
 
             // Publish Textrude (Win64, Linux64)
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings
             {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml")
+                ArgumentCustomization = args =>
+                    args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml")
             });
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings
             {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml")
+                ArgumentCustomization = args =>
+                    args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml")
             });
 
             // Publish TextrudeInteractive (Win64)
-            context.DotNetCorePublish(@"TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings()
+            context.DotNetCorePublish(@"TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings
             {
-                ArgumentCustomization = args => args.Append(@"/p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml")
+                ArgumentCustomization = args =>
+                    args.Append(@"/p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml")
             });
 
             // Move linux executable up
@@ -57,10 +56,9 @@ namespace Build.Tasks
             void DeleteDirRecursive(params DirectoryPath[] pathsToCombine)
             {
                 var dir = pathsToCombine.Aggregate((l, r) => l.Combine(r));
-                context.DeleteDirectory(dir, new DeleteDirectorySettings()
+                context.DeleteDirectory(dir, new DeleteDirectorySettings
                 {
                     Recursive = true,
-                    
                 });
             }
         }
