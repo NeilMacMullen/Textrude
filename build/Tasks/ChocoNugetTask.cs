@@ -101,7 +101,7 @@ namespace Build.Tasks
         }
 
 
-        private void CreatePackage(BuildContext context)
+        protected virtual void CreatePackage(BuildContext context)
         {
             //remove the zip file since we don't want that !
             context.DeleteFile(context.ZipFile);
