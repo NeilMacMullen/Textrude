@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- stop gitversion.msbuild adding additional version info to assembly info-->
+    <Updateassemblyinfo>false</Updateassemblyinfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants Condition="'$(DisableGitVersionTask)' != true">HASGITVERSION</DefineConstants>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
@@ -27,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.5.1">
+    <PackageReference Include="GitVersion.MsBuild" Version="5.6.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
