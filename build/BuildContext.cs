@@ -24,10 +24,12 @@ namespace Build
             PublishDir = RepoDir + context.Directory("publish");
             SolutionFile = RepoDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
+            ScriptLibrary = context.Directory("ScriptLibrary");
         }
 
         public string BuildConfiguration { get; }
         public bool DoClean { get; }
+        public ConvertableDirectoryPath ScriptLibrary { get; }
         public ConvertableDirectoryPath RepoDir { get; }
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }

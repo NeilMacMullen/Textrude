@@ -94,10 +94,11 @@ namespace Build.Tasks
                         if (projFinished.TryMatch(o, out var pfm))
                         {
                             progress?.Report(1);
-                            RenderLine(
-                                "[grey54]dotnet build:[/] [green]{0}[/] -> [grey54]{1}[/]",
-                                pfm.Groups["project"].Value,
-                                pfm.Groups["output"].Value
+                            Render.Line(
+                                "dotnet build".Grey(),
+                                pfm.Groups["project"].Value.Green(),
+                                " -> ",
+                                pfm.Groups["output"].Value.Grey()
                             );
                             return null;
                         }
@@ -105,24 +106,20 @@ namespace Build.Tasks
                         if (warning.TryMatch(o, out var warn))
                         {
                             var offendingFile = context.File(warn.Groups["file"].Value);
-                            RenderLine(
-                                "[grey54]dotnet build:[/] [yellow]{0}({1},{2}): warning {3}[/]",
-                                offendingFile.Path.GetFilename(),
-                                warn.Groups["row"].Value,
-                                warn.Groups["col"].Value,
-                                warn.Groups["text"].Value.EscapeMarkup()
+                            Render.Line(
+                                "dotnet build:".Grey(),
+                                (
+                                    offendingFile.Path.GetFilename() +
+                                    $"({warn.Groups["row"].Value},{warn.Groups["col"].Value}): " +
+                                    $"warning {warn.Groups["text"].Value.EscapeMarkup()}"
+                                ).Yellow()
                             );
                             return null;
                         }
                     }
 
                     if (!string.IsNullOrWhiteSpace(o))
-                    {
-                        RenderLine(
-                            "[grey54]dotnet build:[/] {0}",
-                            o.EscapeMarkup()
-                        );
-                    }
+                        Render.Line("dotnet build:".Grey(), o.EscapeMarkup());
 
                     return null;
                 },
@@ -131,28 +128,22 @@ namespace Build.Tasks
                 throw new Exception("Build failed!");
         }
 
-        private static void RenderLine(string format, params object[] args)
-        {
-            var line =
-                new Markup(string.Format(format, args) + Environment.NewLine)
-                    .Overflow(Overflow.Ellipsis);
-            AnsiConsole.Render(line);
-        }
 
         private string FileStub(IFile path) =>
             path.Path.GetFilenameWithoutExtension().ToString();
 
         private void GenerateDocumentation(BuildContext context)
         {
-            var libFolder = "ScriptLibrary";
-            var extractionScript = $"{libFolder}/extractDoc.sbn";
-            var markDownScript = $"{libFolder}/doctemplate.sbn";
-            var tempDocModel = $"{libFolder}/doc.yaml";
+            var scriptFolder = context.ScriptLibrary;
+            var libFolder = context.ScriptLibrary + new DirectoryPath("lib");
+            var extractionScript = scriptFolder + new FilePath("extractDoc.sbn");
+            var markDownScript = scriptFolder + new FilePath("doctemplate.sbn");
+            var tempDocModel = scriptFolder + new FilePath("doc.yaml");
             var markDownOutput = "doc/lib.md";
             var libFiles =
                 context
                     .FileSystem
-                    .GetDirectory("./ScriptLibrary/lib")
+                    .GetDirectory(libFolder)
                     .GetFiles("*.sbn", SearchScope.Current)
                     .ToArray();
 
@@ -164,7 +155,7 @@ namespace Build.Tasks
                         libFiles
                             .Select(file => $"__{FileStub(file)}=\"{file.Path}\""));
 
-            RenderLine("[green]textrude extracting docs:[/] {0}", modelNames);
+            Render.Line("textrude extracting docs:".Green(), modelNames);
             context
                 .DotNetCoreRun("Textrude",
                     $"render --models {modelPaths}" +
@@ -172,7 +163,7 @@ namespace Build.Tasks
                     $" --definitions \"MODELLIST={modelNames}\"" +
                     $" --output {tempDocModel} ");
 
-            RenderLine("[green]textrude generating lib.md:[/]");
+            Render.Line("textrude generating lib.md:".Green());
             context
                 .DotNetCoreRun("Textrude",
                     $"render --models {tempDocModel}" +
