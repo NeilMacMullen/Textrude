@@ -34,5 +34,13 @@ namespace Build
             firstMatch = regex.Match(input);
             return firstMatch.Success;
         }
+
+        public static void Run(this ProgressTask task, BuildContext context, Action<BuildContext> action)
+        {
+            task.StartTask();
+            action(context);
+            task.Increment(1);
+            task.StopTask();
+        }
     }
 }

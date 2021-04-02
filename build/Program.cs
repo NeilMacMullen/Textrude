@@ -29,7 +29,7 @@ namespace Build
     }
 
     [TaskName("Default")]
-    [IsDependentOn(typeof(BuildTask))]
+    [IsDependentOn(typeof(PackageTask))]
     public class DefaultTask : FrostingTask
     {
     }

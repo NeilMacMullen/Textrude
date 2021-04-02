@@ -56,10 +56,7 @@ namespace Build.Tasks
                             new Progress<int>(p => buildTask.Increment(p)));
                         buildTask.StopTask();
 
-                        buildDocTask.StartTask();
-                        GenerateDocumentation(context);
-                        buildDocTask.Increment(1);
-                        buildDocTask.StopTask();
+                        buildDocTask.Run(context, GenerateDocumentation);
                     });
             }
         }

@@ -9,6 +9,7 @@ using Cake.Frosting;
 namespace Build.Tasks
 {
     [TaskName("Package")]
+    [IsDependentOn(typeof(TestTask))]
     public sealed class PackageTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
@@ -52,6 +53,8 @@ namespace Build.Tasks
                 context.PublishDir,
                 context.PublishDir + context.File("Textrude.zip")
             );
+
+            Render.Line($"Build artefacts are in {context.PublishDir}".Yellow());
 
             void DeleteDirRecursive(params DirectoryPath[] pathsToCombine)
             {

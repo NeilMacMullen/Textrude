@@ -22,9 +22,11 @@ namespace Build
             RepoDir = context.Directory(System.Environment.CurrentDirectory);
             BuildDir = RepoDir + context.Directory("build");
             PublishDir = RepoDir + context.Directory("publish");
+            NugetDir = RepoDir + context.Directory("nuget");
             SolutionFile = RepoDir + context.File("Textrude.sln");
             Solution = context.ParseSolution(SolutionFile);
             ScriptLibrary = context.Directory("ScriptLibrary");
+            ZipFile = PublishDir + context.File("Textrude.zip");
         }
 
         public string BuildConfiguration { get; }
@@ -33,8 +35,10 @@ namespace Build
         public ConvertableDirectoryPath RepoDir { get; }
         public ConvertableDirectoryPath BuildDir { get; }
         public ConvertableDirectoryPath PublishDir { get; }
+        public ConvertableDirectoryPath NugetDir { get; }
         public ConvertableFilePath SolutionFile { get; }
         public SolutionParserResult Solution { get; }
+        public ConvertableFilePath ZipFile { get; }
 
         public IEnumerable<SolutionProject> ProjectsToBuild
             => Solution.Projects
