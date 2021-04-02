@@ -12,7 +12,7 @@ namespace Build.Tasks
             TargetDir = context.ChocoDir;
             Client = "choco";
             base.Run(context);
-            Render.Line("Use 'choco push chocolatey\textrude...'");
+            Render.Line("Use 'choco push  chocolatey\textrude...   -s https://push.chocolatey.org/'");
         }
     }
 }
