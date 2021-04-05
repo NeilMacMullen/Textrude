@@ -16,10 +16,5 @@ namespace Engine.Application
         ///     True if this filesystem recognizes the kind of path
         /// </summary>
         public bool CanHandle(string path);
-
-        /// <summary>
-        ///     Provides a guess at what format to use for a given path
-        /// </summary>
-        ModelFormat DefaultFormat(string path);
     }
 }
