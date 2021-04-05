@@ -4,10 +4,28 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using Engine.Model;
+using Engine.Model.Helpers;
 using Scriban.Runtime;
 
 namespace Engine.Application
 {
+    public class RuntimeInfo
+    {
+        public ModelInfo[] Models { get; set; } = Array.Empty<ModelInfo>();
+
+        public void AddModel(string name, ModelFormat format)
+        {
+            Models = Models.Append(new ModelInfo {Name = name, Format = format.ToString()}).ToArray();
+        }
+
+        public class ModelInfo
+        {
+            public string Name { get; set; }
+            public string Format { get; set; }
+        }
+    }
+
     /// <summary>
     ///     Abstract ApplicationEngine callable by UI and CLI
     /// </summary>
@@ -27,6 +45,8 @@ namespace Engine.Application
     {
         private readonly RunTimeEnvironment _environment;
 
+        private readonly RuntimeInfo _info = new RuntimeInfo();
+
         /// <summary>
         ///     provides generic scriban Template operations
         /// </summary>
@@ -36,7 +56,6 @@ namespace Engine.Application
         ///     Used to automatically name models as they are added
         /// </summary>
         private int _modelCount;
-
 
         /// <summary>
         ///     Create a new application engine
@@ -69,21 +88,15 @@ namespace Engine.Application
         /// </summary>
         public bool HasErrors => Errors.Any();
 
+        public string ErrorOrOutput => HasErrors ? string.Join(Environment.NewLine, Errors) : Output;
+        public string RenderToErrorOrOutput() => Render().ErrorOrOutput;
         public ImmutableArray<ModelPath> ModelPaths() => _templateManager.ModelPaths();
 
-        /// <summary>
-        ///     Parses and adds a new model to engine
-        /// </summary>
-        /// <remarks>
-        ///     Multiple models may be added.
-        /// </remarks>
-        public ApplicationEngine WithModel(string modelText, ModelFormat format)
-        {
-            var name = (_modelCount == 0)
-                ? ScribanNamespaces.ModelPrefix
-                : $"{ScribanNamespaces.ModelPrefix}{_modelCount}";
 
-            return WithModel(name, modelText, format);
+        public ApplicationEngine WithModel(string name, object obj)
+        {
+            var model = ModelDeserializerFactory.Serialise(obj, ModelFormat.Json);
+            return WithModel(name, model, ModelFormat.Json);
         }
 
         public ApplicationEngine WithModel(string name, string modelText, ModelFormat format)
@@ -93,10 +106,8 @@ namespace Engine.Application
                 //parse the text and create a model
                 var serializer = ModelDeserializerFactory.Fetch(format);
                 var model = serializer.Deserialize(modelText);
-
-                //Note that models are added as model0, model1 etc but for
-                //convenience, "model0" is also available as "model"
                 _templateManager.AddVariable(name, model.Untyped);
+                _info.AddModel(name, model.SourceFormat);
                 _modelCount++;
             }
             catch (Exception e)
@@ -170,6 +181,7 @@ namespace Engine.Application
         {
             try
             {
+                _templateManager.AddVariable("_runtime", _info);
                 Output = _templateManager.Render(cancel);
             }
             catch (Exception e)
@@ -223,7 +235,7 @@ namespace Engine.Application
                 Enumerable.Range(0, count).Select(i =>
                     i == 0
                         ? Output
-                        : _templateManager.TryGetVariable($"{ScribanNamespaces.OutputPrefix}{i}")
+                        : _templateManager.GetStringOrEmpty($"{ScribanNamespaces.OutputPrefix}{i}")
                 ).ToImmutableArray();
         }
 
@@ -231,12 +243,14 @@ namespace Engine.Application
         {
             if (name == "output")
                 return Output;
-            return _templateManager.TryGetVariable(name);
+            return _templateManager.GetStringOrEmpty(name);
         }
 
         public Dictionary<string, string> GetDynamicOutput()
-            => _templateManager.TryGetVariableObject<Dictionary<string, string>>(TextrudeMethods.DynamicOutputName) ??
-               new Dictionary<string, string>();
+            => _templateManager.TryGetVariableObject<Dictionary<string, string>>(TextrudeMethods.DynamicOutputName,
+                out var d)
+                ? d
+                : new Dictionary<string, string>();
 
         /// <summary>
         ///     Adds a set of include paths to the engine
@@ -250,6 +264,15 @@ namespace Engine.Application
             foreach (var inc in paths)
                 _templateManager.AddIncludePath(inc);
             return this;
+        }
+
+        public bool TryGetVariableAsJsonString(string name, out string res)
+        {
+            res = default;
+            if (!_templateManager.TryGetVariableObject<object>(name, out var v))
+                return false;
+            res = ModelDeserializerFactory.Serialise(JsonGraph.ToJsonSerialisableTree(v), ModelFormat.Json);
+            return true;
         }
     }
 }
