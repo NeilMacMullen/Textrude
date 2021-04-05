@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Engine.Application;
+using Engine.Model;
 
 namespace SharedApplication
 {

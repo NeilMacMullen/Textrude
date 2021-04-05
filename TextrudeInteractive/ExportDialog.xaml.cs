@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using Engine.Application;
+using Engine.Model;
 using MaterialDesignExtensions.Controls;
 using Ookii.Dialogs.Wpf;
 using SharedApplication;

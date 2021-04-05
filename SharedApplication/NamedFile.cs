@@ -1,4 +1,4 @@
-﻿using Engine.Application;
+﻿using Engine.Model;
 
 namespace SharedApplication
 {
