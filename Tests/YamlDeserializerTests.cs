@@ -17,7 +17,8 @@ namespace Tests
             return new YamlModelDeserializer().Deserialize(text);
         }
 
-        private Dictionary<string, object> GetGraph(object obj) => GetModel(obj).Untyped as Dictionary<string, object>;
+        private IDictionary<string, object> GetGraph(object obj) =>
+            GetModel(obj).Untyped as IDictionary<string, object>;
 
         private object[] GetArray(object obj) => GetModel(obj).Untyped as object[];
 

@@ -27,7 +27,7 @@ namespace Tests
                 var text = ModelDeserializerFactory.Serialise(obj, type);
                 var result = new ApplicationEngine(_rte)
                     .WithTemplate(template)
-                    .WithModel(text, type)
+                    .WithModel("model", text, type)
                     .Render()
                     .Output;
                 act(result);
@@ -124,7 +124,7 @@ namespace Tests
             var model = "{\"label\": null}";
             var engine = new ApplicationEngine(_rte)
                 .WithTemplate("{{model.variable}}")
-                .WithModel(model, ModelFormat.Json)
+                .WithModel("model", model, ModelFormat.Json)
                 .Render();
             engine.HasErrors.Should().BeFalse();
         }
@@ -139,7 +139,7 @@ namespace Tests
 ]";
             var engine = new ApplicationEngine(_rte)
                     .WithTemplate("{{model[0] + model[2] }}")
-                    .WithModel(model, ModelFormat.Json)
+                    .WithModel("model", model, ModelFormat.Json)
                     .Render()
                 ;
             engine.HasErrors.Should().BeFalse();

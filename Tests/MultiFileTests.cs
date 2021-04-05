@@ -15,29 +15,25 @@ namespace Tests
             var csv = @"C
 1";
             var json = @"{""a"":2}";
-            var template = @"{{model[0].C + model1.a}}";
-            var result = new ApplicationEngine(new RunTimeEnvironment(_files))
+            var template = @"{{csv[0].C + json.a}}";
+            new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
-                .WithModel(csv, ModelFormat.Csv)
-                .WithModel(json, ModelFormat.Json)
+                .WithModel("csv", csv, ModelFormat.Csv)
+                .WithModel("json", json, ModelFormat.Json)
                 .Render()
-                .Output;
-            result.Should().Be("3");
+                .ErrorOrOutput
+                .Should().Be("3");
         }
 
         [TestMethod]
         public void MultipleFilesCanBeGenerated()
         {
-            var csv = @"C
-1";
-
             var template = @"test1
 {{-capture output1}}test2{{end-}}
 {{-capture output2}}test3{{end-}}
 test4";
             var engine = new ApplicationEngine(new RunTimeEnvironment(_files))
                 .WithTemplate(template)
-                .WithModel(csv, ModelFormat.Csv)
                 .Render();
             var res = engine.Output;
             //res.Should().Be("aaa");
