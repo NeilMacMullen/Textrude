@@ -150,7 +150,7 @@ namespace Build.Tasks
                 string
                     .Join(" ",
                         libFiles
-                            .Select(file => $"__{FileStub(file)}=\"{file.Path}\""));
+                            .Select(file => $"line!__{FileStub(file)}=\"{file.Path}\""));
 
             Render.Line("textrude extracting docs:".Green(), modelNames);
             context

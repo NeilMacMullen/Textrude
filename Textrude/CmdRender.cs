@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Application;
+using Engine.Model;
 using SharedApplication;
 
 namespace Textrude
@@ -33,6 +34,9 @@ namespace Textrude
         {
             DateTime GetLastWriteTime(string file)
             {
+                //check for script
+                if (file.StartsWith("{{"))
+                    return fallback;
                 if (allowNotExist && !_runtime.FileSystem.Exists(file))
                     return fallback;
 
@@ -52,6 +56,8 @@ namespace Textrude
 
         private string TryReadFile(string path)
         {
+            if (path.StartsWith("{{"))
+                return path;
             return _sys.GetOrQuit(() => _runtime.FileSystem.ReadAllText(path),
                 $"Unable to read file {path}");
         }
@@ -87,7 +93,7 @@ namespace Textrude
                 var modelText = TryReadFile(model.Path);
 
                 var format = model.Format == ModelFormat.Unknown
-                    ? _runtime.FileSystem.DefaultFormat(model.Path)
+                    ? AutoDeserializer.GuessFormatFromPath(model.Path)
                     : model.Format;
                 engine = engine.WithModel(model.Name, modelText, format);
             }
@@ -124,17 +130,14 @@ namespace Textrude
             }
 
             //write dynamic output
-            if (_options.DynamicOutput)
+            if (!_options.DynamicOutput) return;
+
+            var d = engine.GetDynamicOutput();
+            foreach (var (path, text) in d)
             {
-                var d = engine.GetDynamicOutput();
-                foreach (var o in d)
-                {
-                    var text = o.Value;
-                    var path = o.Key;
-                    Verbose($"Writing {text.Length} bytes to {path}");
-                    _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(path, text),
-                        $"Unable to write output to {path}");
-                }
+                Verbose($"Writing {text.Length} bytes to {path}");
+                _sys.TryOrQuit(() => _runtime.FileSystem.WriteAllText(path, text),
+                    $"Unable to write output to {path}");
             }
         }
 

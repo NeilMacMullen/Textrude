@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Scriban.Runtime;
 
 namespace Engine.Model.Deserializers
 {
@@ -21,14 +22,16 @@ namespace Engine.Model.Deserializers
             {
                 case string s:
                 {
-                    if (int.TryParse(s, out var n))
-                        return n;
+                    if (long.TryParse(s, out var lng))
+                        return lng;
+                    if (double.TryParse(s, out var dbl))
+                        return dbl;
                     if (bool.TryParse(s, out var b))
                         return b;
                     return s;
                 }
                 case Dictionary<object, object> d:
-                    var e = new Dictionary<string, object>();
+                    var e = new ScriptObject();
                     foreach (var (key, value) in d)
                     {
                         e[key.ToString()] = FixTypes(value);
@@ -41,9 +44,10 @@ namespace Engine.Model.Deserializers
 
                 //used by CsvHelper
                 case ExpandoObject ex:
-                    return ex.ToDictionary(kv =>
+                    var dict = ex.ToDictionary(kv =>
                             kv.Key,
                         kv => FixTypes(kv.Value));
+                    return ScriptObject.From(dict);
                 default:
                     return tree;
             }

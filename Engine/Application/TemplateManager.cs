@@ -118,7 +118,7 @@ namespace Engine.Application
         /// <remarks>
         ///     If the variable doesn't exist, we return the empty string
         /// </remarks>
-        public string TryGetVariable(string variableName)
+        public string GetStringOrEmpty(string variableName)
         {
             var scribanVariable = new ScriptVariableGlobal(variableName);
             try
@@ -131,16 +131,18 @@ namespace Engine.Application
             }
         }
 
-        public T TryGetVariableObject<T>(string variableName)
+        public bool TryGetVariableObject<T>(string variableName, out T val)
         {
+            val = default;
             var scribanVariable = new ScriptVariableGlobal(variableName);
             try
             {
-                return (T) _context.GetValue(scribanVariable);
+                val = (T) _context.GetValue(scribanVariable);
+                return true;
             }
             catch
             {
-                return default;
+                return false;
             }
         }
 

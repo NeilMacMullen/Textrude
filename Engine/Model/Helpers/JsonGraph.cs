@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.Application;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Scriban.Runtime;
 
 namespace Engine.Model.Helpers
 {
@@ -17,7 +19,7 @@ namespace Engine.Model.Helpers
         /// <remarks>
         ///     The topmost model can either be a ScriptObject or an array of ScriptObjects
         /// </remarks>
-        public static void AddNamedObject(Dictionary<string, object> parent, string name, JToken token)
+        public static void AddNamedObject(IDictionary<string, object> parent, string name, JToken token)
         {
             var obj = MakeTree(token);
             parent.Add(name, obj);
@@ -29,7 +31,7 @@ namespace Engine.Model.Helpers
         /// <remarks>
         ///     The topmost model can either be a ScriptObject or an array of ScriptObjects
         /// </remarks>
-        public static Model Create(JToken token) => new(MakeTree(token));
+        public static Model Create(ModelFormat sourceFormat, JToken token) => new(sourceFormat, MakeTree(token));
 
 
         private static object MakeTree(JToken token)
@@ -43,7 +45,7 @@ namespace Engine.Model.Helpers
                     return sos;
                 case JTokenType.Object:
                 {
-                    var container = new Dictionary<string, object>();
+                    var container = new ScriptObject();
                     foreach (var prop in p.Value<JObject>().Properties())
                         AddNamedObject(container, prop.Name, prop.Value);
 
@@ -92,6 +94,26 @@ namespace Engine.Model.Helpers
         {
             var json = JsonConvert.SerializeObject(o);
             return GraphFromJsonString(json);
+        }
+
+
+        public static object ToJsonSerialisableTree(object o)
+        {
+            if (o is ScriptObject so)
+            {
+                return so
+                    .Where(kv => kv.Value != null)
+                    .ToDictionary(kv => kv.Key, kv => ToJsonSerialisableTree(kv.Value));
+            }
+
+            if (o is IEnumerable<object> oArray)
+            {
+                return oArray.Select(ToJsonSerialisableTree)
+                    .Where(v => v != null)
+                    .ToArray();
+            }
+
+            return o;
         }
     }
 }

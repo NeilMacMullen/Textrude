@@ -1,4 +1,4 @@
-﻿namespace Engine.Application
+﻿namespace Engine.Model
 {
     /// <summary>
     ///     Supported Model file formats

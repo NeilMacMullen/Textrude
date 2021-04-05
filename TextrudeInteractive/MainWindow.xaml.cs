@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Engine.Application;
+using Engine.Model;
 using MaterialDesignExtensions.Controls;
 using TextrudeInteractive.Monaco.Messages;
 

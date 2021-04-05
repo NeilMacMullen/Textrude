@@ -1,4 +1,6 @@
-﻿namespace Engine.Application
+﻿using Engine.Model;
+
+namespace Engine.Application
 {
     /// <summary>
     ///     Provides some helpful functions for templates

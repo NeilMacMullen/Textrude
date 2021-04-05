@@ -23,6 +23,5 @@ namespace Engine.Application
         }
 
         public bool CanHandle(string path) => path == "-";
-        public ModelFormat DefaultFormat(string path) => ModelFormat.Line;
     }
 }

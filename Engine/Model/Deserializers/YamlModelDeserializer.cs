@@ -14,7 +14,7 @@ namespace Engine.Model.Deserializers
             var deserializer = new Deserializer();
             var yamlObject = deserializer.Deserialize(r);
             var d = ObjectGraph.FixTypes(yamlObject);
-            return new Model(d);
+            return new Model(ModelFormat.Yaml, d);
         }
 
         public string Serialize(object o)

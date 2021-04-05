@@ -32,6 +32,5 @@ namespace Engine.Application
         }
 
         public bool CanHandle(string path) => path.StartsWith("http://") || path.StartsWith("https://");
-        public ModelFormat DefaultFormat(string path) => ModelFormat.Json;
     }
 }

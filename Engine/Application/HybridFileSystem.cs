@@ -25,7 +25,7 @@ namespace Engine.Application
 
         public void WriteAllText(string path, string content) => Route(path).WriteAllText(path, content);
         public bool CanHandle(string path) => true;
-        public ModelFormat DefaultFormat(string path) => Route(path).DefaultFormat(path);
+
 
         private IFileSystemOperations Route(string path)
         {

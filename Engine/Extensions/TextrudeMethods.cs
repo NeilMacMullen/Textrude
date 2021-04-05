@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Engine.Model;
+using Engine.Model.Helpers;
 using Scriban.Runtime;
 
 namespace Engine.Application
@@ -66,13 +67,25 @@ namespace Engine.Application
         }
 
         /// <summary>
-        /// Allows scriban code to preprocess other code
+        ///     Allows scriban code to preprocess other code
         /// </summary>
         /// <remarks>
-        /// Useful for auto-doc generation</remarks>
-        public static string PreProcess(string text)
+        ///     Useful for auto-doc generation
+        /// </remarks>
+        public static string PreProcess(string text) =>
+            text == null ? string.Empty : TemplateProcessor.ApplyAllTransforms(text);
+
+
+        public static string Serialize(object o, ModelFormat format)
         {
-            return text == null ? string.Empty : TemplateProcessor.ApplyAllTransforms(text);
+            if (o == null)
+                return string.Empty;
+            return ModelDeserializerFactory.Serialise(JsonGraph.ToJsonSerialisableTree(o), format);
         }
+
+        public static string ToJson(object o) => Serialize(o, ModelFormat.Json);
+        public static string ToCsv(object o) => Serialize(o, ModelFormat.Csv);
+        public static string ToYaml(object o) => Serialize(o, ModelFormat.Yaml);
+        public static string ToLine(object o) => Serialize(o, ModelFormat.Line);
     }
 }

@@ -34,7 +34,6 @@ namespace Tests
         }
 
         public bool CanHandle(string path) => true;
-        public ModelFormat DefaultFormat(string path) => ModelDeserializerFactory.FormatFromExtension(path);
 
         public bool Accessible(string path) => !_inaccessible.Contains(path);
 
