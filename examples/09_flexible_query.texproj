@@ -1,0 +1,80 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 2,
+        "Text": "- id: 1\r\n  name: one\r\n- id: 2\r\n  name: two \r\n- id: 3\r\n  name: three ",
+        "Path": "",
+        "Name": "items"
+      }
+    ],
+    "Template": "{{\r\n\r\n# query code goes inside this function\r\nfunc query(i)\r\nret  (i.id \u003E 2) || (string.contains i.name \u0022t\u0022 )\r\nend\r\n \r\nfiltered = items | array.filter @query \r\n\r\n# write filtered items out in format of your choice\r\n# Csv/Json/Yaml\r\ntextrude.serialize filtered \u0022Json\u0022\r\n\r\n}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "json",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}
