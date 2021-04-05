@@ -8,12 +8,12 @@ namespace Engine.Model.Deserializers
     /// </summary>
     public class JsonModelDeserializer : IModelDeserializer
     {
-        public string Serialize(object o) => JsonConvert.SerializeObject(o);
+        public string Serialize(object o) => JsonConvert.SerializeObject(o, Formatting.Indented);
 
         public Model Deserialize(string s)
         {
             var jobject = JsonGraph.GraphFromJsonString(s);
-            return JsonGraph.Create(jobject);
+            return JsonGraph.Create(ModelFormat.Json, jobject);
         }
     }
 }
