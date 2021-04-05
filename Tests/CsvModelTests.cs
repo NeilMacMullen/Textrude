@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Engine.Application;
 using Engine.Model;
@@ -82,7 +83,9 @@ true,false",
                 .WithTemplate(template)
                 .WithModel("model", o)
                 .RenderToErrorOrOutput()
-                .Should().Be(
+                .Replace("\r\n", Environment.NewLine) //cope with CsvHelper using wrong line endings on Linux
+                .Should()
+                .Be(
                     @"id,name
 1,-1-
 2,-2-
