@@ -13,7 +13,7 @@ If you like or are using this project please give it a star or leave some feedba
 
 Textrude is a tool to feed CSV,YAML, JSON or plain-text files into [Scriban](https://github.com/scriban/scriban) templates. That makes it useful for:
  - **Code-generation**. Generate serializers, smart-enums, lookup tables etc from structured data
- - **Quick and dirty data-processing**. Pull a json file from a URL and extract the fields you're interested in.
+ - **Quick and dirty data-processing**. Pull a json file from a URL and extract the fields you're interested in or use the [convenience commands](doc/textrude_convenience.md) to process data files from the command line.
  - **Text processing**. Use line mode to filter the contents of large log files to get to the relevant sections 
 
 Textrude comes in 3 flavours:
@@ -42,18 +42,24 @@ For **text-processing** or **data-processing**
 
 ## Download/build
 
-The current release is **v1.5.0**.
-
 **Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will be prompted to install it.**
 
-**To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**
+**To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
+ - Or download using Chocolatey `choco install textrude` (*pending verification*)
  - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
  - Or you can create a [Docker image](Docker.md)
  - Textrude is also available on [nuget](https://www.nuget.org/packages/textrude/)
 
 ## What's new
+
+### vNext
+- Chocolatey install is availble (pending verification)
+- A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.
+- Textrude can now emit [serialised representations](doc/format_conversion.md) of object trees
+- Textrude can now guess the format of models based on the first few hundred bytes of content.
+- More examples added
 
 ### v1.6.0 (source/binary)
 - Reduce annoying visual flicker when resizing edit panes
@@ -67,14 +73,7 @@ The current release is **v1.5.0**.
 - Prototype [cpp](doc/lib.md#lib/cpp.sbn) library
 - Prototype [C#](doc/lib.md#lib/csharp.sbn) library
 - Prototype [text-processing](doc/lib.md#lib/line.sbn) library
-   
 
-### v1.5.0 (source/binary)
-- Textrude now provides some simple [syntax extensions](doc/syntaxExtensions.md) over *classic* Scriban 
-- A [create_library](doc/userLibrary.md) built-in method is now provided to make it easier to create libraries
-- LoopLimit now removed and cancellation of long-running in-flight renders is supported.  This makes it easier to process large text files.
-- **Textrude** can now read models from STDIN or from a URL, making it useful for processing the output of other commands.
-- **Textrude** model/output specifiers can now include explicit format declarations.
 
 [Full change history](doc/changeHistory.md)
 
