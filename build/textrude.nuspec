@@ -16,13 +16,14 @@
       <docsUrl>https://github.com/NeilMacMullen/Textrude/blob/main/README.md</docsUrl>
       <bugTrackerUrl>https://github.com/NeilMacMullen/Textrude/issues</bugTrackerUrl>
       <packageSourceUrl>https://github.com/NeilMacMullen/Textrude</packageSourceUrl>
+      <mailingListUrl>https://gitter.im/Textrude/community</mailingListUrl>
       {{end}}
     
          <projectUrl>https://github.com/NeilMacMullen/textrude</projectUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
       <description>Textrude is a utility that allows you to quickly develop templates for code-generation and text processing.  It runs on Windows and Linux and uses Scriban as the template language.  It comes as a CLI exe for use in build systems as well as an GUI prototyping tool which regenerates output in realtime as templates are edited. Models are automatically imported from JSON, YAML, CSV or plain text.</description>
-      <releaseNotes>First nuget release</releaseNotes>
-      <copyright>Copyright 2021</copyright>
+      <releaseNotes>First package release</releaseNotes>
+      <copyright>Copyright Neil MacMullen, 2021</copyright>
       <tags>scriban code-generation template text-processing json yaml csv</tags>
       <iconUrl>https://github.com/NeilMacMullen/Textrude/blob/main/img/textrude_app.png</iconUrl>
     </metadata>
