@@ -1,5 +1,6 @@
 using System.Linq;
 using Engine.Application;
+using Engine.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

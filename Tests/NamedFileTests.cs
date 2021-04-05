@@ -1,4 +1,4 @@
-using Engine.Application;
+using Engine.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharedApplication;
