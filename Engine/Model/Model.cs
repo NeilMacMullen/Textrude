@@ -1,4 +1,6 @@
-﻿namespace Engine.Model
+﻿using Engine.Application;
+
+namespace Engine.Model
 {
     /// <summary>
     ///     Represents an object-model used by the application
@@ -9,11 +11,14 @@
     /// </remarks>
     public class Model
     {
+        public readonly ModelFormat SourceFormat;
+
         public readonly object Untyped;
 
-        public Model(object untyped) =>
-            //Note that untyped must be EITHER an array of items OR a Dictionary 
-            //TODO - put in some error checking here
+        public Model(ModelFormat format, object untyped)
+        {
+            SourceFormat = format;
             Untyped = untyped;
+        }
     }
 }
