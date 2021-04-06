@@ -2,7 +2,7 @@
 
 ## Installation
 
-First, ensure that you have the .Net 5 **desktop** runtime installed.  This is available [from Microsoft](.NET Runtime 5.0.4)   (*If you are only planning to use the CLI tool on Linux then you can get away with the standard runtime rather than the desktop version*)
+First, ensure that you have the .Net 5 **desktop** runtime installed.  This is available [from Microsoft](https://dotnet.microsoft.com/download/dotnet/5.0)   (*If you are only planning to use the CLI tool on Linux then you can get away with the standard runtime rather than the desktop version*)
 
 Next, if you are intending to use the *TextrudeInteractive* GUI tool, install the [WebView2 runtime](https://go.microsoft.com/fwlink/p/?LinkId=2124703). 
 
