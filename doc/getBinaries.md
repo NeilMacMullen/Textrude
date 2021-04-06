@@ -27,6 +27,8 @@ C:\TEXTRUDE
         ... more
 ```
 
+You can run the executables directly from this folder; no further installation steps are required though if you are planning to use the CLI tools you may want to edit your path to include the folder.
+
 ## Important note about moving the executables
 
 The executables are self-contained and can run anywhere but they do expect to find the *lib* folder in the same directory. Later versions also required the *WebView2Loader.dll* to be available in the same folder as the exes.
