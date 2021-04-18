@@ -47,7 +47,7 @@ For **text-processing** or **data-processing**
 **To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
- - Or download using [Chocolatey(https://community.chocolatey.org/) `choco install textrude`
+ - Or download using [Chocolatey](https://community.chocolatey.org/) `choco install textrude`
  - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
  - Or you can create a [Docker image](Docker.md)
  - Textrude is also available on [nuget](https://www.nuget.org/packages/textrude/)
