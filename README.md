@@ -1,9 +1,13 @@
 # ![Textude](img/textrude_logo.png)
 [![NuGet](https://img.shields.io/nuget/v/textrude?label=Latest-version)](https://www.nuget.org/packages/textrude/)
-[![GitHub release](https://img.shields.io/github/downloads-pre/NeilMacmullen/textrude/total?label=Local-downloads)](https://github.com/NeilMacMullen/textrude/releases) 
-[![NuGet](https://img.shields.io/nuget/dt/textrude?label=Nuget-downloads)](https://www.nuget.org/packages/textrude/) 
 [![Coverage Status](https://coveralls.io/repos/github/NeilMacMullen/Textrude/badge.svg?branch=main)](https://coveralls.io/github/NeilMacMullen/Textrude?branch=main) 
 [![Join the chat at https://gitter.im/Textrude/community](https://badges.gitter.im/Textrude/community.svg)](https://gitter.im/Textrude/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+#### Downloads
+[![GitHub release](https://img.shields.io/github/downloads-pre/NeilMacmullen/textrude/total?label=Github)](https://github.com/NeilMacMullen/textrude/releases) 
+[![NuGet](https://img.shields.io/nuget/dt/textrude?label=Nuget)](https://www.nuget.org/packages/textrude/) 
+[![Chocolatey](https://img.shields.io/chocolatey/dt/textrude?label=Chocolatey)](https://community.chocolatey.org/packages/textrude)
+
 
 ## Give a Star! :star:
 
