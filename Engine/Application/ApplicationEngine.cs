@@ -52,6 +52,8 @@ namespace Engine.Application
         /// </summary>
         private readonly TemplateManager _templateManager;
 
+        private readonly CancellationToken Cancel;
+
         /// <summary>
         ///     Used to automatically name models as they are added
         /// </summary>
@@ -60,13 +62,14 @@ namespace Engine.Application
         /// <summary>
         ///     Create a new application engine
         /// </summary>
-        public ApplicationEngine(RunTimeEnvironment environment)
+        public ApplicationEngine(RunTimeEnvironment environment, CancellationToken cancel = new CancellationToken())
         {
             _environment = environment;
             _templateManager = new TemplateManager(environment.FileSystem);
             //we always add the location of the application executable as an include path for 
             //scripts. This allows us to easily ship a library of standard scripts
             _templateManager.AddIncludePath(environment.ApplicationFolder());
+            Cancel = cancel;
         }
 
         /// <summary>
@@ -103,6 +106,7 @@ namespace Engine.Application
         {
             try
             {
+                Cancel.ThrowIfCancellationRequested();
                 //parse the text and create a model
                 var serializer = ModelDeserializerFactory.Fetch(format);
                 var model = serializer.Deserialize(modelText);
@@ -175,14 +179,11 @@ namespace Engine.Application
         ///     Run the render pass of the engine.
         /// </summary>
         public ApplicationEngine Render()
-            => Render(CancellationToken.None);
-
-        public ApplicationEngine Render(CancellationToken cancel)
         {
             try
             {
                 _templateManager.AddVariable("_runtime", _info);
-                Output = _templateManager.Render(cancel);
+                Output = _templateManager.Render(Cancel);
             }
             catch (Exception e)
             {
@@ -217,6 +218,9 @@ namespace Engine.Application
 
             Add(ExtensionCache.KnownAssemblies.Group,
                 ExtensionCache.GetGroupingMethods());
+
+            Add(ExtensionCache.KnownAssemblies.TimeComparison,
+                ExtensionCache.GetTimeComparisonMethods());
 
             return this;
         }
