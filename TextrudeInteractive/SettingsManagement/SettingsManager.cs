@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Security.RightsManagement;
 using System.Text.Json;
 
 namespace TextrudeInteractive
@@ -10,21 +11,28 @@ namespace TextrudeInteractive
     /// </summary>
     public static class SettingsManager
     {
-        public static string GetPath()
+        public static string GetSettingsPath()
+        {
+            var app = GetTextrudeAppDataFolder();
+            var settingsFile = Path.Combine(app,"settings.json");
+            return settingsFile;
+        }
+
+        public static string GetTextrudeAppDataFolder()
         {
             var exe = Assembly.GetExecutingAssembly().GetName().Name;
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var settingsFile = Path.Combine(appData, exe, "settings.json");
-            if (!File.Exists(settingsFile))
-                Directory.CreateDirectory(Path.GetDirectoryName(settingsFile));
-            return settingsFile;
+            var textrudeData = Path.Combine(appData, exe);
+            if (!Directory.Exists(textrudeData))
+                Directory.CreateDirectory(textrudeData);
+            return textrudeData;
         }
 
         public static ApplicationSettings ReadSettings()
         {
             try
             {
-                var text = File.ReadAllText(GetPath());
+                var text = File.ReadAllText(GetSettingsPath());
                 return JsonSerializer.Deserialize<ApplicationSettings>(text);
             }
             catch
@@ -38,7 +46,7 @@ namespace TextrudeInteractive
             try
             {
                 var text = JsonSerializer.Serialize(settings, new JsonSerializerOptions {WriteIndented = true});
-                File.WriteAllText(GetPath(), text);
+                File.WriteAllText(GetSettingsPath(), text);
             }
             catch
             {
