@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using TextrudeInteractive.Monaco.Messages;
@@ -71,7 +72,8 @@ namespace TextrudeInteractive
 
         public async Task Initialize()
         {
-            _webEnv = await CoreWebView2Environment.CreateAsync();
+            //https://docs.microsoft.com/en-us/microsoft-edge/webview2/concepts/userdatafolder
+            _webEnv = await CoreWebView2Environment.CreateAsync(null, SettingsManager.GetTextrudeAppDataFolder(), null);
             await _webView.EnsureCoreWebView2Async(_webEnv);
 
             _webView.CoreWebView2.AddWebResourceRequestedFilter("http://*", CoreWebView2WebResourceContext.All);
