@@ -218,10 +218,10 @@ namespace Engine.Application
 
             Add(ExtensionCache.KnownAssemblies.Group,
                 ExtensionCache.GetGroupingMethods());
-
+/*
             Add(ExtensionCache.KnownAssemblies.TimeComparison,
                 ExtensionCache.GetTimeComparisonMethods());
-
+*/
             return this;
         }
 
