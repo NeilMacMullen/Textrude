@@ -103,12 +103,17 @@ namespace TextrudeInteractive
             }
 
             _inputStream
-                .Do(_ => currentOp.Cancel())
+                .Do(_ =>
+                {
+                    _currentRender.Cancel();
+                    _currentRender = new CancellationTokenSource();
+                })
+                .Select(g => new {EngineInput = g, Cancel = _currentRender.Token})
                 .Throttle(TimeSpan.FromMilliseconds(_responseTimeMs))
                 .ObserveOn(SynchronizationContext.Current)
                 .Do(_ => SetBusyIndicator(+1))
                 .ObserveOn(NewThreadScheduler.Default)
-                .Select(Render)
+                .Select(x => Render(x.EngineInput, x.Cancel))
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(HandleRenderResults);
             RunBackgroundUpgradeCheck();
@@ -178,7 +183,7 @@ namespace TextrudeInteractive
             _editorVisualSettings.ShowWhitespace = !_editorVisualSettings.ShowWhitespace;
         }
 
-        private void ToggleDefsAndIncludes(object sender, RoutedEventArgs e)
+        private void ToggleDefinitionssAndIncludes(object sender, RoutedEventArgs e)
         {
             static bool IsToggleable(EditPaneViewModel p) =>
                 new[] {PaneType.IncludePaths, PaneType.Definitions}.Contains(p.PaneType);
@@ -413,7 +418,7 @@ namespace TextrudeInteractive
             }
         }
 
-        private CancellationTokenSource currentOp = new CancellationTokenSource();
+        private CancellationTokenSource _currentRender = new CancellationTokenSource();
 
         private bool SetBusyIndicator(int increment)
         {
@@ -422,10 +427,11 @@ namespace TextrudeInteractive
             return _editorVisualSettings.IsBusy;
         }
 
-        private TimedOperation<ApplicationEngine> Render(EngineInputSet gi)
+        private static TimedOperation<ApplicationEngine> Render(EngineInputSet gi, CancellationToken cancel)
         {
             var rte = new RunTimeEnvironment(new FileSystem());
-            var engine = new ApplicationEngine(rte);
+            var engine = new ApplicationEngine(rte, cancel);
+
             var timer = new TimedOperation<ApplicationEngine>(engine);
 
             foreach (var m in gi.Models)
@@ -437,8 +443,8 @@ namespace TextrudeInteractive
                 .WithHelpers()
                 .WithTemplate(gi.Template);
 
-            currentOp = new CancellationTokenSource();
-            engine.Render(currentOp.Token);
+
+            engine.Render();
             return timer;
         }
 

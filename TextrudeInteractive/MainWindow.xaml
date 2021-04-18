@@ -72,7 +72,7 @@
         <MenuItem Click="RenameModel" Header="Change name of model" ToolTip="Changes the name of the selected model" />
 
         <Separator />
-        <MenuItem Click="ToggleDefsAndIncludes" Header="Show/hide definitions and includes" />
+        <MenuItem Click="ToggleDefinitionssAndIncludes" Header="Show/hide definitions and includes" />
 
         <Separator />
         <MenuItem Header="Reload linked" Click="ReloadAllInputs" ToolTip="Loads all inputs from linked files" />
