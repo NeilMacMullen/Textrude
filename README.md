@@ -47,7 +47,7 @@ For **text-processing** or **data-processing**
 **To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
- - Or download using Chocolatey `choco install textrude` (*pending verification*)
+ - Or download using [Chocolatey(https://community.chocolatey.org/) `choco install textrude`
  - Alternatively, [building from source](doc/buildFromSource.md) is pretty easy and gives you access to the bleeding-edge! 
  - Or you can create a [Docker image](Docker.md)
  - Textrude is also available on [nuget](https://www.nuget.org/packages/textrude/)
@@ -55,7 +55,7 @@ For **text-processing** or **data-processing**
 ## What's new
 
 ### vNext
-- Chocolatey install is availble (pending verification)
+- Chocolatey install is availble.
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.
 - Textrude can now emit [serialised representations](doc/format_conversion.md) of object trees
 - Textrude can now guess the format of models based on the first few hundred bytes of content.
