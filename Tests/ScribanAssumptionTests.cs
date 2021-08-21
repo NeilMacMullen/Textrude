@@ -146,5 +146,28 @@ end
             var result = template.Render();
             result.Should().Be("678");
         }
+
+
+        [TestMethod]
+        [Ignore("Waiting for new Scriban release")]
+        public void PreventsInfiniteRecursionOnSelfAssignment()
+        {
+            var script = @"{{
+
+m = {
+   abc: 123
+   def: 456 
+ }
+
+m.abc =m
+m
+}}
+";
+            var context = new TemplateContext();
+            context.PushGlobal(new ScriptObject());
+            var template = Template.Parse(script);
+            var result = template.Render();
+            result.Should().Be("678");
+        }
     }
 }

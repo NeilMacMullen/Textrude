@@ -1,0 +1,38 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 0,
+        "Text": " {\r\n    \u0022Transport\u0022: \u0022Unspecified\u0022,\r\n    \u0022SensorId\u0022: \u0022DA:79:CC:9E:59:D6\u0022,\r\n    \u0022Timestamp\u0022: \u00222018-11-15T02:59:43.6931068\u0022,\r\n    \u0022CreationIndex\u0022: 0\r\n  }",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "{{\r\n    model.Timestamp | date.to_string \u0022%T\u0022\r\n}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

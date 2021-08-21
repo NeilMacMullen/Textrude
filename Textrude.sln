@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub workflows", "GitHub 
 		.github\workflows\ci.yaml = .github\workflows\ci.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Query", "Query\Query.csproj", "{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,12 @@ Global
 		{A93C9654-6AE7-4A4E-9988-6B0B89158CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A93C9654-6AE7-4A4E-9988-6B0B89158CE7}.Linux-Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A93C9654-6AE7-4A4E-9988-6B0B89158CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Linux-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Linux-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E56A35AC-6778-42E0-BDAD-6ADE33481A1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

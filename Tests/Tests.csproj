@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\Query\Query.csproj" />
     <ProjectReference Include="..\Textrude\Textrude.csproj" />
   </ItemGroup>
 

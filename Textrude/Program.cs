@@ -32,6 +32,7 @@ namespace Textrude
                     typeof(CmdItemFilter.Options),
                     typeof(CmdItemDo.Options),
                     typeof(CmdItemMap.Options),
+                    typeof(CmdItemMapObject.Options),
                     typeof(CmdModelDo.Options),
                     typeof(CmdDo.Options)
                 )
@@ -42,6 +43,7 @@ namespace Textrude
                 .WithParsed<CmdItemFilter.Options>(o => CmdItemFilter.Run(o, rte, sys))
                 .WithParsed<CmdItemDo.Options>(o => CmdItemDo.Run(o, rte, sys))
                 .WithParsed<CmdItemMap.Options>(o => CmdItemMap.Run(o, rte, sys))
+                .WithParsed<CmdItemMapObject.Options>(o => CmdItemMapObject.Run(o, rte, sys))
                 .WithParsed<CmdModelDo.Options>(o => CmdModelDo.Run(o, rte, sys))
                 .WithParsed<CmdDo.Options>(o => CmdDo.Run(o, rte, sys))
                 ;
