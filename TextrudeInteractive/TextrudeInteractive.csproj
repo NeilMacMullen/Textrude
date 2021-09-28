@@ -33,7 +33,7 @@
     </PackageReference>
     <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.961.33" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.992.28" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="4.0.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
