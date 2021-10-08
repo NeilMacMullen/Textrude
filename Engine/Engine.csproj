@@ -8,7 +8,7 @@
     <PackageReference Include="CsvHelper" Version="27.1.1" />
     <PackageReference Include="Humanizer" Version="2.11.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Scriban" Version="4.0.2" />
+    <PackageReference Include="Scriban" Version="4.1.0" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
