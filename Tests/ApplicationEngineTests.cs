@@ -34,7 +34,7 @@ namespace Tests
         public void CodeCompletionShowsDefinitions()
         {
             new ApplicationEngine(_rte)
-                .WithDefinitions(new[] {"abc=def"})
+                .WithDefinitions(new[] { "abc=def" })
                 .ModelPaths()
                 .Select(p => p.Render())
                 .Should()
@@ -78,6 +78,27 @@ end
             offeredPaths
                 .Should()
                 .NotContain("__library");
+        }
+
+
+        [TestMethod]
+        public void InfiniteRecursionAvoided()
+        {
+            var script = @"{{
+
+m = {
+   x: 123,
+   def: 456 
+ }
+m.abc =m
+m
+}}
+";
+
+            var res = new ApplicationEngine(_rte)
+                .WithTemplate(script)
+                .Render();
+            res.HasErrors.Should().BeTrue();
         }
     }
 }

@@ -43,6 +43,7 @@ namespace Engine.Application
         {
             _context.StrictVariables = true;
             _context.LoopLimit = int.MaxValue;
+            _context.ObjectRecursionLimit = 100;
             _scriptLoader = new ScriptLoader(ops);
             _context.TemplateLoader = _scriptLoader;
             _context.PushGlobal(_top);
@@ -137,7 +138,7 @@ namespace Engine.Application
             var scribanVariable = new ScriptVariableGlobal(variableName);
             try
             {
-                val = (T) _context.GetValue(scribanVariable);
+                val = (T)_context.GetValue(scribanVariable);
                 return true;
             }
             catch

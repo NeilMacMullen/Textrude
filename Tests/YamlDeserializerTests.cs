@@ -48,8 +48,8 @@ namespace Tests
         [TestMethod]
         public void SequenceCanBeDeserialized()
         {
-            var graph = GetArray(new[] {"cat", "dog"});
-            graph.Should().BeEquivalentTo(new[] {"cat", "dog"});
+            var graph = GetArray(new[] { "cat", "dog" });
+            graph.Should().BeEquivalentTo(new[] { "cat", "dog" });
         }
 
 
@@ -61,7 +61,7 @@ namespace Tests
         ///     actual numbers or bools but we would like to break that assumption by treating quoted
         ///     fields as strings.  This test should start passing when that change is made
         /// </remarks>
-        [Ignore]
+        [Ignore("Code changes required")]
         [TestMethod]
         public void StringsThatLookLikeNumbersAreNotDeserializedAsNumbers()
         {
@@ -79,7 +79,7 @@ namespace Tests
         ///     actual numbers or bools but we would like to break that assumption by treating quoted
         ///     fields as strings.  This test should start passing when that change is made
         /// </remarks>
-        [Ignore]
+        [Ignore("Code changes required")]
         [TestMethod]
         public void StringsThatLookLikeBoolsAreNotDeserializedAsBools()
         {

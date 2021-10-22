@@ -16,7 +16,7 @@ namespace Engine.Application
 
         public void AddModel(string name, ModelFormat format)
         {
-            Models = Models.Append(new ModelInfo {Name = name, Format = format.ToString()}).ToArray();
+            Models = Models.Append(new ModelInfo { Name = name, Format = format.ToString() }).ToArray();
         }
 
         public class ModelInfo
@@ -45,7 +45,7 @@ namespace Engine.Application
     {
         private readonly RunTimeEnvironment _environment;
 
-        private readonly RuntimeInfo _info = new RuntimeInfo();
+        private readonly RuntimeInfo _info = new();
 
         /// <summary>
         ///     provides generic scriban Template operations
@@ -62,7 +62,7 @@ namespace Engine.Application
         /// <summary>
         ///     Create a new application engine
         /// </summary>
-        public ApplicationEngine(RunTimeEnvironment environment, CancellationToken cancel = new CancellationToken())
+        public ApplicationEngine(RunTimeEnvironment environment, CancellationToken cancel = new())
         {
             _environment = environment;
             _templateManager = new TemplateManager(environment.FileSystem);
@@ -149,7 +149,7 @@ namespace Engine.Application
             try
             {
                 var definitions = DefinitionParser.CreateDefinitions(definitionAssignments)
-                    .ToDictionary(kv => kv.Key, kv => (object) kv.Value);
+                    .ToDictionary(kv => kv.Key, kv => (object)kv.Value);
                 _templateManager.AddVariable(ScribanNamespaces.DefinitionsNamespace, definitions);
             }
             catch (ArgumentException e)
@@ -218,6 +218,7 @@ namespace Engine.Application
 
             Add(ExtensionCache.KnownAssemblies.Group,
                 ExtensionCache.GetGroupingMethods());
+
             Add(ExtensionCache.KnownAssemblies.TimeComparison,
                 ExtensionCache.GetTimeComparisonMethods());
             return this;
