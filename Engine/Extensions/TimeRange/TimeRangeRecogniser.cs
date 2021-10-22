@@ -11,11 +11,13 @@ namespace Engine.Extensions.TimeRange
     {
         private static string[] GetValueFor(ModelResult result, string property)
         {
-            return ((IList<Dictionary<string, string>>) result.Resolution["values"])
+            if (result.Resolution == null)
+                return Array.Empty<string>();
+            return ((IList<Dictionary<string, string>>)result.Resolution["values"])
                 .SelectMany(v =>
                     v.TryGetValue(property, out var p)
-                        ? new[] {p}
-                        : new string[0]
+                        ? new[] { p }
+                        : Array.Empty<string>()
                 )
                 .ToArray();
         }
@@ -36,6 +38,12 @@ namespace Engine.Extensions.TimeRange
         private static void Dump(ModelResult i)
         {
             Console.WriteLine($"RESULT: {i.TypeName} '{i.Text}'");
+            if (i.Resolution == null)
+            {
+                Console.WriteLine("No resolution");
+                return;
+            }
+
             foreach (var c in i.Resolution)
             {
                 Console.WriteLine($" {c.Key}");
@@ -92,7 +100,7 @@ namespace Engine.Extensions.TimeRange
         {
             var res = DateTimeRecognizer.RecognizeDateTime(input, Culture.English,
                 DateTimeOptions.EnablePreview, basis);
-#if DEBUG
+#if DEBUG_TIMERANGE
             foreach (var r in res)
                 Dump(r);
 #endif
