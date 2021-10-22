@@ -9,7 +9,7 @@ namespace Tests
     [TestClass]
     public class YamlDeserializerTests
     {
-        private Model GetModel(object obj)
+        private static Model GetModel(object obj)
         {
             var ser = new YamlModelDeserializer();
             var text = ser.Serialize(obj);
@@ -17,10 +17,10 @@ namespace Tests
             return new YamlModelDeserializer().Deserialize(text);
         }
 
-        private IDictionary<string, object> GetGraph(object obj) =>
+        private static IDictionary<string, object> GetGraph(object obj) =>
             GetModel(obj).Untyped as IDictionary<string, object>;
 
-        private object[] GetArray(object obj) => GetModel(obj).Untyped as object[];
+        private static object[] GetArray(object obj) => GetModel(obj).Untyped as object[];
 
 
         [TestMethod]
