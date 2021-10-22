@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Application;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Scriban.Runtime;
@@ -87,6 +86,7 @@ namespace Engine.Model.Helpers
                     throw new InvalidOperationException($"Don't know what to do with token of type {p.Type}");
             }
         }
+
 
         public static JToken GraphFromJsonString(string input) => JToken.Parse(input);
 

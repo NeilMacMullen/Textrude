@@ -1,0 +1,44 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 3,
+        "Text": "",
+        "Path": "",
+        "Name": "model"
+      }
+    ],
+    "Template": "{{\r\n    func recognise(expr)\r\n    ret expr \u002B \u0022 -\u003E \u0022 \u002B(timecomparison.recognise expr) \u002B\u0022\r\n\u0022    \r\n    end\r\n\r\n    func compare(d1,d2)\r\n    r= d1\u002B \u0022 \u003C--\u003E \u0022\u002B d2 \r\n    r=r\u002B \u0022 after:\u0022 \u002B (timecomparison.after d1 d2) \r\n    r=r\u002B \u0022 before:\u0022\u002B (timecomparison.before d1 d2) \r\n    ret r \u002B\u0022\r\n\u0022\r\n    end\r\n\r\n    \r\n    #unix seconds\r\n    recognise (3600 * 48)\r\n    recognise \u0022yesterday\u0022\r\n    recognise \u0022tomorrow\u0022\r\n    recognise \u0022today\u0022\r\n    recognise \u002218 Nov, 14:00 PST\u0022\r\n    recognise \u00221 week ago\u0022\r\n    recognise \u0022christmas day\u0022\r\n\r\n    compare \u00223 jan\u0022 \u0022 10 jan\u0022\r\n    compare \u00226 months ago\u0022 \u0022 10 jan 2021\u0022\r\n    compare \u0022christmas day\u0022 \u0022new years day\u0022\r\n\r\n}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

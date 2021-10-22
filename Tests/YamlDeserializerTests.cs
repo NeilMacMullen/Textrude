@@ -9,7 +9,7 @@ namespace Tests
     [TestClass]
     public class YamlDeserializerTests
     {
-        private Model GetModel(object obj)
+        private static Model GetModel(object obj)
         {
             var ser = new YamlModelDeserializer();
             var text = ser.Serialize(obj);
@@ -17,10 +17,10 @@ namespace Tests
             return new YamlModelDeserializer().Deserialize(text);
         }
 
-        private IDictionary<string, object> GetGraph(object obj) =>
+        private static IDictionary<string, object> GetGraph(object obj) =>
             GetModel(obj).Untyped as IDictionary<string, object>;
 
-        private object[] GetArray(object obj) => GetModel(obj).Untyped as object[];
+        private static object[] GetArray(object obj) => GetModel(obj).Untyped as object[];
 
 
         [TestMethod]
@@ -48,8 +48,8 @@ namespace Tests
         [TestMethod]
         public void SequenceCanBeDeserialized()
         {
-            var graph = GetArray(new[] {"cat", "dog"});
-            graph.Should().BeEquivalentTo(new[] {"cat", "dog"});
+            var graph = GetArray(new[] { "cat", "dog" });
+            graph.Should().BeEquivalentTo(new[] { "cat", "dog" });
         }
 
 
@@ -61,7 +61,7 @@ namespace Tests
         ///     actual numbers or bools but we would like to break that assumption by treating quoted
         ///     fields as strings.  This test should start passing when that change is made
         /// </remarks>
-        [Ignore]
+        [Ignore("Code changes required")]
         [TestMethod]
         public void StringsThatLookLikeNumbersAreNotDeserializedAsNumbers()
         {
@@ -79,7 +79,7 @@ namespace Tests
         ///     actual numbers or bools but we would like to break that assumption by treating quoted
         ///     fields as strings.  This test should start passing when that change is made
         /// </remarks>
-        [Ignore]
+        [Ignore("Code changes required")]
         [TestMethod]
         public void StringsThatLookLikeBoolsAreNotDeserializedAsBools()
         {

@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scriban;
 using Scriban.Runtime;
+using Scriban.Syntax;
 
 namespace Tests
 {
@@ -21,7 +22,7 @@ namespace Tests
         /// <remarks>
         ///     This appears to be deliberate behaviour - see https://github.com/scriban/scriban/issues/297
         /// </remarks>
-        [Ignore]
+        [Ignore("Deliberate Scriban behaviour")]
         [TestMethod]
         public void OutputIsAccessibleAfterCapture()
         {
@@ -42,7 +43,7 @@ namespace Tests
         public void IncludeShouldWorkWhenStrictVariablesUsed()
         {
             var text = @"{{include 'testfile'}}";
-            var context = new TemplateContext {TemplateLoader = new MockTemplateLoader()};
+            var context = new TemplateContext { TemplateLoader = new MockTemplateLoader() };
             //NOTE - setting strict variables previously caused the test to fail
             context.StrictVariables = true;
             var compiledTemplate = Template.Parse(text);
@@ -85,7 +86,7 @@ namespace Tests
             var text = @"{{model.test}}";
             var compiledTemplate = Template.Parse(text);
             var scriptObject1 = new ScriptObject();
-            var dict = new Dictionary<string, string> {["test"] = "123"};
+            var dict = new Dictionary<string, string> { ["test"] = "123" };
             scriptObject1.Add("model", dict);
             var context = new TemplateContext();
             context.PushGlobal(scriptObject1);
@@ -106,7 +107,7 @@ namespace Tests
 
             var builtins = context
                 .BuiltinObject
-                .Select(kv => new {Name = kv.Key, FunctionList = kv.Value as ScriptObject})
+                .Select(kv => new { Name = kv.Key, FunctionList = kv.Value as ScriptObject })
                 .Where(o => o.FunctionList != null)
                 .SelectMany(ns => funcNames(ns.FunctionList, ns.Name))
                 .ToArray();
@@ -145,6 +146,35 @@ end
             var template = Template.Parse(script);
             var result = template.Render();
             result.Should().Be("678");
+        }
+
+
+        [TestMethod]
+        //[Ignore("Waiting for new Scriban release")]
+        public void PreventsInfiniteRecursionOnSelfAssignment()
+        {
+            var script = @"{{
+
+m = {
+   x: 123,
+   def: 456 
+ }
+m.abc =m
+m
+}}
+";
+
+            Action a = () =>
+            {
+                var context = new TemplateContext
+                {
+                    ObjectRecursionLimit = 100
+                };
+                Template
+                    .Parse(script)
+                    .Render(context);
+            };
+            a.Should().Throw<ScriptRuntimeException>();
         }
     }
 }

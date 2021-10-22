@@ -13,7 +13,9 @@ import timespan
 import html 
 import object 
 import array
-import textrude";
+import textrude
+import timecomparison
+";
 
         public static string ModelPipedToArrayProcessing(string expression, string arrayFunc) =>
             BareExpression(

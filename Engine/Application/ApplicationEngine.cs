@@ -16,7 +16,7 @@ namespace Engine.Application
 
         public void AddModel(string name, ModelFormat format)
         {
-            Models = Models.Append(new ModelInfo {Name = name, Format = format.ToString()}).ToArray();
+            Models = Models.Append(new ModelInfo { Name = name, Format = format.ToString() }).ToArray();
         }
 
         public class ModelInfo
@@ -43,33 +43,27 @@ namespace Engine.Application
     /// </remarks>
     public class ApplicationEngine
     {
+        private readonly CancellationToken _cancel;
         private readonly RunTimeEnvironment _environment;
 
-        private readonly RuntimeInfo _info = new RuntimeInfo();
+        private readonly RuntimeInfo _info = new();
 
         /// <summary>
         ///     provides generic scriban Template operations
         /// </summary>
         private readonly TemplateManager _templateManager;
 
-        private readonly CancellationToken Cancel;
-
-        /// <summary>
-        ///     Used to automatically name models as they are added
-        /// </summary>
-        private int _modelCount;
-
         /// <summary>
         ///     Create a new application engine
         /// </summary>
-        public ApplicationEngine(RunTimeEnvironment environment, CancellationToken cancel = new CancellationToken())
+        public ApplicationEngine(RunTimeEnvironment environment, CancellationToken cancel = new())
         {
             _environment = environment;
             _templateManager = new TemplateManager(environment.FileSystem);
             //we always add the location of the application executable as an include path for 
             //scripts. This allows us to easily ship a library of standard scripts
             _templateManager.AddIncludePath(environment.ApplicationFolder());
-            Cancel = cancel;
+            _cancel = cancel;
         }
 
         /// <summary>
@@ -106,13 +100,12 @@ namespace Engine.Application
         {
             try
             {
-                Cancel.ThrowIfCancellationRequested();
+                _cancel.ThrowIfCancellationRequested();
                 //parse the text and create a model
                 var serializer = ModelDeserializerFactory.Fetch(format);
                 var model = serializer.Deserialize(modelText);
                 _templateManager.AddVariable(name, model.Untyped);
                 _info.AddModel(name, model.SourceFormat);
-                _modelCount++;
             }
             catch (Exception e)
             {
@@ -149,7 +142,7 @@ namespace Engine.Application
             try
             {
                 var definitions = DefinitionParser.CreateDefinitions(definitionAssignments)
-                    .ToDictionary(kv => kv.Key, kv => (object) kv.Value);
+                    .ToDictionary(kv => kv.Key, kv => (object)kv.Value);
                 _templateManager.AddVariable(ScribanNamespaces.DefinitionsNamespace, definitions);
             }
             catch (ArgumentException e)
@@ -183,7 +176,7 @@ namespace Engine.Application
             try
             {
                 _templateManager.AddVariable("_runtime", _info);
-                Output = _templateManager.Render(Cancel);
+                Output = _templateManager.Render(_cancel);
             }
             catch (Exception e)
             {
@@ -218,10 +211,9 @@ namespace Engine.Application
 
             Add(ExtensionCache.KnownAssemblies.Group,
                 ExtensionCache.GetGroupingMethods());
-/*
+
             Add(ExtensionCache.KnownAssemblies.TimeComparison,
                 ExtensionCache.GetTimeComparisonMethods());
-*/
             return this;
         }
 

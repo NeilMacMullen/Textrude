@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Textrude.Engine</id>
+    <version>1.0.0</version>
+    <authors>Neil MacMullen</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <license type="expression">MIT</license>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="CsvHelper" version="26.1.0" exclude="Build,Analyzers" />
+        <dependency id="Humanizer" version="2.8.26" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
+        <dependency id="Scriban" version="3.6.0" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.Immutable" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="YamlDotNet" version="11.0.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Engine\bin\Debug\net5.0\**" />
+  </files>
+</package>

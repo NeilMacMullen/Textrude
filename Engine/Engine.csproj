@@ -2,11 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>textrude.engine</PackageId>
+    <Description>The engine for Textrude</Description>
+    <Authors>Neil MacMullen</Authors>
+    <Copyright>Copyright Neil MacMullen 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/NeilMacMullen/Textrude</PackageProjectUrl>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageTags></PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <RepositoryUrl>https://github.com/NeilMacMullen/Textrude.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>main</RepositoryBranch>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.1.1" />
     <PackageReference Include="Humanizer" Version="2.11.10" />
+    <PackageReference Include="Microsoft.Recognizers.Text" Version="1.8.0" />
+    <PackageReference Include="Microsoft.Recognizers.Text.DateTime" Version="1.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Scriban" Version="5.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />

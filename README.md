@@ -63,6 +63,7 @@ For **text-processing** or **data-processing**
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.
 - Textrude can now emit [serialised representations](doc/format_conversion.md) of object trees
 - Textrude can now guess the format of models based on the first few hundred bytes of content.
+- Textrude now supports a set of flexible [time recognition and comparison](doc/builtIns.md) functions. 
 - More examples added
 - TextrudeInteractive is now much better at cancelling in-flight renders
 - TextrudeInteractive now configures Webview to use APPDATALOCAL for cached data 

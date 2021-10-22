@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.Extensions.TimeRange;
 using Humanizer;
 using Scriban.Runtime;
 
@@ -14,7 +15,8 @@ namespace Engine.Application
             Humanizr,
             Misc,
             Textrude,
-            Group
+            Group,
+            TimeComparison
         }
 
         private static readonly Dictionary<KnownAssemblies, ScriptObject> CachedResults =
@@ -62,5 +64,8 @@ namespace Engine.Application
 
         public static ScriptObject GetGroupingMethods() =>
             GetOrCreate(KnownAssemblies.Group, () => new[] {typeof(Group)});
+
+        public static ScriptObject GetTimeComparisonMethods() =>
+            GetOrCreate(KnownAssemblies.TimeComparison, () => new[] {typeof(TimeRangeMethods)});
     }
 }
