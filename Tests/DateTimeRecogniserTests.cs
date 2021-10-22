@@ -27,7 +27,6 @@ namespace Tests
             ExpectDateTime("jan 1st, 2021", Tz.Pst, "08:00, 1 jan 2021");
             ExpectDateTime("22 may 2021", Tz.Pst, "07:00 22 may 2021");
             ExpectDateTime("5 may 2021", Tz.Uk, "23:00, 4 may 2021");
-            ExpectDateTime("4pm, 5 may 2021", Tz.Local, "15:00 5 may 2021");
         }
 
         [TestMethod]

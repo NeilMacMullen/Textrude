@@ -22,7 +22,7 @@ namespace Tests
             => ExpectDateTime(Basis, s, localTimeZone, expect, Tz.Utc);
 
         protected void ExpectDateTime(string s, string expect, TimeZoneInfo sourceTimeZone)
-            => ExpectDateTime(Basis, s, Tz.Local, expect, sourceTimeZone);
+            => ExpectDateTime(Basis, s, Tz.Unspecified, expect, sourceTimeZone);
 
         protected static void ExpectDateTime(DateTime basis, string s, TimeZoneInfo localTimeZone, string expect)
             => ExpectDateTime(basis, s, localTimeZone, expect, Tz.Utc);
@@ -52,7 +52,7 @@ namespace Tests
 
         public static class Tz
         {
-            public static readonly TimeZoneInfo Local = TimeZoneInfo.Local;
+            public static readonly TimeZoneInfo Unspecified = TimeZoneInfo.Local;
             public static readonly TimeZoneInfo Utc = TimeZoneInfo.Utc;
             public static readonly TimeZoneInfo Pst = TZConvert.GetTimeZoneInfo("Pacific Standard Time");
             public static readonly TimeZoneInfo Uk = TZConvert.GetTimeZoneInfo("GMT Standard Time");
