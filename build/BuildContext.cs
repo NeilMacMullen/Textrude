@@ -66,7 +66,7 @@ namespace Build
 
             build.AddNode(":hammer: Projects")
                 .AddNode(projects);
-            AnsiConsole.Render(build);
+            AnsiConsole.Write(build);
         }
     }
 }
