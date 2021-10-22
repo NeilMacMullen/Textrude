@@ -1,5 +1,11 @@
 [
   {
+    "Version": "1.7.0",
+    "Date": "22 Nov 2021",
+    "Summary": "Many nuget updates, timecomparison functionality",
+    "Detail": []
+  },
+  {
     "Version": "1.6.0",
     "Date": "24 Mar 2021",
     "Summary": "Prototype libraries, improved CLI version",
