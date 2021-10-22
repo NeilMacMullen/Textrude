@@ -23,7 +23,7 @@ namespace Build
             var line =
                 new Markup(text + Environment.NewLine)
                     .Overflow(Overflow.Ellipsis);
-            AnsiConsole.Render(line);
+            AnsiConsole.Write(line);
         }
     }
 
