@@ -58,8 +58,8 @@ For **text-processing** or **data-processing**
 
 ## What's new
 
-### vNext
-- Chocolatey install is availble.
+### v1.7.0 (source/binary)
+- Chocolatey install is available.
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.
 - Textrude can now emit [serialised representations](doc/format_conversion.md) of object trees
 - Textrude can now guess the format of models based on the first few hundred bytes of content.
@@ -67,19 +67,6 @@ For **text-processing** or **data-processing**
 - More examples added
 - TextrudeInteractive is now much better at cancelling in-flight renders
 - TextrudeInteractive now configures Webview to use APPDATALOCAL for cached data 
-
-### v1.6.0 (source/binary)
-- Reduce annoying visual flicker when resizing edit panes
-- Integers larger than 32 bits supported in JSON files 
-- textrude.exe now provides a convenient [pipe](doc/cmdPipe.md) command
-- textrude.exe *render* command now offers a *verbose* option
-- textrude.exe *info* command now shows full application path
-- textrude.exe now supports [dynamic output](doc/dynamicOutput.md)
-- Prototype Grouping methods in textrude namespace
-- Improve templates for library autodoc
-- Prototype [cpp](doc/lib.md#lib/cpp.sbn) library
-- Prototype [C#](doc/lib.md#lib/csharp.sbn) library
-- Prototype [text-processing](doc/lib.md#lib/line.sbn) library
 
 
 [Full change history](doc/changeHistory.md)
