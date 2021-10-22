@@ -43,6 +43,7 @@ namespace Engine.Application
     /// </remarks>
     public class ApplicationEngine
     {
+        private readonly CancellationToken _cancel;
         private readonly RunTimeEnvironment _environment;
 
         private readonly RuntimeInfo _info = new();
@@ -51,13 +52,6 @@ namespace Engine.Application
         ///     provides generic scriban Template operations
         /// </summary>
         private readonly TemplateManager _templateManager;
-
-        private readonly CancellationToken Cancel;
-
-        /// <summary>
-        ///     Used to automatically name models as they are added
-        /// </summary>
-        private int _modelCount;
 
         /// <summary>
         ///     Create a new application engine
@@ -69,7 +63,7 @@ namespace Engine.Application
             //we always add the location of the application executable as an include path for 
             //scripts. This allows us to easily ship a library of standard scripts
             _templateManager.AddIncludePath(environment.ApplicationFolder());
-            Cancel = cancel;
+            _cancel = cancel;
         }
 
         /// <summary>
@@ -106,13 +100,12 @@ namespace Engine.Application
         {
             try
             {
-                Cancel.ThrowIfCancellationRequested();
+                _cancel.ThrowIfCancellationRequested();
                 //parse the text and create a model
                 var serializer = ModelDeserializerFactory.Fetch(format);
                 var model = serializer.Deserialize(modelText);
                 _templateManager.AddVariable(name, model.Untyped);
                 _info.AddModel(name, model.SourceFormat);
-                _modelCount++;
             }
             catch (Exception e)
             {
@@ -183,7 +176,7 @@ namespace Engine.Application
             try
             {
                 _templateManager.AddVariable("_runtime", _info);
-                Output = _templateManager.Render(Cancel);
+                Output = _templateManager.Render(_cancel);
             }
             catch (Exception e)
             {

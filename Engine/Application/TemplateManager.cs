@@ -178,7 +178,7 @@ namespace Engine.Application
         public ImmutableArray<ModelPath> GetBuiltIns() => PathsForObjectTree(_context.BuiltinObject, ModelPath.Empty);
         public ImmutableArray<ModelPath> GetObjectTree() => PathsForObjectTree(_top, ModelPath.Empty);
 
-        public ImmutableArray<ModelPath> GetKeywords()
+        public static ImmutableArray<ModelPath> GetKeywords()
         {
             var keywords =
                 @"func end if else for break continue
