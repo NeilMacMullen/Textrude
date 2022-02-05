@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Cake.Common;
 using Cake.Common.Build;
 using Cake.Common.IO;
-using Cake.Common.Tools.DotNetCore;
+using Cake.Common.Tools.DotNet;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -29,14 +29,8 @@ namespace Build.Tasks
                 AnsiConsole.Progress()
                     .AutoClear(false)
                     .AutoRefresh(true)
-                    .Columns(new ProgressColumn[]
-                    {
-                        new TaskDescriptionColumn(),
-                        new ProgressBarColumn(),
-                        new PercentageColumn(),
-                        new RemainingTimeColumn(),
-                        new SpinnerColumn(Spinner.Known.CircleQuarters),
-                    })
+                    .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(),
+                        new RemainingTimeColumn(), new SpinnerColumn(Spinner.Known.CircleQuarters))
                     .Start(ctx =>
                     {
                         var buildTask = ctx.AddTask("Build", new ProgressTaskSettings
@@ -73,7 +67,7 @@ namespace Build.Tasks
                     .Append("build")
                     .Append("--no-restore")
                     .AppendSwitch("-c", context.BuildConfiguration)
-                    .AppendSwitch("-v", DotNetCoreVerbosity.Minimal.ToString())
+                    .AppendSwitch("-v", DotNetVerbosity.Minimal.ToString())
                     .Append("-consoleLoggerParameters:NoSummary;NoItemAndPropertyList")
                     .Append("-binaryLogger:LogFile=build.binlog"),
                 RedirectStandardOutput = true,
@@ -154,7 +148,7 @@ namespace Build.Tasks
 
             Render.Line("textrude extracting docs:".Green(), modelNames);
             context
-                .DotNetCoreRun("Textrude",
+                .DotNetRun("Textrude",
                     $"render --models {modelPaths}" +
                     $" --template {extractionScript}" +
                     $" --definitions \"MODELLIST={modelNames}\"" +
@@ -162,7 +156,7 @@ namespace Build.Tasks
 
             Render.Line("textrude generating lib.md:".Green());
             context
-                .DotNetCoreRun("Textrude",
+                .DotNetRun("Textrude",
                     $"render --models {tempDocModel}" +
                     $" --template {markDownScript}" +
                     $" --output {markDownOutput}");

@@ -2,7 +2,7 @@
 using Cake.Common.Build;
 using Cake.Common.IO;
 using Cake.Common.IO.Paths;
-using Cake.Common.Tools.DotNetCore;
+using Cake.Common.Tools.DotNet;
 using Cake.Core.IO;
 using Cake.Frosting;
 using Spectre.Console;
@@ -36,14 +36,8 @@ namespace Build.Tasks
                 AnsiConsole.Progress()
                     .AutoClear(false)
                     .AutoRefresh(true)
-                    .Columns(new ProgressColumn[]
-                    {
-                        new TaskDescriptionColumn(),
-                        new ProgressBarColumn(),
-                        new PercentageColumn(),
-                        new RemainingTimeColumn(),
-                        new SpinnerColumn(Spinner.Known.CircleQuarters),
-                    })
+                    .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(),
+                        new RemainingTimeColumn(), new SpinnerColumn(Spinner.Known.CircleQuarters))
                     .Start(ctx =>
                     {
                         var getVersionTask = ctx.AddTask("Gitversion ", new ProgressTaskSettings
@@ -93,7 +87,7 @@ namespace Build.Tasks
 
             Render.Line("textrude creating nuspec file:".Green());
             context
-                .DotNetCoreRun("Textrude",
+                .DotNetRun("Textrude",
                     $"render --models {_versionJson}" +
                     $" --template {nuspecTemplate}" +
                     $" --definitions CLIENT={Client}" +

@@ -1,8 +1,8 @@
 ﻿using Cake.Common;
 using Cake.Common.Build;
 using Cake.Common.Diagnostics;
-using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Clean;
+using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Clean;
 using Cake.Frosting;
 
 namespace Build.Tasks
@@ -16,17 +16,17 @@ namespace Build.Tasks
 
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreClean(context.SolutionFile, new DotNetCoreCleanSettings()
+            context.DotNetClean(context.SolutionFile, new DotNetCleanSettings
             {
                 Configuration = context.BuildConfiguration,
-                Verbosity = DotNetCoreVerbosity.Minimal
+                Verbosity = DotNetVerbosity.Minimal
             });
 
             if (context.GitHubActions().IsRunningOnGitHubActions)
             {
                 // NuGet cache has to cleaned so that windows-latest picks up the NuGet packages
                 // see https://github.com/dotnet/core/issues/5881
-                int nugetLocalsClearResult = context.StartProcess("dotnet", "nuget locals all --clear");
+                var nugetLocalsClearResult = context.StartProcess("dotnet", "nuget locals all --clear");
                 if (nugetLocalsClearResult != 0)
                     context.Error("Could not clear local NuGet cache!");
             }

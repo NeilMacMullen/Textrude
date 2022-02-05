@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>textrude.engine</PackageId>
     <Description>The engine for Textrude</Description>
     <Authors>Neil MacMullen</Authors>
