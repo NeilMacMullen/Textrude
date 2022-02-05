@@ -1,5 +1,5 @@
-﻿using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Restore;
+﻿using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Restore;
 using Cake.Core;
 using Cake.Frosting;
 
@@ -12,10 +12,10 @@ namespace Build.Tasks
     {
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreRestore(context.SolutionFile, new DotNetCoreRestoreSettings()
+            context.DotNetRestore(context.SolutionFile, new DotNetRestoreSettings
             {
                 ArgumentCustomization = args => args.Append($"-p:Configuration={context.BuildConfiguration}"),
-                Verbosity = DotNetCoreVerbosity.Minimal
+                Verbosity = DotNetVerbosity.Minimal
             });
         }
     }

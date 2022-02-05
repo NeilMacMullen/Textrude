@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Cake.Common.IO;
-using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Publish;
+using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Publish;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -17,19 +17,19 @@ namespace Build.Tasks
             context.CleanDirectory(context.PublishDir);
 
             // Publish Textrude (Win64, Linux64)
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings
+            context.DotNetPublish(@"Textrude\Textrude.csproj", new DotNetPublishSettings
             {
                 ArgumentCustomization = args =>
                     args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\WinX64.pubxml")
             });
-            context.DotNetCorePublish(@"Textrude\Textrude.csproj", new DotNetCorePublishSettings
+            context.DotNetPublish(@"Textrude\Textrude.csproj", new DotNetPublishSettings
             {
                 ArgumentCustomization = args =>
                     args.Append(@"/p:PublishProfile=Textrude\Properties\PublishProfiles\LinuxX64.pubxml")
             });
 
             // Publish TextrudeInteractive (Win64)
-            context.DotNetCorePublish(@"TextrudeInteractive\TextrudeInteractive.csproj", new DotNetCorePublishSettings
+            context.DotNetPublish(@"TextrudeInteractive\TextrudeInteractive.csproj", new DotNetPublishSettings
             {
                 ArgumentCustomization = args =>
                     args.Append(@"/p:PublishProfile=TextrudeInteractive\Properties\PublishProfiles\WinX64.pubxml")

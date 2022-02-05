@@ -46,9 +46,9 @@ For **text-processing** or **data-processing**
 
 ## Download/build
 
-**Textrude requires [.Net 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).  If it's not already on your machine you will be prompted to install it.**
+**Textrude requires [.Net 6.0](https://dotnet.microsoft.com/download/dotnet6.0).  If it's not already on your machine you will be prompted to install it.**
 
-**To run TextrudeInteractive v1.3 and up you must install the [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
+**To run TextrudeInteractive v1.3 and up the [WebView2 runtime] is required.  If this is not already installed on your PC you can obtain it from (https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
 
  - If you just want the binaries,  [go here](doc/getBinaries.md).
  - Or download using [Chocolatey](https://community.chocolatey.org/) `choco install textrude` **Important - TextrudeInteractive is not currently correctly installed in Chocolatey release**
@@ -58,6 +58,8 @@ For **text-processing** or **data-processing**
 
 ## What's new
 
+### vNext (source only)
+- Retarget to Net6
 ### v1.7.0 (source/binary)
 - Chocolatey install is available.
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.

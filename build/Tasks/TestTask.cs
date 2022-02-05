@@ -1,7 +1,7 @@
 ﻿using Cake.Common;
 using Cake.Common.IO;
-using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Test;
+using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Test;
 using Cake.Common.Tools.ReportGenerator;
 using Cake.Core;
 using Cake.Core.IO;
@@ -22,12 +22,12 @@ namespace Build.Tasks
                 context.Directory("**") + context.Directory("TestResults")
             ));
 
-            context.DotNetCoreTest(context.SolutionFile, new DotNetCoreTestSettings()
+            context.DotNetTest(context.SolutionFile, new DotNetTestSettings
             {
                 NoRestore = true,
                 NoBuild = true,
                 Configuration = context.BuildConfiguration,
-                Verbosity = DotNetCoreVerbosity.Minimal,
+                Verbosity = DotNetVerbosity.Minimal,
                 Collectors = new[]
                 {
                     "XPlat Code Coverage"
@@ -47,7 +47,7 @@ namespace Build.Tasks
             context.ReportGenerator(
                 allOpenCoverReports,
                 context.Directory("TestReports"),
-                new ReportGeneratorSettings()
+                new ReportGeneratorSettings
                 {
                     ToolPath = context.IsRunningOnLinux()
                         ? context.RepoDir + context.File("tools/ReportGenerator.4.8.5/tools/net5.0/ReportGenerator.dll")
@@ -63,7 +63,7 @@ namespace Build.Tasks
             context.ReportGenerator(
                 allOpenCoverReports,
                 context.Directory("TestResults"),
-                new ReportGeneratorSettings()
+                new ReportGeneratorSettings
                 {
                     ToolPath = context.IsRunningOnLinux()
                         ? context.RepoDir + context.File("tools/ReportGenerator.4.8.5/tools/net5.0/ReportGenerator.dll")

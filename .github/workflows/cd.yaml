@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Package
       run: dotnet run --project build/Build.csproj -- --target Package
     - uses: actions/upload-artifact@v2
