@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
 WORKDIR /app
 
 COPY Engine/*.csproj ./Engine/
@@ -14,7 +14,7 @@ COPY . ./
 ENV DisableGitVersionTask=true
 RUN dotnet publish Textrude -c Release -o out -r linux-musl-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:5.0-alpine3.12
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0
 WORKDIR /app
 COPY --from=builder /app/out .
 ENTRYPOINT ["/app/Textrude"]
