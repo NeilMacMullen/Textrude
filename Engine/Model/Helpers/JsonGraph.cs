@@ -97,18 +97,21 @@ namespace Engine.Model.Helpers
         }
 
 
-        public static object ToJsonSerialisableTree(object o)
+        public static object ToJsonSerialisableTree(object o,int depth=0)
         {
+            depth++;
+            if (depth > 100)
+                throw new InvalidOperationException($"Attempt to serialise deeply nested or recursive structure");
             if (o is ScriptObject so)
             {
                 return so
                     .Where(kv => kv.Value != null)
-                    .ToDictionary(kv => kv.Key, kv => ToJsonSerialisableTree(kv.Value));
+                    .ToDictionary(kv => kv.Key, kv => ToJsonSerialisableTree(kv.Value,depth));
             }
 
             if (o is IEnumerable<object> oArray)
             {
-                return oArray.Select(ToJsonSerialisableTree)
+                return oArray.Select(o=>ToJsonSerialisableTree(o,depth))
                     .Where(v => v != null)
                     .ToArray();
             }

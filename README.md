@@ -60,6 +60,8 @@ For **text-processing** or **data-processing**
 
 ### vNext (source only)
 - Retarget to Net6
+- Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
+
 ### v1.7.0 (source/binary)
 - Chocolatey install is available.
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.
