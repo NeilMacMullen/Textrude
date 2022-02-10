@@ -1,25 +1,24 @@
 ﻿using System.Windows;
 
-namespace TextrudeInteractive
+namespace TextrudeInteractive;
+
+/// <summary>
+///     Simple class to wrap Windows Clipboard flakiness
+/// </summary>
+public static class ClipboardHelper
 {
-    /// <summary>
-    ///     Simple class to wrap Windows Clipboard flakiness
-    /// </summary>
-    public static class ClipboardHelper
+    public static void CopyToClipboard(string text)
     {
-        public static void CopyToClipboard(string text)
+        var maxAttempts = 3;
+        for (var i = 0; i < maxAttempts; i++)
         {
-            var maxAttempts = 3;
-            for (var i = 0; i < maxAttempts; i++)
+            try
             {
-                try
-                {
-                    Clipboard.SetText(text);
-                    return;
-                }
-                catch
-                {
-                }
+                Clipboard.SetText(text);
+                return;
+            }
+            catch
+            {
             }
         }
     }

@@ -12,12 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Monaco\NewFolder\**" />
     <Compile Remove="Resources\NewFolder1\**" />
     <Compile Remove="Resources\NewFolder\**" />
+    <EmbeddedResource Remove="Monaco\NewFolder\**" />
     <EmbeddedResource Remove="Resources\NewFolder1\**" />
     <EmbeddedResource Remove="Resources\NewFolder\**" />
+    <None Remove="Monaco\NewFolder\**" />
     <None Remove="Resources\NewFolder1\**" />
     <None Remove="Resources\NewFolder\**" />
+    <Page Remove="Monaco\NewFolder\**" />
     <Page Remove="Resources\NewFolder1\**" />
     <Page Remove="Resources\NewFolder\**" />
   </ItemGroup>
@@ -56,10 +60,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Monaco\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>

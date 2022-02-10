@@ -14,8 +14,9 @@ using System.Windows.Media;
 using Engine.Application;
 using Engine.Model;
 using MaterialDesignExtensions.Controls;
+using TextrudeInteractive.Monaco;
 using TextrudeInteractive.Monaco.Messages;
-
+using TextrudeInteractive.SettingsManagement;
 #if ! HASGITVERSION
 // for default GitVersionInformation
 using SharedApplication;
@@ -108,7 +109,7 @@ namespace TextrudeInteractive
                     _currentRender.Cancel();
                     _currentRender = new CancellationTokenSource();
                 })
-                .Select(g => new {EngineInput = g, Cancel = _currentRender.Token})
+                .Select(g => new { EngineInput = g, Cancel = _currentRender.Token })
                 .Throttle(TimeSpan.FromMilliseconds(_responseTimeMs))
                 .ObserveOn(SynchronizationContext.Current)
                 .Do(_ => SetBusyIndicator(+1))
@@ -186,7 +187,7 @@ namespace TextrudeInteractive
         private void ToggleDefinitionssAndIncludes(object sender, RoutedEventArgs e)
         {
             static bool IsToggleable(EditPaneViewModel p) =>
-                new[] {PaneType.IncludePaths, PaneType.Definitions}.Contains(p.PaneType);
+                new[] { PaneType.IncludePaths, PaneType.Definitions }.Contains(p.PaneType);
 
             _modelManager.ToggleVisibility(IsToggleable);
         }
@@ -227,7 +228,7 @@ namespace TextrudeInteractive
             var currentModel = mgr.CurrentPane();
             if (currentModel.PaneType != type)
                 return;
-            var dlg = new RenameItem(currentModel.ScribanName) {Owner = this};
+            var dlg = new RenameItem(currentModel.ScribanName) { Owner = this };
             if (dlg.ShowDialog() == true)
             {
                 currentModel.ScribanName = dlg.Name;
@@ -326,7 +327,7 @@ namespace TextrudeInteractive
 
         public EngineOutputSet CollectOutput()
         {
-            return new(
+            return new EngineOutputSet(
                 _outputManager.Panes.Select(b => new OutputPaneModel(b.Format, b.ScribanName, b.LinkedPath))
             );
         }
@@ -336,8 +337,8 @@ namespace TextrudeInteractive
             if (_projectManager.IsDirty)
             {
                 if (MessageBox.Show(this,
-                    "You have unsaved changes in the current project.\nDo you really want to lose them?", "Warning",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                        "You have unsaved changes in the current project.\nDo you really want to lose them?", "Warning",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 {
                     return false;
                 }
@@ -418,7 +419,7 @@ namespace TextrudeInteractive
             }
         }
 
-        private CancellationTokenSource _currentRender = new CancellationTokenSource();
+        private CancellationTokenSource _currentRender = new();
 
         private bool SetBusyIndicator(int increment)
         {
@@ -450,7 +451,7 @@ namespace TextrudeInteractive
 
         private void HandleRenderResults(TimedOperation<ApplicationEngine> timedEngine)
         {
-            var elapsedMs = (int) timedEngine.Timer.ElapsedMilliseconds;
+            var elapsedMs = (int)timedEngine.Timer.ElapsedMilliseconds;
             var engine = timedEngine.Value;
             var outputPanes = _outputManager.Panes.ToArray();
             foreach (var o in outputPanes)
@@ -509,10 +510,10 @@ namespace TextrudeInteractive
         public EngineInputSet CollectInput()
         {
             ModelFormat TryFormat(string s)
-                => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat) f : ModelFormat.Line;
+                => Enum.TryParse(typeof(ModelFormat), s, true, out var f) ? (ModelFormat)f : ModelFormat.Line;
 
             static bool IsInput(EditPaneViewModel p) =>
-                new[] {PaneType.Model}.Contains(p.PaneType);
+                new[] { PaneType.Model }.Contains(p.PaneType);
 
 
             var models = _modelManager.Panes

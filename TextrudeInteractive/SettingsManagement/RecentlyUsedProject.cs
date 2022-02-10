@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace TextrudeInteractive
+namespace TextrudeInteractive.SettingsManagement;
+
+public class RecentlyUsedProject
 {
-    public class RecentlyUsedProject
-    {
-        public string Path { get; set; } = string.Empty;
-        public DateTime LastLoaded { get; set; }
-    }
+    public string Path { get; set; } = string.Empty;
+    public DateTime LastLoaded { get; set; }
 }

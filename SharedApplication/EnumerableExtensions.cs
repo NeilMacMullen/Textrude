@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SharedApplication
+namespace SharedApplication;
+
+/// <summary>
+///     Simple extensions for IEnumerable
+/// </summary>
+public static class EnumerableExtensions
 {
     /// <summary>
-    ///     Simple extensions for IEnumerable
+    ///     return only the non-empty strings and trim them as we go
     /// </summary>
-    public static class EnumerableExtensions
+    public static IEnumerable<string> Clean(this IEnumerable<string> items)
     {
-        /// <summary>
-        ///     return only the non-empty strings and trim them as we go
-        /// </summary>
-        public static IEnumerable<string> Clean(this IEnumerable<string> items)
-        {
-            return items.Select(i => i.Trim()).Where(i => i.Length != 0);
-        }
+        return items.Select(i => i.Trim()).Where(i => i.Length != 0);
     }
 }

@@ -4,6 +4,7 @@ using Engine.Application;
 using Engine.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.Helpers;
 
 namespace Tests;
 
@@ -76,7 +77,7 @@ true,false",
     [TestMethod]
     public void CanSerialiseCsvFromWithinScriban()
     {
-        var o = Enumerable.Range(1, 2).Select(i => new {id = i, name = $"-{i}-"}).ToArray();
+        var o = Enumerable.Range(1, 2).Select(i => new { id = i, name = $"-{i}-" }).ToArray();
         var template = "{{textrude.to_csv model}}";
         new ApplicationEngine(new RunTimeEnvironment(_files))
             .WithHelpers()
