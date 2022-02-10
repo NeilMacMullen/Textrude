@@ -1,10 +1,9 @@
-﻿namespace Engine.Application
-{
-    /// <summary>
-    ///     Represents a consecutive pair of lines
-    /// </summary>
-    /// <remarks>
-    ///     LinePairs are primarily used when hoisting pipes
-    /// </remarks>
-    public record LinePair(string First, string Second);
-}
+﻿namespace Engine.TemplateProcessing;
+
+/// <summary>
+///     Represents a consecutive pair of lines
+/// </summary>
+/// <remarks>
+///     LinePairs are primarily used when hoisting pipes
+/// </remarks>
+public record LinePair(string First, string Second);

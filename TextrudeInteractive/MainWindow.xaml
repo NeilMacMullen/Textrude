@@ -129,7 +129,7 @@
           </Grid.ColumnDefinitions>
           <DockPanel>
             <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="InputModels" DockPanel.Dock="Top" />
-            <local:InputMonacoPane x:Name="SharedInput" />
+            <monaco:InputMonacoPane x:Name="SharedInput" />
           </DockPanel>
 
 
@@ -137,7 +137,7 @@
 
           <DockPanel Grid.Column="2">
             <TabControl Style="{StaticResource MaterialDesignTabControl}" Name="Templates" DockPanel.Dock="Top" />
-            <local:InputMonacoPane x:Name="TemplateEditPane" />
+            <monaco:InputMonacoPane x:Name="TemplateEditPane" />
           </DockPanel>
 
 
@@ -149,7 +149,7 @@
             <DockPanel>
               <ProgressBar Style="{StaticResource MaterialDesignLinearProgressBar}" IsIndeterminate="{Binding IsBusy}"
                            DockPanel.Dock="Top"/>
-              <local:InputMonacoPane x:Name="SharedOutput"
+              <monaco:InputMonacoPane x:Name="SharedOutput"
                                      DockPanel.Dock="Bottom"/>
             </DockPanel>
           

@@ -4,87 +4,88 @@ using Engine.Application;
 using Engine.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.Helpers;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ApplicationEngineTests
 {
-    [TestClass]
-    public class ApplicationEngineTests
+    private readonly MockFileSystem _files = new();
+    private readonly RunTimeEnvironment _rte;
+
+
+    public ApplicationEngineTests() => _rte = new RunTimeEnvironment(_files);
+
+    [TestMethod]
+    public void CodeCompletionShowsModel()
     {
-        private readonly MockFileSystem _files = new();
-        private readonly RunTimeEnvironment _rte;
+        var model =
+            @"str: a";
 
+        new ApplicationEngine(_rte)
+            .WithModel("model", model, ModelFormat.Yaml)
+            .ModelPaths()
+            .Select(p => p.Render())
+            .Should()
+            .Contain("model.str");
+    }
 
-        public ApplicationEngineTests() => _rte = new RunTimeEnvironment(_files);
+    [TestMethod]
+    public void CodeCompletionShowsDefinitions()
+    {
+        new ApplicationEngine(_rte)
+            .WithDefinitions(new[] { "abc=def" })
+            .ModelPaths()
+            .Select(p => p.Render())
+            .Should()
+            .Contain("def.abc");
+    }
 
-        [TestMethod]
-        public void CodeCompletionShowsModel()
-        {
-            var model =
-                @"str: a";
+    [TestMethod]
+    public void CodeCompletionShowsEnvironment()
+    {
+        var envKeys = Environment.GetEnvironmentVariables()
+            .Keys
+            .Cast<string>()
+            .Select(e => $"env.{e}");
 
-            new ApplicationEngine(_rte)
-                .WithModel("model", model, ModelFormat.Yaml)
-                .ModelPaths()
-                .Select(p => p.Render())
-                .Should()
-                .Contain("model.str");
-        }
+        new ApplicationEngine(_rte)
+            .WithEnvironmentVariables()
+            .ModelPaths()
+            .Select(p => p.Render())
+            .Should().Contain(envKeys);
+    }
 
-        [TestMethod]
-        public void CodeCompletionShowsDefinitions()
-        {
-            new ApplicationEngine(_rte)
-                .WithDefinitions(new[] { "abc=def" })
-                .ModelPaths()
-                .Select(p => p.Render())
-                .Should()
-                .Contain("def.abc");
-        }
-
-        [TestMethod]
-        public void CodeCompletionShowsEnvironment()
-        {
-            var envKeys = Environment.GetEnvironmentVariables()
-                .Keys
-                .Cast<string>()
-                .Select(e => $"env.{e}");
-
-            new ApplicationEngine(_rte)
-                .WithEnvironmentVariables()
-                .ModelPaths()
-                .Select(p => p.Render())
-                .Should().Contain(envKeys);
-        }
-
-        [TestMethod]
-        public void CodeCompletionRejectsLibraryMethods()
-        {
-            var offeredPaths = new ApplicationEngine(_rte)
-                .WithTemplate(@"
+    [TestMethod]
+    public void CodeCompletionRejectsLibraryMethods()
+    {
+        var offeredPaths = new ApplicationEngine(_rte)
+            .WithTemplate(@"
 {{
 func __library ; ret 1;end;
 func notlibrary ; ret 1;end;
 end
 }}")
-                .Render()
-                .ModelPaths()
-                .Select(p => p.Render())
-                .ToArray();
+            .Render()
+            .ModelPaths()
+            .Select(p => p.Render())
+            .ToArray();
 
-            offeredPaths
-                .Should()
-                .Contain("notlibrary");
+        offeredPaths
+            .Should()
+            .Contain("notlibrary");
 
-            offeredPaths
-                .Should()
-                .NotContain("__library");
-        }
+        offeredPaths
+            .Should()
+            .NotContain("__library");
+    }
 
 
-        [TestMethod]
-        public void InfiniteRecursionAvoided()
-        {
-            var script = @"{{
+    [TestMethod]
+    public void InfiniteRecursionAvoided()
+    {
+        var script = @"{{
 
 m = {
    x: 123,
@@ -95,10 +96,9 @@ m
 }}
 ";
 
-            var res = new ApplicationEngine(_rte)
-                .WithTemplate(script)
-                .Render();
-            res.HasErrors.Should().BeTrue();
-        }
+        var res = new ApplicationEngine(_rte)
+            .WithTemplate(script)
+            .Render();
+        res.HasErrors.Should().BeTrue();
     }
 }

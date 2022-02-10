@@ -1,8 +1,7 @@
-﻿namespace Engine.Model
+﻿namespace Engine.Model;
+
+public interface IModelDeserializer
 {
-    public interface IModelDeserializer
-    {
-        public Model Deserialize(string s);
-        public string Serialize(object o);
-    }
+    public Model Deserialize(string s);
+    public string Serialize(object o);
 }

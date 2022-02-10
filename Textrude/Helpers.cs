@@ -1,46 +1,45 @@
 ﻿using System;
 
-namespace Textrude
+namespace Textrude;
+
+/// <summary>
+///     Miscellaneous operations for the application
+/// </summary>
+public class Helpers
 {
-    /// <summary>
-    ///     Miscellaneous operations for the application
-    /// </summary>
-    public class Helpers
+    public Action<string> ExitHandler { get; set; } = ExitApplication;
+
+    private static void ExitApplication(string message)
     {
-        public Action<string> ExitHandler { get; set; } = ExitApplication;
+        Console.Error.WriteLine(message);
 
-        private static void ExitApplication(string message)
+        Environment.Exit(1);
+    }
+
+    /// <summary>
+    ///     Attempt to perform an operation or quit if error detected
+    /// </summary>
+    public T GetOrQuit<T>(Func<T> a, string message)
+    {
+        try
         {
-            Console.Error.WriteLine(message);
-
-            Environment.Exit(1);
+            return a();
+        }
+        catch
+        {
+            ExitHandler(message);
         }
 
-        /// <summary>
-        ///     Attempt to perform an operation or quit if error detected
-        /// </summary>
-        public T GetOrQuit<T>(Func<T> a, string message)
-        {
-            try
-            {
-                return a();
-            }
-            catch
-            {
-                ExitHandler(message);
-            }
+        //keep the compiler happy since it doesn't recognize Environment.Exit
+        throw new ApplicationException();
+    }
 
-            //keep the compiler happy since it doesn't recognize Environment.Exit
-            throw new ApplicationException();
-        }
-
-        public void TryOrQuit(Action a, string message)
+    public void TryOrQuit(Action a, string message)
+    {
+        GetOrQuit(() =>
         {
-            GetOrQuit(() =>
-            {
-                a();
-                return 1;
-            }, message);
-        }
+            a();
+            return 1;
+        }, message);
     }
 }

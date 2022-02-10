@@ -3,89 +3,88 @@ using Engine.Application;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+/// <summary>
+///     Tests for the DefinitionParser
+/// </summary>
+[TestClass]
+public class DefinitionParserTests
 {
-    /// <summary>
-    ///     Tests for the DefinitionParser
-    /// </summary>
-    [TestClass]
-    public class DefinitionParserTests
+    [TestMethod]
+    public void WellFormedDefinitionsShouldParse()
     {
-        [TestMethod]
-        public void WellFormedDefinitionsShouldParse()
+        var d = DefinitionParser.CreateDefinitions(new[]
         {
-            var d = DefinitionParser.CreateDefinitions(new[]
-            {
-                "ABC=123",
-                "DEF=456"
-            });
-            d["ABC"].Should().Be("123");
-            d["DEF"].Should().Be("456");
-        }
+            "ABC=123",
+            "DEF=456"
+        });
+        d["ABC"].Should().Be("123");
+        d["DEF"].Should().Be("456");
+    }
 
-        [TestMethod]
-        public void SingleLetterDefinitionsWork()
+    [TestMethod]
+    public void SingleLetterDefinitionsWork()
+    {
+        var d = DefinitionParser.CreateDefinitions(new[]
         {
-            var d = DefinitionParser.CreateDefinitions(new[]
-            {
-                "A=1"
-            });
-            d["A"].Should().Be("1");
-        }
+            "A=1"
+        });
+        d["A"].Should().Be("1");
+    }
 
 
-        [TestMethod]
-        public void DefinitionIdsAreTrimmed()
+    [TestMethod]
+    public void DefinitionIdsAreTrimmed()
+    {
+        var d = DefinitionParser.CreateDefinitions(new[]
         {
-            var d = DefinitionParser.CreateDefinitions(new[]
-            {
-                "  A   =1"
-            });
-            d["A"].Should().Be("1");
-        }
+            "  A   =1"
+        });
+        d["A"].Should().Be("1");
+    }
 
-        [TestMethod]
-        public void DefinitionValuesAreNotTrimmed()
+    [TestMethod]
+    public void DefinitionValuesAreNotTrimmed()
+    {
+        var d = DefinitionParser.CreateDefinitions(new[]
         {
-            var d = DefinitionParser.CreateDefinitions(new[]
-            {
-                "ABC=  1  "
-            });
-            d["ABC"].Should().Be("  1  ");
-        }
+            "ABC=  1  "
+        });
+        d["ABC"].Should().Be("  1  ");
+    }
 
-        [TestMethod]
-        public void MissingIdThrows()
+    [TestMethod]
+    public void MissingIdThrows()
+    {
+        Action a = () => DefinitionParser.CreateDefinitions(new[]
         {
-            Action a = () => DefinitionParser.CreateDefinitions(new[]
-            {
-                "=  1  "
-            });
+            "=  1  "
+        });
 
-            a.Should().Throw<ArgumentException>();
-        }
+        a.Should().Throw<ArgumentException>();
+    }
 
-        [TestMethod]
-        public void MissingValueReturnsEmptyString()
+    [TestMethod]
+    public void MissingValueReturnsEmptyString()
+    {
+        var d = DefinitionParser.CreateDefinitions(new[]
         {
-            var d = DefinitionParser.CreateDefinitions(new[]
-            {
-                "ABC="
-            });
+            "ABC="
+        });
 
-            d["ABC"].Should().Be(string.Empty);
-        }
+        d["ABC"].Should().Be(string.Empty);
+    }
 
-        [TestMethod]
-        public void DuplicateIdThrows()
+    [TestMethod]
+    public void DuplicateIdThrows()
+    {
+        Action a = () => DefinitionParser.CreateDefinitions(new[]
         {
-            Action a = () => DefinitionParser.CreateDefinitions(new[]
-            {
-                "ABC=123",
-                "ABC =456",
-            });
+            "ABC=123",
+            "ABC =456",
+        });
 
-            a.Should().Throw<ArgumentException>();
-        }
+        a.Should().Throw<ArgumentException>();
     }
 }

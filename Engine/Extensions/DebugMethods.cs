@@ -1,20 +1,20 @@
-﻿using Engine.Model;
+﻿using Engine.Application;
+using Engine.Model;
 
-namespace Engine.Application
+namespace Engine.Extensions;
+
+/// <summary>
+///     Provides some helpful functions for templates
+/// </summary>
+public static class DebugMethods
 {
     /// <summary>
-    ///     Provides some helpful functions for templates
+    ///     Use the YAML serializer to dump objects
     /// </summary>
-    public static class DebugMethods
+    public static string Dump(object o)
     {
-        /// <summary>
-        ///     Use the YAML serializer to dump objects
-        /// </summary>
-        public static string Dump(object o)
-        {
-            var serializer = ModelDeserializerFactory.Fetch(ModelFormat.Yaml);
-            var text = serializer.Serialize(o);
-            return text;
-        }
+        var serializer = ModelDeserializerFactory.Fetch(ModelFormat.Yaml);
+        var text = serializer.Serialize(o);
+        return text;
     }
 }

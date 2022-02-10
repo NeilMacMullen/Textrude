@@ -6,57 +6,56 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharedApplication;
 using YamlDotNet.Serialization;
 
-namespace Tests
+namespace Tests;
+
+/// <summary>
+/// </summary>
+[TestClass]
+public class YamlAssumptionTests
 {
-    /// <summary>
-    /// </summary>
-    [TestClass]
-    public class YamlAssumptionTests
+    [TestMethod]
+    public void NumbersAreDeserializedAsStrings()
     {
-        [TestMethod]
-        public void NumbersAreDeserializedAsStrings()
-        {
-            var reader = new StringReader("A: 1");
+        var reader = new StringReader("A: 1");
 
-            var graph = new Deserializer().Deserialize(reader);
+        var graph = new Deserializer().Deserialize(reader);
 
-            var propertyA = ((Dictionary<object, object>) graph).First();
+        var propertyA = ((Dictionary<object, object>)graph).First();
 
-            propertyA.Key.Should().Be("A");
-            propertyA.Value.Should().Be("1");
-        }
+        propertyA.Key.Should().Be("A");
+        propertyA.Value.Should().Be("1");
+    }
 
-        [TestMethod]
-        public void BooleansAreDeserializedAsStrings()
-        {
-            var reader = new StringReader("A: true");
+    [TestMethod]
+    public void BooleansAreDeserializedAsStrings()
+    {
+        var reader = new StringReader("A: true");
 
-            var graph = new Deserializer().Deserialize(reader);
+        var graph = new Deserializer().Deserialize(reader);
 
-            var propertyA = ((Dictionary<object, object>) graph).First();
+        var propertyA = ((Dictionary<object, object>)graph).First();
 
-            propertyA.Key.Should().Be("A");
-            propertyA.Value.Should().Be("true");
-        }
+        propertyA.Key.Should().Be("A");
+        propertyA.Value.Should().Be("true");
+    }
 
-        [TestMethod]
-        public void SerializingEmptyRenderOptionsShouldNotGenerateFunnyCharacters()
-        {
-            var text = new Serializer()
-                .Serialize(new RenderOptions());
+    [TestMethod]
+    public void SerializingEmptyRenderOptionsShouldNotGenerateFunnyCharacters()
+    {
+        var text = new Serializer()
+            .Serialize(new RenderOptions());
 
-            //leave this test here in the inverted state so we can tell when (if)
-            //the YAML serializer gets fixed
+        //leave this test here in the inverted state so we can tell when (if)
+        //the YAML serializer gets fixed
 #if YAML_FIXED
             text.Should().NotContain("o0");
             text.Should().NotContain("&o");
             text.Should().NotContain("*o");
 #else
-            //this is the broken behaviour :-(
-            text.Should().Contain("o0");
-            text.Should().Contain("&o");
-            text.Should().Contain("*o");
+        //this is the broken behaviour :-(
+        text.Should().Contain("o0");
+        text.Should().Contain("&o");
+        text.Should().Contain("*o");
 #endif
-        }
     }
 }

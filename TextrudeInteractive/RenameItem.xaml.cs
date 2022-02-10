@@ -1,28 +1,27 @@
 ﻿using System.Windows;
 using MaterialDesignExtensions.Controls;
 
-namespace TextrudeInteractive
+namespace TextrudeInteractive;
+
+/// <summary>
+///     Interaction logic for RenameItem.xaml
+/// </summary>
+public partial class RenameItem : MaterialWindow
 {
-    /// <summary>
-    ///     Interaction logic for RenameItem.xaml
-    /// </summary>
-    public partial class RenameItem : MaterialWindow
+    public RenameItem(string oldName)
     {
-        public RenameItem(string oldName)
-        {
-            InitializeComponent();
-            Name = oldName;
-            Title = $"Renaming {oldName}";
-            NewName.Text = oldName;
-            NewName.Focus();
-        }
+        InitializeComponent();
+        Name = oldName;
+        Title = $"Renaming {oldName}";
+        NewName.Text = oldName;
+        NewName.Focus();
+    }
 
-        public new string Name { get; private set; }
+    public new string Name { get; private set; }
 
-        private void OnOk(object sender, RoutedEventArgs e)
-        {
-            Name = NewName.Text;
-            DialogResult = true;
-        }
+    private void OnOk(object sender, RoutedEventArgs e)
+    {
+        Name = NewName.Text;
+        DialogResult = true;
     }
 }
