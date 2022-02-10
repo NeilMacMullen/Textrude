@@ -150,8 +150,35 @@ end
 
 
         [TestMethod]
-        //[Ignore("Waiting for new Scriban release")]
         public void PreventsInfiniteRecursionOnSelfAssignment()
+        {
+            var script = @"{{
+
+m = {
+   x: 123,
+   def: 456 
+ }
+m.abc =m
+m
+}}
+";
+
+            Action a = () =>
+            {
+                var context = new TemplateContext
+                {
+                    ObjectRecursionLimit = 100
+                };
+                Template
+                    .Parse(script)
+                    .Render(context);
+            };
+            a.Should().Throw<ScriptRuntimeException>();
+        }
+
+
+        [TestMethod]
+        public void PreventsInfiniteRecursionOnSelfAssignmentInLoop()
         {
             var script = @"{{
 
