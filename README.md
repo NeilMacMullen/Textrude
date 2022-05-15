@@ -61,7 +61,7 @@ For **text-processing** or **data-processing**
 ### vNext (source only)
 - Retarget to Net6
 - Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
-- Add snippet support for script editor (thanks to Olof Wistrand)
+- Add [snippet](doc/snippets.md) support for script editor (thanks to Olof Wistrand)
 
 ### v1.7.0 (source/binary)
 - Chocolatey install is available.
