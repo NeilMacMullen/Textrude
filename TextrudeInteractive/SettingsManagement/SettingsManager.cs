@@ -10,12 +10,12 @@ namespace TextrudeInteractive.SettingsManagement;
 /// </summary>
 public static class SettingsManager
 {
-    public static string GetSettingsPath()
-    {
-        var app = GetTextrudeAppDataFolder();
-        var settingsFile = Path.Combine(app, "settings.json");
-        return settingsFile;
-    }
+    public static string SettingsPath { get; } = GetPath("settings");
+    public static string SnippetsPath { get; } = GetPath("snippets");
+
+
+    public static string GetPath(string t)
+        => Path.Combine(GetTextrudeAppDataFolder(), $"{t}.json");
 
     public static string GetTextrudeAppDataFolder()
     {
@@ -27,28 +27,44 @@ public static class SettingsManager
         return textrudeData;
     }
 
-    public static ApplicationSettings ReadSettings()
+    private static T ReadFile<T>(string path)
+        where T : new()
     {
         try
         {
-            var text = File.ReadAllText(GetSettingsPath());
-            return JsonSerializer.Deserialize<ApplicationSettings>(text);
+            var text = File.ReadAllText(path);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var o = JsonSerializer.Deserialize<T>(text, options);
+            return o;
         }
         catch
         {
-            return new ApplicationSettings();
+            return new T();
+        }
+    }
+
+    public static ApplicationSettings ReadSettings()
+        => ReadFile<ApplicationSettings>(SettingsPath);
+
+    public static SnippetFile ReadSnippets()
+        => ReadFile<SnippetFile>(SnippetsPath);
+
+
+    private static void WriteFile<T>(string path, T obj)
+    {
+        try
+        {
+            var text = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path, text);
+        }
+        catch
+        {
         }
     }
 
     public static void WriteSettings(ApplicationSettings settings)
-    {
-        try
-        {
-            var text = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(GetSettingsPath(), text);
-        }
-        catch
-        {
-        }
-    }
+        => WriteFile(SettingsPath, settings);
 }

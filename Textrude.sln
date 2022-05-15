@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0
 		doc\lib.md = doc\lib.md
 		doc\multiModel.md = doc\multiModel.md
 		README.md = README.md
+		snippets.md = snippets.md
 		doc\userLibrary.md = doc\userLibrary.md
 	EndProjectSection
 EndProject

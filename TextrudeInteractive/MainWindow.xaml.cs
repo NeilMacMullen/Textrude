@@ -88,7 +88,7 @@ namespace TextrudeInteractive
 
             //do this before setting up the input stream so we can change the responsiveness
             var settings = LoadSettings();
-
+            _snippets = LoadSnippets();
 
             //check to see if the application was invoked with arguments
             //if so open that project, otherwise open the last used
@@ -184,7 +184,7 @@ namespace TextrudeInteractive
             _editorVisualSettings.ShowWhitespace = !_editorVisualSettings.ShowWhitespace;
         }
 
-        private void ToggleDefinitionssAndIncludes(object sender, RoutedEventArgs e)
+        private void ToggleDefinitionsAndIncludes(object sender, RoutedEventArgs e)
         {
             static bool IsToggleable(EditPaneViewModel p) =>
                 new[] { PaneType.IncludePaths, PaneType.Definitions }.Contains(p.PaneType);
@@ -420,6 +420,7 @@ namespace TextrudeInteractive
         }
 
         private CancellationTokenSource _currentRender = new();
+        private readonly SnippetFile _snippets;
 
         private bool SetBusyIndicator(int increment)
         {
@@ -497,13 +498,18 @@ namespace TextrudeInteractive
                 return d.TryGetValue(type, out var k) ? k : CompletionType.Value;
             }
 
-            var nodes = engine.ModelPaths()
-                .Select(r => new CompletionNode(r.Render(), r.Terminal(), MapType(r.ModelType)
-                )).ToArray();
+            var snippetCompletions = _snippets.Scriban
+                .Select(s => new CompletionNode(s.Label, s.Documentation, s.InsertText, CompletionType.Snippet))
+                .ToArray();
 
 
-            var comp = new Completions(nodes);
-            TemplateEditPane.MonacoPane.SetCompletions(comp);
+            var intellisenseCompletions = engine.ModelPaths()
+                .Select(r => new CompletionNode(r.Render(), r.Terminal(), r.Render(), MapType(r.ModelType)))
+                .ToArray();
+
+
+            var allCompletions = new Completions(intellisenseCompletions.Concat(snippetCompletions).ToArray());
+            TemplateEditPane.MonacoPane.SetCompletions(allCompletions);
         }
 
 
@@ -549,6 +555,7 @@ namespace TextrudeInteractive
             return settings;
         }
 
+        private SnippetFile LoadSnippets() => SettingsManager.ReadSnippets();
 
         /// <summary>
         ///     Persist settings
