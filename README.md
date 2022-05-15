@@ -61,6 +61,7 @@ For **text-processing** or **data-processing**
 ### vNext (source only)
 - Retarget to Net6
 - Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
+- Add snippet support for script editor (thanks to Olof Wistrand)
 
 ### v1.7.0 (source/binary)
 - Chocolatey install is available.
@@ -89,6 +90,7 @@ For **text-processing** or **data-processing**
 - [Understanding file-linkages](doc/fileLinkage.md)
 - [Constructing command lines](doc/exportInvocation.md)
 - [command line piping](doc/cmdPipe.md)
+- [Using snippets](doc/snippets.md)
 
 ## Credits and contributors
 Textrude makes heavy use of the following components:
