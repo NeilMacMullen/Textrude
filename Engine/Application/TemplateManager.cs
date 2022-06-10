@@ -32,7 +32,7 @@ public class TemplateManager
     /// <summary>
     ///     The template after compilation
     /// </summary>
-    private Template _compiledTemplate;
+    private Template _compiledTemplate = Template.Parse("");
 
     /// <summary>
     ///     Output after render pass
@@ -131,8 +131,13 @@ public class TemplateManager
             return string.Empty;
         }
     }
-
-    public bool TryGetVariableObject<T>(string variableName, out T val)
+    /// <summary>
+    /// Tries to get a value of type T with the supplied name
+    /// </summary>
+    /// <remarks>
+    /// Although the return value is marked nullable, in practice it will
+    /// never be null if the Try is successful</remarks>
+    public bool TryGetVariableObject<T>(string variableName, out T? val)
     {
         val = default;
         var scribanVariable = new ScriptVariableGlobal(variableName);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Extensions.TimeRange;
+using Engine.TemplateProcessing;
 using Humanizer;
 using Scriban.Runtime;
 
@@ -31,7 +32,7 @@ public static class ExtensionCache
                 "force load".Humanize();
                 return AppDomain.CurrentDomain
                     .GetAssemblies()
-                    .Single(a => a.FullName.Contains("Humanizer"))
+                    .Single(a => a.FullName.EmptyWhenNull().Contains("Humanizer"))
                     .GetTypes()
                     .Where(t => t.Name.EndsWith("Extensions"))
                     .ToArray();

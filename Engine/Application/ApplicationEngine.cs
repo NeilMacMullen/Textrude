@@ -23,8 +23,8 @@ public class RuntimeInfo
 
     public class ModelInfo
     {
-        public string Name { get; set; }
-        public string Format { get; set; }
+        public string Name { get; set; } =string.Empty;
+        public string Format { get; set; }=string.Empty;
     }
 }
 
@@ -125,7 +125,7 @@ public class ApplicationEngine
         var environmentVariables =
             Environment.GetEnvironmentVariables()
                 .Cast<DictionaryEntry>()
-                .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value);
+                .ToDictionary(kv => kv.Key.ToString()!, kv => kv.Value);
         //Add run-time information
         environmentVariables[ScribanNamespaces.TextrudeExe] = _environment.ApplicationPath();
         _templateManager.AddVariable(ScribanNamespaces.EnvironmentNamespace, environmentVariables);
@@ -247,7 +247,7 @@ public class ApplicationEngine
     public Dictionary<string, string> GetDynamicOutput()
         => _templateManager.TryGetVariableObject<Dictionary<string, string>>(TextrudeMethods.DynamicOutputName,
             out var d)
-            ? d
+            ? d!
             : new Dictionary<string, string>();
 
     /// <summary>
@@ -266,10 +266,10 @@ public class ApplicationEngine
 
     public bool TryGetVariableAsJsonString(string name, out string res)
     {
-        res = default;
+        res = string.Empty;
         if (!_templateManager.TryGetVariableObject<object>(name, out var v))
             return false;
-        res = ModelDeserializerFactory.Serialise(JsonGraph.ToJsonSerialisableTree(v), ModelFormat.Json);
+        res = ModelDeserializerFactory.Serialise(JsonGraph.ToJsonSerialisableTree(v!), ModelFormat.Json);
         return true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.TemplateProcessing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Scriban.Runtime;
@@ -45,14 +46,14 @@ public class JsonGraph
             case JTokenType.Object:
             {
                 var container = new ScriptObject();
-                foreach (var prop in p.Value<JObject>().Properties())
+                foreach (var prop in p.Value<JObject>()!.Properties())
                     AddNamedObject(container, prop.Name, prop.Value);
 
                 return container;
             }
 
             case JTokenType.String:
-                return p.Value<string>();
+                return p.Value<string>().EmptyWhenNull();
 
             case JTokenType.Integer:
                 return p.Value<long>();
@@ -68,7 +69,7 @@ public class JsonGraph
             case JTokenType.Date:
                 return p.Value<DateTime>();
             case JTokenType.Null:
-                return null;
+                return string.Empty;
             /*
                             Unused types...
                             case JTokenType.None:

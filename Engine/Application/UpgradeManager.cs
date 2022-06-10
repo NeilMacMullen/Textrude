@@ -27,7 +27,7 @@ public static class UpgradeManager
             using var client = new HttpClient();
             var raw = await client.GetStringAsync(ChangeList);
             var infos = JsonConvert.DeserializeObject<VersionInfo[]>(raw);
-            return infos.OrderByDescending(i => i.Date).First();
+            return infos!.OrderByDescending(i => i.Date).First();
         }
         catch
         {

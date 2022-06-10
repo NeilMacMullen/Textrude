@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.TemplateProcessing;
 
 namespace Engine.Model.Deserializers;
 
@@ -17,8 +18,8 @@ public class LineModelDeserializer : IModelDeserializer
 
     public string Serialize(object o)
     {
-        if (o is not IEnumerable<object> arr)
-            return string.Empty;
-        return string.Join(Environment.NewLine, arr.Select(a => a.ToString().TrimEnd()));
+        return o is not IEnumerable<object> arr
+            ? string.Empty
+            : string.Join(Environment.NewLine, arr.Select(a => a.ToString().EmptyWhenNull().TrimEnd()));
     }
 }

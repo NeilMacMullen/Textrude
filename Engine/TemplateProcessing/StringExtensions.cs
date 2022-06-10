@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Engine.TemplateProcessing;
 
@@ -16,7 +17,7 @@ public static class StringExtensions
     public static IEnumerable<string> ProcessLinePairs(this IEnumerable<string> lines,
         Func<LinePair, LinePair> transform)
     {
-        string previous = null;
+        string? previous = null;
         foreach (var line in lines)
         {
             if (previous != null)
@@ -39,4 +40,13 @@ public static class StringExtensions
     public static IEnumerable<string> ToLines(this string str) =>
         str.Replace("\r\n", "\n")
             .Split("\n");
+
+    /// <summary>
+    /// Satisfy NRT checks by ensuring a null string is never propagated
+    /// </summary>
+    /// <remarks>
+    /// Various legacy APIs still return nullable strings (even if, in practice they
+    /// never will actually be null) so we can use this extension to keep the NRT
+    /// checks quiet</remarks>
+    public static string EmptyWhenNull(this string? str) => str ?? string.Empty;
 }

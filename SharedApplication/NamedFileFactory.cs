@@ -18,7 +18,7 @@ public static class NamedFileFactory
         var format = ModelFormat.Unknown;
         if (match.Groups[2].Success
             && Enum.TryParse(typeof(ModelFormat), match.Groups[2].Value, true, out var f))
-            format = (ModelFormat)f;
+            format = (ModelFormat)f!;
         var modelName = match.Groups[4].Success
             ? match.Groups[4].Value
             : fallbackName;
