@@ -46,7 +46,7 @@ public static class ObjectGraph
             case ExpandoObject ex:
                 var dict = ex.ToDictionary(kv =>
                         kv.Key,
-                    kv => FixTypes(kv.Value));
+                    kv => FixTypes(kv.Value!));
                 return ScriptObject.From(dict);
             default:
                 return tree;

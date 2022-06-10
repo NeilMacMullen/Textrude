@@ -30,6 +30,6 @@ public class CmdRenderFromFile
                 return;
         }
 
-        CmdRender.Run(indirectOptions, rte, sys);
+        CmdRender.Run(indirectOptions!, rte, sys);
     }
 }

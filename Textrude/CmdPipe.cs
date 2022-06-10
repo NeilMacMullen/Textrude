@@ -40,7 +40,7 @@ public class CmdPipe
     public class Options
     {
         [Value(0, MetaName = "template", Required = true, HelpText = "path to template file")]
-        public string Template { get; set; }
+        public string Template { get; set; } = string.Empty;
 
         [Usage]
         public static IEnumerable<Example> Examples => new[]

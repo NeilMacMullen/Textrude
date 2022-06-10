@@ -3,6 +3,9 @@ using System.IO;
 
 namespace Engine.Application;
 
+// In practice it would be exceedingly odd if 
+
+
 public class RunTimeEnvironment
 {
     public readonly IFileSystemOperations FileSystem;
@@ -15,7 +18,7 @@ public class RunTimeEnvironment
     /// <remarks>
     ///     This is useful when setting up include paths
     /// </remarks>
-    public string ApplicationFolder() => Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+    public string ApplicationFolder() => Path.GetDirectoryName(ApplicationPath())!;
 
     /// <summary>
     ///     Path to application exe
@@ -24,5 +27,5 @@ public class RunTimeEnvironment
     ///     This is the approved formulation for compatibility with single-exe apps.
     ///     See https://github.com/dotnet/runtime/issues/3704
     /// </remarks>
-    public string ApplicationPath() => Process.GetCurrentProcess().MainModule.FileName;
+    public string ApplicationPath() => Process.GetCurrentProcess().MainModule!.FileName!;
 }

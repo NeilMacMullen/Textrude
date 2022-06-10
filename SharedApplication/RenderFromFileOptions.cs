@@ -6,5 +6,5 @@ namespace SharedApplication;
 public class RenderFromFileOptions
 {
     [Option(Required = true, HelpText = "file containing arguments (.yaml or .json)")]
-    public string Arguments { get; set; }
+    public string Arguments { get; set; } = string.Empty;
 }

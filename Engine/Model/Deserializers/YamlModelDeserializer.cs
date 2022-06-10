@@ -14,7 +14,7 @@ public class YamlModelDeserializer : IModelDeserializer
         var r = new StringReader(input);
         var deserializer = new Deserializer();
         var yamlObject = deserializer.Deserialize(r);
-        var d = ObjectGraph.FixTypes(yamlObject);
+        var d = ObjectGraph.FixTypes(yamlObject!);
         return new Model(ModelFormat.Yaml, d);
     }
 

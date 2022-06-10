@@ -65,7 +65,7 @@ public static class TextrudeMethods
             outputs = dynOutput as Dictionary<string, string>;
         }
 
-        outputs[outputName] = content;
+        outputs![outputName] = content;
     }
 
     /// <summary>
