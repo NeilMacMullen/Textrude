@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <PackageId>textrude.engine</PackageId>
     <Description>The engine for Textrude</Description>
     <Authors>Neil MacMullen</Authors>
@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Recognizers.Text" Version="1.8.6" />
     <PackageReference Include="Microsoft.Recognizers.Text.DateTime" Version="1.8.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Scriban" Version="5.5.1" />
+    <PackageReference Include="Scriban" Version="5.5.2" />
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
     <PackageReference Include="YamlDotNet" Version="12.3.1" />
   </ItemGroup>

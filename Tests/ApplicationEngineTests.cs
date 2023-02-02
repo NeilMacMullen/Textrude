@@ -45,9 +45,12 @@ public class ApplicationEngineTests
     [TestMethod]
     public void CodeCompletionShowsEnvironment()
     {
+        //Not sure why we need to exclude __COMPAT_LAYER here - possibly
+        //injected by VS
         var envKeys = Environment.GetEnvironmentVariables()
             .Keys
             .Cast<string>()
+            .Where(s => s != "__COMPAT_LAYER")
             .Select(e => $"env.{e}");
 
         new ApplicationEngine(_rte)
