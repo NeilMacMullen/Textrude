@@ -1,5 +1,11 @@
 # Full change history
 
+
+### 1.8.0 (source/binary)
+- Retarget to Net7
+- Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
+- Add [snippet](doc/snippets.md) support for script editor (thanks to Olof Wistrand)
+
 ### v1.7.0 (source/binary)
 - Chocolatey install is available.
 - A number of cli [convenience commands](doc/textrude_convenience.md) have been added to make it easier to process data files.

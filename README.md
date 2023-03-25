@@ -46,7 +46,7 @@ For **text-processing** or **data-processing**
 
 ## Download/build
 
-**Textrude requires [.Net 6.0](https://dotnet.microsoft.com/download/dotnet6.0).  If it's not already on your machine you will be prompted to install it.**
+**Textrude requires [.Net 7.0](https://dotnet.microsoft.com/download/dotnet7.0).  If it's not already on your machine you will be prompted to install it.**
 
 **To run TextrudeInteractive v1.3 and up the [WebView2 runtime] is required.  If this is not already installed on your PC you can obtain it from (https://developer.microsoft.com/en-us/microsoft-edge/webview2/)**  (This is *not* required if you just want to run the CLI tool.)
 
@@ -58,8 +58,8 @@ For **text-processing** or **data-processing**
 
 ## What's new
 
-### vNext (source only)
-- Retarget to Net6
+### 1.8.0 (source/binary)
+- Retarget to Net7
 - Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
 - Add [snippet](doc/snippets.md) support for script editor (thanks to Olof Wistrand)
 

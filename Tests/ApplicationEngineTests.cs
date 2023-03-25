@@ -64,8 +64,6 @@ public class ApplicationEngineTests
             .WithTemplate(@"
 {{
 func __library ; ret 1;end;
-func notlibrary ; ret 1;end;
-end
 }}")
             .Render()
             .ModelPaths()
@@ -74,11 +72,27 @@ end
 
         offeredPaths
             .Should()
-            .Contain("notlibrary");
+            .NotContain("__library");
+    }
+
+    [TestMethod]
+    public void CodeCompletionIncludesFunctions()
+    {
+        var offeredPaths = new ApplicationEngine(_rte)
+            .WithTemplate(@"
+{{
+func myfunc ; ret 1;end;
+}}")
+            .Render()
+            .ModelPaths()
+            .Select(p => p.Render())
+            .ToArray();
 
         offeredPaths
             .Should()
-            .NotContain("__library");
+            .Contain("myfunc");
+
+     
     }
 
 
