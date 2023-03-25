@@ -1,5 +1,11 @@
 [
   {
+    "Version": "1.8.0",
+    "Date": "25 Mar 2023",
+    "Summary": "Update to Net7",
+    "Detail": []
+  },
+  {
     "Version": "1.7.0",
     "Date": "22 Nov 2021",
     "Summary": "Many nuget updates, timecomparison functionality",
