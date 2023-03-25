@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Build.Tasks;
+using Cake.Core;
 using Cake.Frosting;
 
 namespace Build;
@@ -22,9 +23,9 @@ public static class Program
 
 public class BuildSetup : FrostingSetup<BuildContext>
 {
-    public override void Setup(BuildContext context)
+   public override void Setup(BuildContext buildContext,ISetupContext setupContext)
     {
-        context.Describe();
+        buildContext.Describe();
     }
 }
 

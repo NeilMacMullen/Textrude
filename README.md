@@ -59,7 +59,7 @@ For **text-processing** or **data-processing**
 ## What's new
 
 ### vNext (source only)
-- Retarget to Net6
+- Retarget to Net7
 - Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
 - Add [snippet](doc/snippets.md) support for script editor (thanks to Olof Wistrand)
 
