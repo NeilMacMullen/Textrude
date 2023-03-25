@@ -13,16 +13,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextrudeInteractive", "Text
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{69945C04-7A0A-4643-9B89-C03AFC72D707}"
 	ProjectSection(SolutionItems) = preProject
+		doc\buildFromSource.md = doc\buildFromSource.md
 		doc\buildSystemIntegration.md = doc\buildSystemIntegration.md
 		doc\builtIns.md = doc\builtIns.md
+		doc\changeHistory.md = doc\changeHistory.md
 		doc\changelist.json = doc\changelist.json
+		doc\cmdPipe.md = doc\cmdPipe.md
 		dynamicOutput.md = dynamicOutput.md
+		doc\dynamicOutput.md = doc\dynamicOutput.md
 		doc\environmentAndDefinitions.md = doc\environmentAndDefinitions.md
+		doc\exportInvocation.md = doc\exportInvocation.md
+		doc\fileLinkage.md = doc\fileLinkage.md
+		doc\format_conversion.md = doc\format_conversion.md
+		doc\getBinaries.md = doc\getBinaries.md
 		doc\gettingStarted.md = doc\gettingStarted.md
 		doc\lib.md = doc\lib.md
 		doc\multiModel.md = doc\multiModel.md
 		README.md = README.md
 		snippets.md = snippets.md
+		doc\snippets.md = doc\snippets.md
+		doc\syntaxExtensions.md = doc\syntaxExtensions.md
+		doc\textrude_convenience.md = doc\textrude_convenience.md
 		doc\userLibrary.md = doc\userLibrary.md
 	EndProjectSection
 EndProject
@@ -36,6 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "build\Build.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub workflows", "GitHub workflows", "{02A73D75-89E1-4C65-8799-A3A9DBE32A40}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\cd.yaml = .github\workflows\cd.yaml
 		.github\workflows\ci.yaml = .github\workflows\ci.yaml
 	EndProjectSection
 EndProject
