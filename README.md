@@ -58,6 +58,9 @@ For **text-processing** or **data-processing**
 
 ## What's new
 
+### vNext (source)
+- Retarget to Net8
+
 ### 1.8.0 (source/binary)
 - Retarget to Net7
 - Fix bug where a StackOverflowException could be thrown if textrude.to_csv/to_json/to_yaml was called on recursive object
