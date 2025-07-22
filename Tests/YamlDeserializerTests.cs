@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Engine.Model;
 using Engine.Model.Deserializers;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests;

@@ -1,6 +1,6 @@
 using System;
 using Engine.TemplateProcessing;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests;
