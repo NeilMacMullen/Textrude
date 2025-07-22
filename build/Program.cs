@@ -14,7 +14,7 @@ public static class Program
         Environment.CurrentDirectory = projectDir.Parent.FullName;
 
         return new CakeHost()
-            .InstallTool(new Uri("nuget:?package=ReportGenerator&version=4.8.5"))
+            .InstallTool(new Uri("nuget:?package=ReportGenerator&version=5.4.9"))
             .UseContext<BuildContext>()
             .UseSetup<BuildSetup>()
             .Run(args);
