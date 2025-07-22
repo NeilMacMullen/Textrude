@@ -34,7 +34,7 @@ public class TestTask : FrostingTask<BuildContext>
             },
             Settings = context.BuildDir + context.File("coverlet.runsettings")
         });
-
+        /*
         var allOpenCoverReports = GlobPattern.FromString(
             context.RepoDir
             + context.Directory("**")
@@ -42,7 +42,6 @@ public class TestTask : FrostingTask<BuildContext>
             + context.Directory("*")
             + context.File("coverage.opencover.xml")
         );
-
         // Build HTML report
         context.ReportGenerator(
             allOpenCoverReports,
@@ -71,5 +70,6 @@ public class TestTask : FrostingTask<BuildContext>
                 ArgumentCustomization = args => args.Append("-reporttypes:lcov")
             }
         );
+        */
     }
 }
