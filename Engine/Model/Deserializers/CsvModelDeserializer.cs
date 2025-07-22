@@ -16,7 +16,9 @@ public class CsvModelDeserializer : IModelDeserializer
     {
         using var reader = new StringReader(input);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        var records = csv.GetRecords<object>().ToArray();
+       
+
+        var records = csv.GetRecords<dynamic>().OfType<IDictionary<string, object>>().ToArray();
 
         var cleaned = ObjectGraph.FixTypes(records);
         return new Model(ModelFormat.Csv, cleaned);

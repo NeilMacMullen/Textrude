@@ -31,6 +31,7 @@ public static class ObjectGraph
                 return s;
             }
             case Dictionary<object, object> d:
+            {
                 var e = new ScriptObject();
                 foreach (var (key, value) in d)
                 {
@@ -38,16 +39,23 @@ public static class ObjectGraph
                 }
 
                 return e;
+            }
+            //used by CsvHelper
+            case IDictionary<string, object> od:
+            {
+                var e = new ScriptObject();
+                foreach (var (key, value) in od)
+                {
+                    e[key] = FixTypes(value);
+                }
+
+                return e;
+            }
+
 
             case IEnumerable<object> l:
                 return l.Select(FixTypes).ToArray();
-
-            //used by CsvHelper
-            case ExpandoObject ex:
-                var dict = ex.ToDictionary(kv =>
-                        kv.Key,
-                    kv => FixTypes(kv.Value!));
-                return ScriptObject.From(dict);
+        
             default:
                 return tree;
         }

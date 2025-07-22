@@ -1,0 +1,7 @@
+/*!-----------------------------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * monaco-kusto version: 12.0.5(cc6fed3c5889904ef8dc2b360efe8caab28ba1df)
+ * Released under the MIT license
+ * https://https://github.com/Azure/monaco-kusto/blob/master/README.md
+ *-----------------------------------------------------------------------------*/
+define("vs/language/kusto/types-da1c5003",["exports"],(function(e){"use strict";var a=function(e){return e.PlainText="plainText",e.Comment="comment",e.Punctuation="punctuation",e.Directive="directive",e.Literal="literal",e.StringLiteral="stringLiteral",e.Type="type",e.Column="column",e.Table="table",e.Database="database",e.Function="function",e.Parameter="parameter",e.Variable="variable",e.Identifier="identifier",e.ClientParameter="clientParameter",e.QueryParameter="queryParameter",e.ScalarParameter="scalarParameter",e.MathOperator="mathOperator",e.QueryOperator="queryOperator",e.Command="command",e.Keyword="keyword",e.MaterializedView="materializedView",e.SchemaMember="schemaMember",e.SignatureParameter="signatureParameter",e.Option="option",e}({}),r=[a.PlainText,a.Comment,a.Punctuation,a.Directive,a.Literal,a.StringLiteral,a.Type,a.Column,a.Table,a.Database,a.Function,a.Parameter,a.Variable,a.Identifier,a.ClientParameter,a.QueryParameter,a.ScalarParameter,a.MathOperator,a.QueryOperator,a.Command,a.Keyword,a.MaterializedView,a.SchemaMember,a.SignatureParameter,a.Option];e.LANGUAGE_ID="kusto",e.Token=a,e.tokenTypes=r}));

@@ -72,8 +72,8 @@ public class DateTimeRecogniserTests : TimeTestMethods
         //"yesterday" defaults to the first instant of the day
         var s = ExpectDateTime(basis, "yesterday");
         var duration = (basis - s);
-        duration.Should().BeGreaterOrEqualTo(TimeSpan.FromDays(1));
-        duration.Should().BeLessOrEqualTo(TimeSpan.FromDays(2));
+        duration.Should().BeGreaterThanOrEqualTo(TimeSpan.FromDays(1));
+        duration.Should().BeLessThanOrEqualTo(TimeSpan.FromDays(2));
     }
 
 
