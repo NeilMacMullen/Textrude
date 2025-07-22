@@ -1,5 +1,11 @@
 [
   {
+    "Version": "1.8.1",
+    "Date": "22 Jul 2025",
+    "Summary": "Update to Net9",
+    "Detail": []
+  },
+  {
     "Version": "1.8.0",
     "Date": "25 Mar 2023",
     "Summary": "Update to Net7",
