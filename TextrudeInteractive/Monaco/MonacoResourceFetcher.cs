@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Collections.Immutable;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -40,7 +38,7 @@ public class MonacoResourceFetcher
                 .Select(e => monacoLangRegex.Match(e.FullName))
                 .Where(m => m.Success)
                 .Select(m => m.Groups["name"].Value)
-                .Concat(new[] { "text", "scriban","kusto" })
+                .Concat(new[] { "text", "scriban" })
                 .OrderBy(l => l)
                 .Distinct()
                 .ToImmutableArray();
@@ -51,17 +49,8 @@ public class MonacoResourceFetcher
 
     public MemoryStream FetchPath(string path)
     {
-        Debug.WriteLine($"Fetching {path}");
-        if (path.Contains("kusto"))
-        {
-            Debug.WriteLine("HERE!!!");
-            return new MemoryStream();
-        }
-
         if (path.EndsWith("scriban.js"))
-        {
             return new MemoryStream(Encoding.UTF8.GetBytes(Resources.scriban));
-        }
 
         using var zipStream = new MemoryStream(GetMonacoResource());
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
