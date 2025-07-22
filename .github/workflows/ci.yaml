@@ -19,13 +19,13 @@ jobs:
         include:
           - os: windows-latest
             build_config: Debug
-          - os: ubuntu-latest
+          - os: ubuntu-22
             build_config: Linux-Debug
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     - name: Test
