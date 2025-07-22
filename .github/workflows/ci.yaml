@@ -19,7 +19,7 @@ jobs:
         include:
           - os: windows-latest
             build_config: Debug
-          - os: ubuntu-22
+          - os: ubuntu-latest
             build_config: Linux-Debug
     runs-on: ${{ matrix.os }}
     steps:
