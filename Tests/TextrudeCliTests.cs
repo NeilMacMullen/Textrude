@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Engine.Application;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharedApplication;
 using Tests.Helpers;

@@ -1,6 +1,6 @@
 using System;
 using Engine.Extensions.TimeRange;
-using FluentAssertions;
+using AwesomeAssertions;
 using TimeZoneConverter;
 
 namespace Tests;
