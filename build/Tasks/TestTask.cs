@@ -34,7 +34,7 @@ public class TestTask : FrostingTask<BuildContext>
             },
             Settings = context.BuildDir + context.File("coverlet.runsettings")
         });
-        /*
+        
         var allOpenCoverReports = GlobPattern.FromString(
             context.RepoDir
             + context.Directory("**")
@@ -65,11 +65,11 @@ public class TestTask : FrostingTask<BuildContext>
             new ReportGeneratorSettings
             {
                 ToolPath = context.IsRunningOnLinux()
-                    ? context.RepoDir + context.File("tools/ReportGenerator.4.8.5/tools/net5.0/ReportGenerator.dll")
+                    ? context.RepoDir + context.File("tools/ReportGenerator.5.4.9/tools/net9.0/ReportGenerator.dll")
                     : null,
                 ArgumentCustomization = args => args.Append("-reporttypes:lcov")
             }
         );
-        */
+        
     }
 }
