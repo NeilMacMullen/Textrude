@@ -1,4 +1,4 @@
-﻿<controls:MaterialWindow x:Class="TextrudeInteractive.MainWindow"
+﻿<Window x:Class="TextrudeInteractive.MainWindow"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,6 @@
                          mc:Ignorable="d"
                          Title="Textrude Interactive" Height="800" Width="1000"
                          Closing="MainWindow_OnClosing"
-                         TitleBarIcon="{StaticResource AppIcon}"
                          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                          TextElement.FontWeight="Regular"
@@ -18,7 +17,8 @@
                          FontFamily="{DynamicResource MaterialDesignFont}"
 
                          xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
-                         xmlns:monaco="clr-namespace:TextrudeInteractive.Monaco">
+                         xmlns:monaco="clr-namespace:TextrudeInteractive.Monaco"
+                         >
   <Window.Resources>
     <Style TargetType="GridSplitter" BasedOn="{StaticResource MaterialDesignGridSplitterPreview}">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -169,5 +169,4 @@
       </Grid>
     </DockPanel>
   </DockPanel>
-
-</controls:MaterialWindow>
+</Window>
