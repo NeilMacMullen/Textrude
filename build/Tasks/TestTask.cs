@@ -34,42 +34,44 @@ public class TestTask : FrostingTask<BuildContext>
             },
             Settings = context.BuildDir + context.File("coverlet.runsettings")
         });
-        
-        var allOpenCoverReports = GlobPattern.FromString(
-            context.RepoDir
-            + context.Directory("**")
-            + context.Directory("TestResults")
-            + context.Directory("*")
-            + context.File("coverage.opencover.xml")
-        );
-        // Build HTML report
-        context.ReportGenerator(
-            allOpenCoverReports,
-            context.Directory("TestReports"),
-            new ReportGeneratorSettings
-            {
-                ToolPath = context.IsRunningOnLinux()
-                    ? context.RepoDir + context.File("tools/ReportGenerator.5.4.9/tools/net9.0/ReportGenerator.dll")
-                    : null,
-                ReportTypes = new[]
+        if (context.IsRunningOnWindows())
+        {
+            var allOpenCoverReports = GlobPattern.FromString(
+                context.RepoDir
+                + context.Directory("**")
+                + context.Directory("TestResults")
+                + context.Directory("*")
+                + context.File("coverage.opencover.xml")
+            );
+            // Build HTML report
+            context.ReportGenerator(
+                allOpenCoverReports,
+                context.Directory("TestReports"),
+                new ReportGeneratorSettings
                 {
-                    ReportGeneratorReportType.Html,
+                    ToolPath = context.IsRunningOnLinux()
+                        ? context.RepoDir + context.File("tools/ReportGenerator.5.4.9/tools/net9.0/ReportGenerator.dll")
+                        : null,
+                    ReportTypes = new[]
+                    {
+                        ReportGeneratorReportType.Html,
+                    }
                 }
-            }
-        );
+            );
 
-        // Build lcov report for Coveralls
-        context.ReportGenerator(
-            allOpenCoverReports,
-            context.Directory("TestResults"),
-            new ReportGeneratorSettings
-            {
-                ToolPath = context.IsRunningOnLinux()
-                    ? context.RepoDir + context.File("tools/ReportGenerator.5.4.9/tools/net9.0/ReportGenerator.dll")
-                    : null,
-                ArgumentCustomization = args => args.Append("-reporttypes:lcov")
-            }
-        );
-        
+            // Build lcov report for Coveralls
+            context.ReportGenerator(
+                allOpenCoverReports,
+                context.Directory("TestResults"),
+                new ReportGeneratorSettings
+                {
+                    ToolPath = context.IsRunningOnLinux()
+                        ? context.RepoDir + context.File("tools/ReportGenerator.5.4.9/tools/net9.0/ReportGenerator.dll")
+                        : null,
+                    ArgumentCustomization = args => args.Append("-reporttypes:lcov")
+                }
+            );
+        }
+
     }
 }

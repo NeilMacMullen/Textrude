@@ -39,7 +39,7 @@ jobs:
         parallel: true
   coveralls-finish:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - name: Coveralls Finished
       uses: coverallsapp/github-action@master
